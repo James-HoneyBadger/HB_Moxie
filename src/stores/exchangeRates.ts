@@ -22,7 +22,7 @@ import { getExchangedAmountByRate } from '@/lib/numeral.ts';
 import logger from '@/lib/logger.ts';
 import services from '@/lib/services.ts';
 
-const exchangeRatesLocalStorageKey = 'ebk_app_exchange_rates';
+const exchangeRatesLocalStorageKey = 'hbm_app_exchange_rates';
 const userDataSourceType = 'user_custom';
 
 interface LatestExchangeRates {
@@ -32,7 +32,12 @@ interface LatestExchangeRates {
 
 function getExchangeRatesFromLocalStorage(): LatestExchangeRates {
     const storageData = localStorage.getItem(exchangeRatesLocalStorageKey) || '{}';
-    return JSON.parse(storageData) as LatestExchangeRates;
+
+    try {
+        return JSON.parse(storageData) as LatestExchangeRates;
+    } catch {
+        return {};
+    }
 }
 
 function getExchangeRatesRawDataFromLocalStorage(): string | null {

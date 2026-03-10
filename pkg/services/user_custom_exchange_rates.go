@@ -4,10 +4,10 @@ import (
 	"time"
 	"xorm.io/xorm"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/datastore"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/datastore"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
 )
 
 // UserCustomExchangeRatesService represents user custom exchange rate data service
@@ -89,6 +89,11 @@ func (s *UserCustomExchangeRatesService) UpdateCustomExchangeRate(c core.Context
 		}
 
 		newCustomExchangeRate, err = models.CreateUserCustomExchangeRate(uid, currency, rate, defaultCurrencyExchangeRate.Rate)
+
+		if err != nil {
+			return err
+		}
+
 		newCustomExchangeRate.CreatedUnixTime = now
 		newCustomExchangeRate.UpdatedUnixTime = now
 		newCustomExchangeRate.DeletedUnixTime = 0

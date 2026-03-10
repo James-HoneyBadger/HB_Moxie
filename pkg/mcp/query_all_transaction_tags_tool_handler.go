@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"reflect"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // MCPAllQueryTransactionTagsResponse represents the response structure for querying transaction tags
@@ -26,7 +26,7 @@ func (h *mcpQueryAllTransactionTagsToolHandler) Name() string {
 
 // Description returns the description of the MCP tool
 func (h *mcpQueryAllTransactionTagsToolHandler) Description() string {
-	return "Query transaction tags for the current user in ezBookkeeping."
+	return "Query transaction tags for the current user in HB Moxie."
 }
 
 // InputType returns the input type for the MCP tool request

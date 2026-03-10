@@ -96,6 +96,11 @@ const isDarkMode = computed<boolean>(() => theme.global.name.value === ThemeType
 function loadImage(file: File): void {
     loading.value = true;
     imageFile.value = null;
+
+    if (imageSrc.value) {
+        URL.revokeObjectURL(imageSrc.value);
+    }
+
     imageSrc.value = undefined;
 
     compressJpgImage(file, 1280, 1280, 0.8).then(blob => {
@@ -117,6 +122,11 @@ function open(): Promise<RecognizedReceiptImageResponse> {
     recognizing.value = false;
     cancelRecognizingUuid.value = undefined;
     imageFile.value = null;
+
+    if (imageSrc.value) {
+        URL.revokeObjectURL(imageSrc.value);
+    }
+
     imageSrc.value = undefined;
 
     return new Promise((resolve, reject) => {

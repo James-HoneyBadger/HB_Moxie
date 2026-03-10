@@ -70,8 +70,12 @@ func SetProxyUrl(transport *http.Transport, proxy string) {
 	if proxy == "none" {
 		transport.Proxy = nil
 	} else if proxy != "system" {
-		proxy, _ := url.Parse(proxy)
-		transport.Proxy = http.ProxyURL(proxy)
+		proxyUrl, err := url.Parse(proxy)
+		if err != nil {
+			transport.Proxy = http.ProxyFromEnvironment
+			return
+		}
+		transport.Proxy = http.ProxyURL(proxyUrl)
 	} else {
 		transport.Proxy = http.ProxyFromEnvironment
 	}

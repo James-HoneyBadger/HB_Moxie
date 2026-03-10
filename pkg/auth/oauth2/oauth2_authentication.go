@@ -5,16 +5,16 @@ import (
 
 	"golang.org/x/oauth2"
 
-	"github.com/mayswind/ezbookkeeping/pkg/auth/oauth2/data"
-	"github.com/mayswind/ezbookkeeping/pkg/auth/oauth2/provider"
-	"github.com/mayswind/ezbookkeeping/pkg/auth/oauth2/provider/gitea"
-	"github.com/mayswind/ezbookkeeping/pkg/auth/oauth2/provider/github"
-	"github.com/mayswind/ezbookkeeping/pkg/auth/oauth2/provider/nextcloud"
-	"github.com/mayswind/ezbookkeeping/pkg/auth/oauth2/provider/oidc"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/httpclient"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/auth/oauth2/data"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/auth/oauth2/provider"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/auth/oauth2/provider/gitea"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/auth/oauth2/provider/github"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/auth/oauth2/provider/nextcloud"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/auth/oauth2/provider/oidc"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/httpclient"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // OAuth2Container contains the current OAuth 2.0 authentication provider

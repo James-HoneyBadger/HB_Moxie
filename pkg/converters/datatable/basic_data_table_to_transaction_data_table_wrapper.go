@@ -1,10 +1,10 @@
 package datatable
 
 import (
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
 )
 
 // basicDataTableToTransactionDataTableWrapper defines the structure of basic data table to transaction data table wrapper

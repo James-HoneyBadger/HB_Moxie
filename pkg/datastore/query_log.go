@@ -3,8 +3,8 @@ package datastore
 import (
 	xorm "xorm.io/xorm/log"
 
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // XOrmLoggerAdapter represents the logger adapter for xorm
@@ -69,7 +69,7 @@ func (logger XOrmLoggerAdapter) Level() xorm.LogLevel {
 }
 
 // SetLevel sets the logger level
-func (logger XOrmLoggerAdapter) SetLevel(l xorm.LogLevel) {
+func (logger *XOrmLoggerAdapter) SetLevel(l xorm.LogLevel) {
 	if l == xorm.LOG_DEBUG {
 		logger.logLevel = settings.LOGLEVEL_DEBUG
 	} else if l == xorm.LOG_INFO {
@@ -78,13 +78,13 @@ func (logger XOrmLoggerAdapter) SetLevel(l xorm.LogLevel) {
 		logger.logLevel = settings.LOGLEVEL_WARN
 	} else if l == xorm.LOG_ERR {
 		logger.logLevel = settings.LOGLEVEL_ERROR
+	} else {
+		logger.logLevel = settings.LOGLEVEL_INFO
 	}
-
-	logger.logLevel = settings.LOGLEVEL_INFO
 }
 
 // ShowSQL sets whether write sql to log
-func (logger XOrmLoggerAdapter) ShowSQL(show ...bool) {
+func (logger *XOrmLoggerAdapter) ShowSQL(show ...bool) {
 	logger.enable = len(show) > 0 && show[0]
 }
 
@@ -95,7 +95,7 @@ func (logger XOrmLoggerAdapter) IsShowSQL() bool {
 
 // NewXOrmLoggerAdapter returns a new XOrmLoggerAdapter instance
 func NewXOrmLoggerAdapter(showSql bool, logLevel settings.Level) xorm.Logger {
-	return XOrmLoggerAdapter{
+	return &XOrmLoggerAdapter{
 		enable:   showSql,
 		logLevel: logLevel,
 	}

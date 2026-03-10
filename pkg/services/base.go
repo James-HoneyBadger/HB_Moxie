@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/datastore"
-	"github.com/mayswind/ezbookkeeping/pkg/mail"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
-	"github.com/mayswind/ezbookkeeping/pkg/storage"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
-	"github.com/mayswind/ezbookkeeping/pkg/uuid"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/datastore"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/mail"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/storage"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/uuid"
 )
 
 // ServiceUsingDB represents a service that need to use db

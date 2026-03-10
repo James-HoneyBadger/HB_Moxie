@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#0f3460"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#daa520"/>
+      <stop offset="50%" style="stop-color:#ffd700"/>
+      <stop offset="100%" style="stop-color:#c67e48"/>
+    </linearGradient>
+    <linearGradient id="silver" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8e8e8"/>
+      <stop offset="100%" style="stop-color:#b0b0b0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#c67e48;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#c67e48;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="256" cy="256" r="256" fill="url(#bg)"/>
+  <circle cx="256" cy="220" r="150" fill="url(#glow)"/>
+  <!-- Badger Body -->
+  <ellipse cx="256" cy="260" rx="85" ry="58" fill="#1a1a1a"/>
+  <ellipse cx="256" cy="242" rx="80" ry="48" fill="#c0c0c0"/>
+  <ellipse cx="256" cy="278" rx="78" ry="40" fill="#1a1a1a"/>
+  <!-- Badger Head -->
+  <ellipse cx="256" cy="180" rx="46" ry="37" fill="#1a1a1a"/>
+  <path d="M 243 147 Q 256 143 269 147 L 266 185 Q 256 189 246 185 Z" fill="url(#silver)"/>
+  <ellipse cx="235" cy="185" rx="16" ry="12" fill="#c0c0c0"/>
+  <ellipse cx="277" cy="185" rx="16" ry="12" fill="#c0c0c0"/>
+  <!-- Ears -->
+  <ellipse cx="225" cy="152" rx="10" ry="8" fill="#2a2a2a"/>
+  <ellipse cx="287" cy="152" rx="10" ry="8" fill="#2a2a2a"/>
+  <!-- Eyes -->
+  <ellipse cx="243" cy="180" rx="7" ry="5" fill="#fff"/>
+  <ellipse cx="269" cy="180" rx="7" ry="5" fill="#fff"/>
+  <circle cx="244" cy="180" r="3.5" fill="#111"/>
+  <circle cx="270" cy="180" r="3.5" fill="#111"/>
+  <circle cx="246" cy="178" r="1.3" fill="#fff"/>
+  <circle cx="272" cy="178" r="1.3" fill="#fff"/>
+  <!-- Nose -->
+  <ellipse cx="256" cy="195" rx="7" ry="4" fill="#333"/>
+  <!-- Smile -->
+  <path d="M 250 200 Q 256 205 262 200" fill="none" stroke="#555" stroke-width="1.3" stroke-linecap="round"/>
+  <!-- Arms -->
+  <path d="M 180 250 Q 170 232 175 218 Q 180 210 188 214" fill="#1a1a1a" stroke="#1a1a1a" stroke-width="7" stroke-linecap="round"/>
+  <path d="M 332 250 Q 342 232 337 218 Q 332 210 324 214" fill="#1a1a1a" stroke="#1a1a1a" stroke-width="7" stroke-linecap="round"/>
+  <!-- Gold coin -->
+  <circle cx="176" cy="212" r="19" fill="url(#gold)" stroke="#b8860b" stroke-width="2"/>
+  <text x="176" y="219" text-anchor="middle" font-size="19" font-weight="bold" fill="#8b6914" font-family="serif">$</text>
+  <!-- Floating coins -->
+  <circle cx="328" cy="148" r="12" fill="url(#gold)" stroke="#b8860b" stroke-width="1.5" opacity="0.8"/>
+  <text x="328" y="153" text-anchor="middle" font-size="12" font-weight="bold" fill="#8b6914" font-family="serif">$</text>
+  <circle cx="160" cy="140" r="10" fill="url(#gold)" stroke="#b8860b" stroke-width="1.5" opacity="0.6"/>
+  <text x="160" y="144" text-anchor="middle" font-size="10" font-weight="bold" fill="#8b6914" font-family="serif">$</text>
+  <!-- Chart -->
+  <g transform="translate(300, 260)" opacity="0.6">
+    <rect x="0" y="18" width="7" height="18" rx="2" fill="#4ecdc4"/>
+    <rect x="10" y="8" width="7" height="28" rx="2" fill="#c67e48"/>
+    <rect x="20" y="13" width="7" height="23" rx="2" fill="#45b7d1"/>
+    <rect x="30" y="3" width="7" height="33" rx="2" fill="#96ceb4"/>
+  </g>
+  <!-- App name -->
+  <text x="256" y="365" text-anchor="middle" font-size="42" font-weight="800" fill="url(#gold)" font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif" letter-spacing="3">HB MOXIE</text>
+  <text x="256" y="388" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.5)" font-family="'Segoe UI',Arial,sans-serif" letter-spacing="3">PERSONAL FINANCE MANAGER</text>
+  <circle cx="256" cy="256" r="248" fill="none" stroke="url(#gold)" stroke-width="1.5" opacity="0.15"/>
+</svg>

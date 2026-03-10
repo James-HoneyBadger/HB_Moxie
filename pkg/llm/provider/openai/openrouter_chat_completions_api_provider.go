@@ -3,9 +3,9 @@ package openai
 import (
 	"net/http"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/llm/provider"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/provider"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // OpenRouterChatCompletionsAPIProvider defines the structure of OpenRouter chat completions API provider
@@ -26,7 +26,7 @@ func (p *OpenRouterChatCompletionsAPIProvider) BuildChatCompletionsHttpRequest(c
 	}
 
 	req.Header.Set("Authorization", "Bearer "+p.OpenRouterAPIKey)
-	req.Header.Set("HTTP-Referer", "https://ezbookkeeping.mayswind.net/")
+	req.Header.Set("HTTP-Referer", "https://github.com/James-HoneyBadger/HB_Moxie/")
 	req.Header.Set("X-Title", core.ApplicationName)
 
 	return req, nil

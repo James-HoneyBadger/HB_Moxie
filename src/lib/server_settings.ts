@@ -1,5 +1,5 @@
 function getServerSetting(key: string): string | number | boolean | Record<string, string> | undefined | null {
-    const settings = window.EZBOOKKEEPING_SERVER_SETTINGS || {};
+    const settings = window.HBMOXIE_SERVER_SETTINGS || {};
     return settings[key];
 }
 
@@ -41,6 +41,14 @@ export function isDataExportingEnabled(): boolean {
 
 export function isDataImportingEnabled(): boolean {
     return getServerSetting('i') === 1;
+}
+
+export function isBackupEnabled(): boolean {
+    return getServerSetting('b') === 1;
+}
+
+export function isDesktopAutoLoginEnabled(): boolean {
+    return getServerSetting('dal') === 1;
 }
 
 export function getOAuth2Provider(): string {

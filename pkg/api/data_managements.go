@@ -6,14 +6,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mayswind/ezbookkeeping/pkg/converters"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/services"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/services"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 const pageCountForClearTransactions = 1000
@@ -55,13 +55,13 @@ var (
 	}
 )
 
-// ExportDataToEzbookkeepingCSVHandler returns exported data in csv format
-func (a *DataManagementsApi) ExportDataToEzbookkeepingCSVHandler(c *core.WebContext) ([]byte, string, *errs.Error) {
+// ExportDataToHBMoxieCSVHandler returns exported data in csv format
+func (a *DataManagementsApi) ExportDataToHBMoxieCSVHandler(c *core.WebContext) ([]byte, string, *errs.Error) {
 	return a.getExportedFileContent(c, "csv")
 }
 
-// ExportDataToEzbookkeepingTSVHandler returns exported data in csv format
-func (a *DataManagementsApi) ExportDataToEzbookkeepingTSVHandler(c *core.WebContext) ([]byte, string, *errs.Error) {
+// ExportDataToHBMoxieTSVHandler returns exported data in tsv format
+func (a *DataManagementsApi) ExportDataToHBMoxieTSVHandler(c *core.WebContext) ([]byte, string, *errs.Error) {
 	return a.getExportedFileContent(c, "tsv")
 }
 
@@ -292,7 +292,7 @@ func (a *DataManagementsApi) ClearAllTransactionsByAccountHandler(c *core.WebCon
 	account, err := a.accounts.GetAccountByAccountId(c, uid, clearDataReq.AccountId)
 
 	if err != nil {
-		log.Errorf(c, "[data_managements.ClearAllTransactionsByAccountHandler] failed to get account \"id:%d\" for user \"uid:%d\", because %s", uid, clearDataReq.AccountId, err.Error())
+		log.Errorf(c, "[data_managements.ClearAllTransactionsByAccountHandler] failed to get account \"id:%d\" for user \"uid:%d\", because %s", clearDataReq.AccountId, uid, err.Error())
 		return nil, errs.Or(err, errs.ErrOperationFailed)
 	}
 

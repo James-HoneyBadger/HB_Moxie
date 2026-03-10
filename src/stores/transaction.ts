@@ -314,6 +314,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
             for (const [transaction, transactionIndex] of itemAndIndex(transactionMonthList.items)) {
                 if (transaction.id === currentTransaction.id) {
                     transactionMonthList.items.splice(transactionIndex, 1);
+                    break;
                 }
             }
 
@@ -1063,6 +1064,8 @@ export const useTransactionsStore = defineStore('transactions', () => {
                     } else {
                         reject({ message: 'Unable to save transaction' });
                     }
+
+                    return;
                 }
 
                 const transaction = Transaction.of(data.result);
@@ -1241,6 +1244,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
             }).catch(error => {
                 if (error.canceled) {
                     reject(error);
+                    return;
                 }
 
                 logger.error('failed to recognize image', error);

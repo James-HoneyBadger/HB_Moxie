@@ -5,7 +5,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 // ValidAmountFilter returns whether the given amount filter is valid
@@ -45,6 +45,8 @@ func ValidAmountFilter(fl validator.FieldLevel) bool {
 			if amount2 < amount1 {
 				return false
 			}
+		} else {
+			return false
 		}
 
 		return true

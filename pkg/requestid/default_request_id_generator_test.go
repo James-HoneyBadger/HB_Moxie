@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 func TestNewDefaultRequestIdGenerator_Http(t *testing.T) {
@@ -29,10 +29,9 @@ func TestNewDefaultRequestIdGenerator_Http(t *testing.T) {
 
 func TestNewDefaultRequestIdGenerator_UnixSocket(t *testing.T) {
 	generator, _ := NewDefaultRequestIdGenerator(core.NewNullContext(), &settings.Config{
-		HttpAddr:       "1.2.3.4",
-		UnixSocketPath: "/var/lib/ezbookkeeping/ezbookkeeping.sock",
-		Protocol:       "socket",
-		SecretKey:      "secretkey",
+		HttpAddr:  "1.2.3.4",
+		HttpPort:  8080,
+		SecretKey: "secretkey",
 	})
 	requestId := generator.GenerateRequestId("127.0.0.1", 20000)
 	requestIdInfo := generator.parseRequestIdInfo(generator.parseRequestIdFromUuid(requestId))
@@ -41,17 +40,16 @@ func TestNewDefaultRequestIdGenerator_UnixSocket(t *testing.T) {
 	actualServerUniqId := requestIdInfo.ServerUniqId
 	assert.Equal(t, expectedServerUniqId, actualServerUniqId)
 
-	expectedInstanceUniqId := uint16(0x2cc) // crc32("/var/lib/ezbookkeeping/ezbookkeeping.sock" + "_" + "secretkey") & 0xFFFF
+	expectedInstanceUniqId := uint16(0x0e79) // crc32("8080" + "_" + "secretkey") & 0xFFFF
 	actualInstanceUniqId := requestIdInfo.InstanceUniqId
 	assert.Equal(t, expectedInstanceUniqId, actualInstanceUniqId)
 }
 
 func TestNewDefaultRequestIdGenerator_ClientIpv4(t *testing.T) {
 	generator, _ := NewDefaultRequestIdGenerator(core.NewNullContext(), &settings.Config{
-		HttpAddr:       "1.2.3.4",
-		UnixSocketPath: "/var/lib/ezbookkeeping/ezbookkeeping.sock",
-		Protocol:       "socket",
-		SecretKey:      "secretkey",
+		HttpAddr:  "1.2.3.4",
+		HttpPort:  8080,
+		SecretKey: "secretkey",
 	})
 	requestId := generator.GenerateRequestId("127.0.0.1", 20000)
 	requestIdInfo := generator.parseRequestIdInfo(generator.parseRequestIdFromUuid(requestId))
@@ -78,10 +76,9 @@ func TestNewDefaultRequestIdGenerator_ClientIpv4(t *testing.T) {
 
 func TestNewDefaultRequestIdGenerator_ClientIpv6(t *testing.T) {
 	generator, _ := NewDefaultRequestIdGenerator(core.NewNullContext(), &settings.Config{
-		HttpAddr:       "1.2.3.4",
-		UnixSocketPath: "/var/lib/ezbookkeeping/ezbookkeeping.sock",
-		Protocol:       "socket",
-		SecretKey:      "secretkey",
+		HttpAddr:  "1.2.3.4",
+		HttpPort:  8080,
+		SecretKey: "secretkey",
 	})
 	requestId := generator.GenerateRequestId("2001:abc:def:1234::1", 20000)
 	requestIdInfo := generator.parseRequestIdInfo(generator.parseRequestIdFromUuid(requestId))
@@ -108,10 +105,9 @@ func TestNewDefaultRequestIdGenerator_ClientIpv6(t *testing.T) {
 
 func TestNewDefaultRequestIdGenerator_ClientPort(t *testing.T) {
 	generator, _ := NewDefaultRequestIdGenerator(core.NewNullContext(), &settings.Config{
-		HttpAddr:       "1.2.3.4",
-		UnixSocketPath: "/var/lib/ezbookkeeping/ezbookkeeping.sock",
-		Protocol:       "socket",
-		SecretKey:      "secretkey",
+		HttpAddr:  "1.2.3.4",
+		HttpPort:  8080,
+		SecretKey: "secretkey",
 	})
 	requestId := generator.GenerateRequestId("127.0.0.1", 0)
 	requestIdInfo := generator.parseRequestIdInfo(generator.parseRequestIdFromUuid(requestId))

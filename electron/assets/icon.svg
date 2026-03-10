@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#0f3460"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#daa520"/>
+      <stop offset="50%" style="stop-color:#ffd700"/>
+      <stop offset="100%" style="stop-color:#c67e48"/>
+    </linearGradient>
+    <linearGradient id="silver" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8e8e8"/>
+      <stop offset="100%" style="stop-color:#b0b0b0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#c67e48;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#c67e48;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="url(#bg)"/>
+
+  <!-- Warm glow behind badger -->
+  <circle cx="256" cy="240" r="160" fill="url(#glow)"/>
+
+  <!-- Honey Badger Body -->
+  <ellipse cx="256" cy="280" rx="95" ry="65" fill="#1a1a1a"/>
+  <!-- White stripe on body -->
+  <ellipse cx="256" cy="260" rx="90" ry="55" fill="#c0c0c0"/>
+  <!-- Dark lower body overlap -->
+  <ellipse cx="256" cy="300" rx="85" ry="45" fill="#1a1a1a"/>
+
+  <!-- Badger Head -->
+  <ellipse cx="256" cy="195" rx="52" ry="42" fill="#1a1a1a"/>
+  <!-- White head stripe -->
+  <path d="M 240 155 Q 256 150 272 155 L 268 200 Q 256 205 244 200 Z" fill="url(#silver)"/>
+  <!-- White cheeks -->
+  <ellipse cx="232" cy="200" rx="18" ry="14" fill="#c0c0c0"/>
+  <ellipse cx="280" cy="200" rx="18" ry="14" fill="#c0c0c0"/>
+
+  <!-- Ears -->
+  <ellipse cx="222" cy="165" rx="12" ry="10" fill="#2a2a2a"/>
+  <ellipse cx="290" cy="165" rx="12" ry="10" fill="#2a2a2a"/>
+  <ellipse cx="222" cy="165" rx="7" ry="6" fill="#4a4a4a"/>
+  <ellipse cx="290" cy="165" rx="7" ry="6" fill="#4a4a4a"/>
+
+  <!-- Eyes -->
+  <ellipse cx="240" cy="195" rx="8" ry="6" fill="#fff"/>
+  <ellipse cx="272" cy="195" rx="8" ry="6" fill="#fff"/>
+  <circle cx="242" cy="195" r="4" fill="#111"/>
+  <circle cx="274" cy="195" r="4" fill="#111"/>
+  <!-- Eye highlights -->
+  <circle cx="244" cy="193" r="1.5" fill="#fff"/>
+  <circle cx="276" cy="193" r="1.5" fill="#fff"/>
+
+  <!-- Nose -->
+  <ellipse cx="256" cy="210" rx="8" ry="5" fill="#333"/>
+  <ellipse cx="256" cy="209" rx="4" ry="2" fill="#555"/>
+
+  <!-- Slight smile -->
+  <path d="M 248 216 Q 256 222 264 216" fill="none" stroke="#555" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Arms holding coin -->
+  <path d="M 175 270 Q 165 250 170 235 Q 175 225 185 230" fill="#1a1a1a" stroke="#1a1a1a" stroke-width="8" stroke-linecap="round"/>
+  <path d="M 337 270 Q 347 250 342 235 Q 337 225 327 230" fill="#1a1a1a" stroke="#1a1a1a" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Gold coin held by badger (left paw) -->
+  <circle cx="172" cy="228" r="22" fill="url(#gold)" stroke="#b8860b" stroke-width="2"/>
+  <text x="172" y="235" text-anchor="middle" font-size="22" font-weight="bold" fill="#8b6914" font-family="serif">$</text>
+
+  <!-- Small floating coins -->
+  <circle cx="330" cy="160" r="14" fill="url(#gold)" stroke="#b8860b" stroke-width="1.5" opacity="0.8"/>
+  <text x="330" y="166" text-anchor="middle" font-size="14" font-weight="bold" fill="#8b6914" font-family="serif">$</text>
+
+  <circle cx="155" cy="150" r="11" fill="url(#gold)" stroke="#b8860b" stroke-width="1.5" opacity="0.6"/>
+  <text x="155" y="155" text-anchor="middle" font-size="12" font-weight="bold" fill="#8b6914" font-family="serif">$</text>
+
+  <!-- Mini chart/graph behind badger -->
+  <g transform="translate(310, 280)" opacity="0.6">
+    <rect x="0" y="20" width="8" height="20" rx="2" fill="#4ecdc4"/>
+    <rect x="12" y="10" width="8" height="30" rx="2" fill="#c67e48"/>
+    <rect x="24" y="15" width="8" height="25" rx="2" fill="#45b7d1"/>
+    <rect x="36" y="5" width="8" height="35" rx="2" fill="#96ceb4"/>
+  </g>
+
+  <!-- App name text -->
+  <text x="256" y="390" text-anchor="middle" font-size="48" font-weight="800" fill="url(#gold)" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" letter-spacing="4">HB MOXIE</text>
+
+  <!-- Tagline -->
+  <text x="256" y="415" text-anchor="middle" font-size="13" fill="rgba(255,255,255,0.5)" font-family="'Segoe UI', Arial, sans-serif" letter-spacing="4">PERSONAL FINANCE MANAGER</text>
+
+  <!-- Decorative border ring -->
+  <circle cx="256" cy="256" r="248" fill="none" stroke="url(#gold)" stroke-width="1.5" opacity="0.2"/>
+  <circle cx="256" cy="256" r="244" fill="none" stroke="url(#gold)" stroke-width="0.5" opacity="0.1"/>
+</svg>

@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/mayswind/ezbookkeeping/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
 )
 
 func TestGetCategoryMapByList_EmptyList(t *testing.T) {

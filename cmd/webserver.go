@@ -3,39 +3,37 @@ package cmd
 import (
 	"fmt"
 	"net/http"
-	"path/filepath"
 	"time"
 
 	"github.com/gin-contrib/cache"
 	"github.com/gin-contrib/cache/persistence"
-	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	"github.com/urfave/cli/v3"
 
-	"github.com/mayswind/ezbookkeeping/pkg/api"
-	"github.com/mayswind/ezbookkeeping/pkg/auth/oauth2"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/cron"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/mcp"
-	"github.com/mayswind/ezbookkeeping/pkg/middlewares"
-	"github.com/mayswind/ezbookkeeping/pkg/requestid"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
-	"github.com/mayswind/ezbookkeeping/pkg/validators"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/api"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/auth/oauth2"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/cron"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/mcp"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/middlewares"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/requestid"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/validators"
 )
 
 // WebServer represents the server command
 var WebServer = &cli.Command{
 	Name:  "server",
-	Usage: "ezBookkeeping web server operation",
+	Usage: "HB Moxie web server operation",
 	Commands: []*cli.Command{
 		{
 			Name:   "run",
-			Usage:  "Run ezBookkeeping web server",
+			Usage:  "Run HB Moxie web server",
 			Action: bindAction(startWebServer),
 		},
 	},
@@ -47,8 +45,6 @@ func startWebServer(c *core.CliContext) error {
 	if err != nil {
 		return err
 	}
-
-	log.BootInfof(c, "[webserver.startWebServer] static root path is %s", config.StaticRootPath)
 
 	if config.AutoUpdateDatabase {
 		err = updateAllDatabaseTablesStructure(c)
@@ -99,14 +95,8 @@ func startWebServer(c *core.CliContext) error {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	workboxFileNames := utils.ListFileNamesWithPrefixAndSuffix(config.StaticRootPath, "workbox-", ".js")
-
 	router := gin.New()
 	router.Use(bindMiddleware(middlewares.Recovery))
-
-	if config.EnableGZip {
-		router.Use(gzip.Gzip(gzip.DefaultCompression))
-	}
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		_ = v.RegisterValidation("notBlank", validators.NotBlank)
@@ -124,56 +114,7 @@ func startWebServer(c *core.CliContext) error {
 	router.NoMethod(bindApi(api.Default.MethodNotAllowed))
 
 	serverSettingsCacheStore := persistence.NewInMemoryStore(time.Minute)
-
-	router.StaticFile("/", filepath.Join(config.StaticRootPath, "index.html"))
-	router.Static("/js", filepath.Join(config.StaticRootPath, "js"))
-	router.Static("/css", filepath.Join(config.StaticRootPath, "css"))
-	router.Static("/img", filepath.Join(config.StaticRootPath, "img"))
-	router.Static("/fonts", filepath.Join(config.StaticRootPath, "fonts"))
-
-	router.StaticFile("robots.txt", filepath.Join(config.StaticRootPath, "robots.txt"))
-	router.StaticFile("favicon.ico", filepath.Join(config.StaticRootPath, "favicon.ico"))
-	router.StaticFile("favicon.png", filepath.Join(config.StaticRootPath, "favicon.png"))
-	router.StaticFile("touchicon.png", filepath.Join(config.StaticRootPath, "touchicon.png"))
-	router.StaticFile("manifest.json", filepath.Join(config.StaticRootPath, "manifest.json"))
-	router.StaticFile("sw.js", filepath.Join(config.StaticRootPath, "sw.js"))
 	router.GET("/server_settings.js", bindCachedJs(api.ServerSettings.ServerSettingsJavascriptHandler, serverSettingsCacheStore))
-
-	for i := 0; i < len(workboxFileNames); i++ {
-		router.StaticFile("/"+workboxFileNames[i], filepath.Join(config.StaticRootPath, workboxFileNames[i]))
-	}
-
-	router.StaticFile("/mobile", filepath.Join(config.StaticRootPath, "mobile.html"))
-	router.Static("/mobile/js", filepath.Join(config.StaticRootPath, "js"))
-	router.Static("/mobile/css", filepath.Join(config.StaticRootPath, "css"))
-	router.Static("/mobile/img", filepath.Join(config.StaticRootPath, "img"))
-	router.Static("/mobile/fonts", filepath.Join(config.StaticRootPath, "fonts"))
-	router.StaticFile("/mobile/favicon.ico", filepath.Join(config.StaticRootPath, "favicon.ico"))
-	router.StaticFile("/mobile/favicon.png", filepath.Join(config.StaticRootPath, "favicon.png"))
-	router.StaticFile("/mobile/touchicon.png", filepath.Join(config.StaticRootPath, "touchicon.png"))
-	router.StaticFile("/mobile/manifest.json", filepath.Join(config.StaticRootPath, "manifest.json"))
-	router.StaticFile("/mobile/sw.js", filepath.Join(config.StaticRootPath, "sw.js"))
-	router.GET("/mobile/server_settings.js", bindCachedJs(api.ServerSettings.ServerSettingsJavascriptHandler, serverSettingsCacheStore))
-
-	for i := 0; i < len(workboxFileNames); i++ {
-		router.StaticFile("/mobile/"+workboxFileNames[i], filepath.Join(config.StaticRootPath, workboxFileNames[i]))
-	}
-
-	router.StaticFile("/desktop", filepath.Join(config.StaticRootPath, "desktop.html"))
-	router.Static("/desktop/js", filepath.Join(config.StaticRootPath, "js"))
-	router.Static("/desktop/css", filepath.Join(config.StaticRootPath, "css"))
-	router.Static("/desktop/img", filepath.Join(config.StaticRootPath, "img"))
-	router.Static("/desktop/fonts", filepath.Join(config.StaticRootPath, "fonts"))
-	router.StaticFile("/desktop/favicon.ico", filepath.Join(config.StaticRootPath, "favicon.ico"))
-	router.StaticFile("/desktop/favicon.png", filepath.Join(config.StaticRootPath, "favicon.png"))
-	router.StaticFile("/desktop/touchicon.png", filepath.Join(config.StaticRootPath, "touchicon.png"))
-	router.StaticFile("/desktop/manifest.json", filepath.Join(config.StaticRootPath, "manifest.json"))
-	router.StaticFile("/desktop/sw.js", filepath.Join(config.StaticRootPath, "sw.js"))
-	router.GET("/desktop/server_settings.js", bindCachedJs(api.ServerSettings.ServerSettingsJavascriptHandler, serverSettingsCacheStore))
-
-	for i := 0; i < len(workboxFileNames); i++ {
-		router.StaticFile("/desktop/"+workboxFileNames[i], filepath.Join(config.StaticRootPath, workboxFileNames[i]))
-	}
 
 	if config.AvatarProvider == core.USER_AVATAR_PROVIDER_INTERNAL {
 		avatarRoute := router.Group("/avatar")
@@ -224,13 +165,6 @@ func startWebServer(c *core.CliContext) error {
 		}
 	}
 
-	qrCodeRoute := router.Group("/qrcode")
-	qrCodeRoute.Use(bindMiddleware(middlewares.RequestId(config)))
-	{
-		qrCodeCacheStore := persistence.NewInMemoryStore(time.Minute)
-		qrCodeRoute.GET("/mobile_url.png", bindCachedImage(api.QrCodes.MobileUrlQrCodeHandler, qrCodeCacheStore))
-	}
-
 	if config.EnableMCPServer {
 		mcpRoute := router.Group("/mcp")
 		mcpRoute.Use(bindMiddleware(middlewares.RequestId(config)))
@@ -269,6 +203,10 @@ func startWebServer(c *core.CliContext) error {
 	{
 		if config.EnableInternalAuth {
 			apiRoute.POST("/authorize.json", bindApiWithTokenUpdate(api.Authorizations.AuthorizeHandler, config))
+		}
+
+		if config.EnableDesktopAutoLogin {
+			apiRoute.POST("/auto_login.json", bindApiWithTokenUpdate(api.Authorizations.DesktopAutoLoginHandler, config))
 		}
 
 		if config.EnableInternalAuth && config.EnableTwoFactor {
@@ -366,9 +304,16 @@ func startWebServer(c *core.CliContext) error {
 			apiV1Route.POST("/data/clear/transactions/by_account.json", bindApi(api.DataManagements.ClearAllTransactionsByAccountHandler))
 
 			if config.EnableDataExport {
-				apiV1Route.GET("/data/export.csv", bindCsv(api.DataManagements.ExportDataToEzbookkeepingCSVHandler))
-				apiV1Route.GET("/data/export.tsv", bindTsv(api.DataManagements.ExportDataToEzbookkeepingTSVHandler))
+				apiV1Route.GET("/data/export.csv", bindCsv(api.DataManagements.ExportDataToHBMoxieCSVHandler))
+				apiV1Route.GET("/data/export.tsv", bindTsv(api.DataManagements.ExportDataToHBMoxieTSVHandler))
 			}
+
+			// Backups & Archives
+			apiV1Route.GET("/backups/list.json", bindApi(api.Backups.BackupListHandler))
+			apiV1Route.POST("/backups/create.json", bindApi(api.Backups.BackupCreateHandler))
+			apiV1Route.GET("/backups/download.zip", bindZip(api.Backups.BackupDownloadHandler))
+			apiV1Route.POST("/backups/restore.json", bindApi(api.Backups.BackupRestoreHandler))
+			apiV1Route.POST("/backups/delete.json", bindApi(api.Backups.BackupDeleteHandler))
 
 			// Accounts
 			apiV1Route.GET("/accounts/list.json", bindApi(api.Accounts.AccountListHandler))
@@ -472,20 +417,10 @@ func startWebServer(c *core.CliContext) error {
 		}
 	}
 
-	listenAddr := fmt.Sprintf("%s:%d", config.HttpAddr, config.HttpPort)
+	listenAddr := fmt.Sprintf("127.0.0.1:%d", config.HttpPort)
 
-	if config.Protocol == settings.SCHEME_SOCKET {
-		log.BootInfof(c, "[webserver.startWebServer] will run at socks:%s", config.UnixSocketPath)
-		err = router.RunUnix(config.UnixSocketPath)
-	} else if config.Protocol == settings.SCHEME_HTTP {
-		log.BootInfof(c, "[webserver.startWebServer] will run at http://%s", listenAddr)
-		err = router.Run(listenAddr)
-	} else if config.Protocol == settings.SCHEME_HTTPS {
-		log.BootInfof(c, "[webserver.startWebServer] will run at https://%s", listenAddr)
-		err = router.RunTLS(listenAddr, config.CertFile, config.CertKeyFile)
-	} else {
-		err = errs.ErrInvalidProtocol
-	}
+	log.BootInfof(c, "[webserver.startWebServer] will run at http://%s", listenAddr)
+	err = router.Run(listenAddr)
 
 	if err != nil {
 		log.BootErrorf(c, "[webserver.startWebServer] cannot start, because %s", err)
@@ -582,18 +517,6 @@ func bindJSONRPCApi(fns map[string]core.JSONRPCApiHandlerFunc, skipMethods map[s
 	}
 }
 
-func bindEventStreamApi(fn core.EventStreamApiHandlerFunc) gin.HandlerFunc {
-	return func(ginCtx *gin.Context) {
-		c := core.WrapWebContext(ginCtx)
-		utils.SetEventStreamHeader(c)
-		err := fn(c)
-
-		if err != nil {
-			utils.WriteEventStreamJsonErrorResult(c, err)
-		}
-	}
-}
-
 func bindCachedJs(fn core.DataHandlerFunc, store persistence.CacheStore) gin.HandlerFunc {
 	return cache.CachePage(store, time.Minute, func(ginCtx *gin.Context) {
 		c := core.WrapWebContext(ginCtx)
@@ -633,6 +556,19 @@ func bindTsv(fn core.DataHandlerFunc) gin.HandlerFunc {
 	}
 }
 
+func bindZip(fn core.DataHandlerFunc) gin.HandlerFunc {
+	return func(ginCtx *gin.Context) {
+		c := core.WrapWebContext(ginCtx)
+		result, fileName, err := fn(c)
+
+		if err != nil {
+			utils.PrintDataErrorResult(c, "text/text", err)
+		} else {
+			utils.PrintDataSuccessResult(c, "application/zip", fileName, result)
+		}
+	}
+}
+
 func bindImage(fn core.ImageHandlerFunc) gin.HandlerFunc {
 	return func(ginCtx *gin.Context) {
 		c := core.WrapWebContext(ginCtx)
@@ -644,19 +580,6 @@ func bindImage(fn core.ImageHandlerFunc) gin.HandlerFunc {
 			utils.PrintDataSuccessResult(c, contentType, "", result)
 		}
 	}
-}
-
-func bindCachedImage(fn core.ImageHandlerFunc, store persistence.CacheStore) gin.HandlerFunc {
-	return cache.CachePage(store, time.Minute, func(ginCtx *gin.Context) {
-		c := core.WrapWebContext(ginCtx)
-		result, contentType, err := fn(c)
-
-		if err != nil {
-			utils.PrintDataErrorResult(c, "text/text", err)
-		} else {
-			utils.PrintDataSuccessResult(c, contentType, "", result)
-		}
-	})
 }
 
 func bindProxy(fn core.ProxyHandlerFunc) gin.HandlerFunc {

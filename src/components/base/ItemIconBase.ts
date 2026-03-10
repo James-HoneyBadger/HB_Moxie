@@ -9,10 +9,9 @@ import { isNumber } from '@/lib/common.ts';
 type IconItemStyleName = string;
 type IconItemStyleValue = ColorValue | string | number | undefined;
 type CommonIconItemType = 'account' | 'category' | 'fixed';
-type MobileIconItemType = 'fixed-f7';
 
 export interface CommonIconProps {
-    iconType: CommonIconItemType | MobileIconItemType;
+    iconType: CommonIconItemType;
     iconId: string | number;
     color?: ColorValue;
     defaultColor?: ColorStyleValue;

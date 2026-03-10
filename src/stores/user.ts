@@ -21,6 +21,13 @@ import type {
     DataStatisticsResponse
 } from '@/models/data_management.ts';
 
+import type {
+    BackupCreateRequest,
+    BackupRestoreRequest,
+    BackupDeleteRequest,
+    BackupListResponse
+} from '@/models/backup.ts';
+
 import {
     isObject,
     isString,
@@ -408,6 +415,123 @@ export const useUserStore = defineStore('user', () => {
         });
     }
 
+    function getBackupList(): Promise<BackupListResponse[]> {
+        return new Promise((resolve, reject) => {
+            services.getBackupList().then(response => {
+                const data = response.data;
+
+                if (!data || !data.success || !data.result) {
+                    reject({ message: 'Unable to retrieve backup list' });
+                    return;
+                }
+
+                resolve(data.result);
+            }).catch(error => {
+                logger.error('failed to retrieve backup list', error);
+
+                if (error.response && error.response.data && error.response.data.errorMessage) {
+                    reject({ error: error.response.data });
+                } else if (!error.processed) {
+                    reject({ message: 'Unable to retrieve backup list' });
+                } else {
+                    reject(error);
+                }
+            });
+        });
+    }
+
+    function createBackup(req: BackupCreateRequest): Promise<BackupListResponse> {
+        return new Promise((resolve, reject) => {
+            services.createBackup(req).then(response => {
+                const data = response.data;
+
+                if (!data || !data.success || !data.result) {
+                    reject({ message: 'Unable to create backup' });
+                    return;
+                }
+
+                resolve(data.result);
+            }).catch(error => {
+                logger.error('failed to create backup', error);
+
+                if (error.response && error.response.data && error.response.data.errorMessage) {
+                    reject({ error: error.response.data });
+                } else if (!error.processed) {
+                    reject({ message: 'Unable to create backup' });
+                } else {
+                    reject(error);
+                }
+            });
+        });
+    }
+
+    function downloadBackup(fileName: string): Promise<Blob> {
+        return new Promise((resolve, reject) => {
+            services.downloadBackup(fileName).then(response => {
+                const blob = new Blob([response.data], { type: 'application/zip' });
+                resolve(blob);
+            }).catch(error => {
+                logger.error('failed to download backup', error);
+
+                if (!error.processed) {
+                    reject({ message: 'Unable to download backup' });
+                } else {
+                    reject(error);
+                }
+            });
+        });
+    }
+
+    function restoreBackup(req: BackupRestoreRequest): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            services.restoreBackup(req).then(response => {
+                const data = response.data;
+
+                if (!data || !data.success || !data.result) {
+                    reject({ message: 'Unable to restore backup' });
+                    return;
+                }
+
+                resolve(data.result);
+            }).catch(error => {
+                logger.error('failed to restore backup', error);
+
+                if (error.response && error.response.data && error.response.data.errorMessage) {
+                    reject({ error: error.response.data });
+                } else if (!error.processed) {
+                    reject({ message: 'Unable to restore backup' });
+                } else {
+                    reject(error);
+                }
+            });
+        });
+    }
+
+    function deleteBackup(req: BackupDeleteRequest): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            services.deleteBackup(req).then(response => {
+                const data = response.data;
+
+                if (!data || !data.success || !data.result) {
+                    reject({ message: 'Unable to delete backup' });
+                    return;
+                }
+
+                resolve(data.result);
+            }).catch(error => {
+                logger.error('failed to delete backup', error);
+
+                if (error.response && error.response.data && error.response.data.errorMessage) {
+                    reject({ error: error.response.data });
+                } else if (!error.processed) {
+                    reject({ message: 'Unable to delete backup' });
+                } else {
+                    reject(error);
+                }
+            });
+        });
+    }
+
     function getUserAvatarUrl(userInfoOrAvatarUrl: UserBasicInfo | string | null, disableBrowserCache: boolean | string): string | null {
         let avatarUrl = '';
 
@@ -463,6 +587,11 @@ export const useUserStore = defineStore('user', () => {
         disableUserApplicationCloudSettings,
         getUserDataStatistics,
         getExportedUserData,
+        getBackupList,
+        createBackup,
+        downloadBackup,
+        restoreBackup,
+        deleteBackup,
         getUserAvatarUrl
     };
 });

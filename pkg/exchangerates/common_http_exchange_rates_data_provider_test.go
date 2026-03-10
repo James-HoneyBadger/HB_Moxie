@@ -8,10 +8,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 func TestExchangeRatesApiLatestExchangeRateHandler_BankOfCanadaDataSource(t *testing.T) {
@@ -281,13 +281,17 @@ func TestExchangeRatesApiLatestExchangeRateHandler_CentralBankOfUzbekistanDataSo
 }
 
 func executeLatestExchangeRateHandler(t *testing.T, dataSourceType string) *models.LatestExchangeRateResponse {
+	if testing.Short() {
+		t.Skip("skipping external API test in short mode")
+	}
+
 	if os.Getenv("BUILD_PIPELINE") == "1" && os.Getenv("CHECK_3RD_API") != "1" {
 		return nil
 	}
 
 	config := &settings.Config{
 		ExchangeRatesDataSource:     dataSourceType,
-		ExchangeRatesRequestTimeout: 10000,
+		ExchangeRatesRequestTimeout: 30000,
 		ExchangeRatesProxy:          "system",
 		ExchangeRatesSkipTLSVerify:  true,
 	}

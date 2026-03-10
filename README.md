@@ -1,159 +1,96 @@
-# ezBookkeeping
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/mayswind/ezbookkeeping/blob/master/LICENSE)
-[![Go Report](https://goreportcard.com/badge/github.com/mayswind/ezbookkeeping)](https://goreportcard.com/report/github.com/mayswind/ezbookkeeping)
-[![Latest Release](https://img.shields.io/github/release/mayswind/ezbookkeeping.svg?style=flat)](https://github.com/mayswind/ezbookkeeping/releases)
-[![Latest Build](https://img.shields.io/github/actions/workflow/status/mayswind/ezbookkeeping/build-snapshot.yml?branch=main)](https://github.com/mayswind/ezbookkeeping/actions)
-[![Latest Docker Image Size](https://img.shields.io/docker/image-size/mayswind/ezbookkeeping.svg?style=flat)](https://hub.docker.com/r/mayswind/ezbookkeeping)
-[![Docker Pulls](https://img.shields.io/docker/pulls/mayswind/ezbookkeeping)](https://hub.docker.com/r/mayswind/ezbookkeeping)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/mayswind/ezbookkeeping)
+# HB Moxie
 
-[![Recommend By HelloGitHub](https://api.hellogithub.com/v1/widgets/recommend.svg?rid=ded5af09da574ec1811ddb154f1b2093&claim_uid=LT7EZxeBukCnh0K)](https://hellogithub.com/en/repository/mayswind/ezbookkeeping)
-[![Trending](https://trendshift.io/api/badge/repositories/12917)](https://trendshift.io/repositories/12917)
+A standalone desktop personal finance management application.
 
-## Introduction
-ezBookkeeping is a lightweight, self-hosted personal finance app with a user-friendly interface and powerful bookkeeping features. It helps you record daily transactions, import data from various sources, and quickly search and filter your bills. You can analyze historical data using built-in charts or perform custom queries with your own chart dimensions to better understand spending patterns and financial trends. ezBookkeeping is easy to deploy, and you can start it with just one single Docker command. Designed to be resource-efficient, it runs smoothly on devices such as Raspberry Pi, NAS, and MicroServers.
-
-ezBookkeeping offers tailored interfaces for both mobile and desktop devices. With support for PWA (Progressive Web Apps), you can even [add it to your mobile home screen](https://raw.githubusercontent.com/wiki/mayswind/ezbookkeeping/img/mobile/add_to_home_screen.gif) and use it like a native app.
-
-Live Demo: [https://ezbookkeeping-demo.mayswind.net](https://ezbookkeeping-demo.mayswind.net)
+HB Moxie is a self-contained Electron desktop application for individuals who want full control over their financial data. All data is stored locally on your machine — no cloud, no browser, no external services required.
 
 ## Features
-- **Open Source & Self-Hosted**
-    - Built for privacy and control
-- **Lightweight & Fast**
-    - Minimal resource usage, runs smoothly even on low-resource devices
-- **Easy Installation**
-    - Docker support
-    - Supports SQLite, MySQL, PostgreSQL
-    - Cross-platform (Windows, macOS, Linux)
-    - Works on x86, amd64, ARM architectures
-- **User-Friendly Interface**
-    - UI optimized for both mobile and desktop
-    - PWA support for native-like mobile experience
-    - Dark mode
-- **AI-Powered Features**
-    - Receipt image recognition
-    - MCP (Model Context Protocol) support for AI integration
-    - API command-line script tools for AI integration
-- **Powerful Bookkeeping**
-    - Two-level accounts and categories
-    - Image attachments for transactions
-    - Location tracking with maps
-    - Scheduled transactions
-    - Advanced filtering, search, visualization and analysis
-- **Localization & Internationalization**
-    - Multi-language and multi-currency support
-    - Multiple exchange rate sources with automatic updates
-    - Multi-timezone support
-    - Custom formats for dates, numbers and currencies
-- **Security**
-    - Two-factor authentication (2FA)
-    - OIDC external authentication
-    - Login rate limiting
-    - Application lock (PIN code / WebAuthn)
-- **Data Import & Export**
-    - Supports CSV, OFX, QFX, QIF, IIF, Camt.052, Camt.053, MT940, GnuCash, Firefly III, Beancount and more
 
-For a full list of features, visit the [Full Feature List](https://ezbookkeeping.mayswind.net/comparison/).
+- **Desktop Only** — Native Electron application for Windows, macOS, and Linux. No browser needed.
+- **Self-Contained** — Go backend runs as a child process inside the Electron app.
+- **System Tray** — Minimize to tray, global keyboard shortcuts, desktop notifications.
+- **Auto-Login** — Single-user mode skips the login screen automatically.
+- **Automatic Backups** — Scheduled backups with configurable retention.
+- **Multiple Databases** — SQLite (default), MySQL, or PostgreSQL.
+- **Dark Mode** — Full dark theme support with automatic system detection.
+- **Multi-Currency** — 170+ currencies with automatic exchange rate updates from 16 data sources.
+- **Multi-Language** — 19 languages including English, German, French, Spanish, Italian, Japanese, Korean, Chinese, and more.
+- **Multi-Timezone** — Per-user timezone configuration with timezone-aware statistics.
+- **Data Import** — Import from CSV, TSV, Excel, OFX, QFX, QIF, IIF, Camt.052/053, MT940, GnuCash, Firefly III, Beancount, and more.
+- **Data Export** — Export transactions to CSV, TSV, or ZIP archives.
+- **Backups** — Create, download, restore, and manage full database backups.
+- **AI Receipt Recognition** — Extract transaction data from receipt images using LLM providers (OpenAI, Anthropic, Google AI, Ollama, LM Studio, and others).
+- **MCP Support** — Model Context Protocol integration for AI agent access to your financial data.
+- **Scheduled Transactions** — Recurring transaction automation via built-in cron jobs.
+- **Transaction Templates** — Save and reuse common transaction patterns.
+- **Insights Explorer** — Custom data queries with chart and table visualization.
+- **Account Reconciliation** — Reconciliation statement support for account balancing.
+- **Map Integration** — Geotagging with 13 map providers (OpenStreetMap, Google Maps, Baidu, Amap, and others).
+- **Cloud Settings Sync** — Sync application preferences across sessions.
+- **API Tokens** — Generate tokens for programmatic access and automation.
 
-## Screenshots
-### Desktop Version
-[![ezBookkeeping](https://raw.githubusercontent.com/wiki/mayswind/ezbookkeeping/img/desktop/en.png)](https://raw.githubusercontent.com/wiki/mayswind/ezbookkeeping/img/desktop/en.png)
+## Quick Start
 
-### Mobile Version
-[![ezBookkeeping](https://raw.githubusercontent.com/wiki/mayswind/ezbookkeeping/img/mobile/en.png)](https://raw.githubusercontent.com/wiki/mayswind/ezbookkeeping/img/mobile/en.png)
+### Run the Desktop App
 
-## Installation
-### Run with Docker
-Visit [Docker Hub](https://hub.docker.com/r/mayswind/ezbookkeeping) to see all images and tags.
-
-**Latest Release:**
-
-    $ docker run -p8080:8080 mayswind/ezbookkeeping
-
-**Latest Daily Build:**
-
-    $ docker run -p8080:8080 mayswind/ezbookkeeping:latest-snapshot
-
-### Install from Binary
-Download the latest release: [https://github.com/mayswind/ezbookkeeping/releases](https://github.com/mayswind/ezbookkeeping/releases)
-
-**Linux / macOS**
-
-    $ ./ezbookkeeping server run
-
-**Windows**
-
-    > .\ezbookkeeping.exe server run
-
-By default, ezBookkeeping listens on port 8080. You can then visit `http://{YOUR_HOST_ADDRESS}:8080/` .
+```bash
+cd electron
+npm install
+npm start
+```
 
 ### Build from Source
-Make sure you have [Golang](https://golang.org/), [GCC](https://gcc.gnu.org/), [Node.js](https://nodejs.org/) and [NPM](https://www.npmjs.com/) installed. Then download the source code, and follow these steps:
 
-**Linux / macOS**
+```bash
+./scripts/build.sh package
+```
 
-    $ ./build.sh package -o ezbookkeeping.tar.gz
+Then extract the archive and run the binary. See [docs/INSTALLATION.md](docs/INSTALLATION.md) for complete instructions.
 
-All the files will be packaged in `ezbookkeeping.tar.gz`.
+## Default Credentials
 
-**Windows**
+On first launch with no existing database, HB Moxie creates a default administrator account with a random password displayed in the startup log. If auto-login is enabled (default), the login screen is skipped entirely.
 
-    > .\build.bat package -o ezbookkeeping.zip
+## Keyboard Shortcuts
 
-or
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+Shift+N` / `Cmd+Shift+N` | Quick-add transaction |
+| `Ctrl+Shift+M` / `Cmd+Shift+M` | Show/focus main window |
 
-    PS > .\build.ps1 package -Output ezbookkeeping.zip
+## Admin Tool
 
-All the files will be packaged in `ezbookkeeping.zip`.
+A standalone Fyne-based desktop admin tool is available in the `admin/` directory for database management, user administration, and diagnostics.
 
-You can also build a Docker image. Make sure you have [Docker](https://www.docker.com/) installed, then follow these steps:
-
-**Linux**
-
-    $ ./build.sh docker
-
-## Contributing
-We welcome contributions of all kinds.
-
-If you find a bug, please [submit an issue](https://github.com/mayswind/ezbookkeeping/issues) on GitHub.
-
-If you would like to contribute code, you can fork the repository and open a pull request.
-
-Improvements to documentation, feature suggestions, and other forms of feedback are also appreciated.
-
-You can view existing contributors on the [Contributor Graph](https://github.com/mayswind/ezbookkeeping/graphs/contributors).
-
-## Translating
-Help make ezBookkeeping accessible to users around the world. We welcome help to improve existing translations or add new ones. If you would like to contribute a translation, please refer to the [translation guide](https://ezbookkeeping.mayswind.net/translating).
-
-Currently available translations:
-
-| Tag | Language | Contributors |
-| --- | --- | --- |
-| de | Deutsch | [@chrgm](https://github.com/chrgm) |
-| en | English | / |
-| es | Español | [@Miguelonlonlon](https://github.com/Miguelonlonlon), [@abrugues](https://github.com/abrugues), [@AndresTeller](https://github.com/AndresTeller), [@diegofercri](https://github.com/diegofercri) |
-| fr | Français | [@brieucdlf](https://github.com/brieucdlf) |
-| it | Italiano | [@waron97](https://github.com/waron97) |
-| ja | 日本語 | [@tkymmm](https://github.com/tkymmm) |
-| kn | ಕನ್ನಡ | [@Darshanbm05](https://github.com/Darshanbm05) |
-| ko | 한국어 | [@overworks](https://github.com/overworks) |
-| nl | Nederlands | [@automagics](https://github.com/automagics) |
-| pt-BR | Português (Brasil) | [@thecodergus](https://github.com/thecodergus) |
-| ru | Русский | [@artegoser](https://github.com/artegoser), [@dshemin](https://github.com/dshemin) |
-| sl | Slovenščina | [@thehijacker](https://github.com/thehijacker) |
-| ta | தமிழ் | [@hhharsha36](https://github.com/hhharsha36) |
-| th | ไทย | [@natthavat28](https://github.com/natthavat28) |
-| tr | Türkçe | [@aydnykn](https://github.com/aydnykn) |
-| uk | Українська | [@nktlitvinenko](https://github.com/nktlitvinenko) |
-| vi | Tiếng Việt | [@f97](https://github.com/f97) |
-| zh-Hans | 中文 (简体) | / |
-| zh-Hant | 中文 (繁體) | / |
+```bash
+cd admin
+go run .
+```
 
 ## Documentation
-1. [English](https://ezbookkeeping.mayswind.net)
-1. [中文 (简体)](https://ezbookkeeping.mayswind.net/zh_Hans)
+
+| Document | Description |
+|----------|-------------|
+| [Installation Guide](docs/INSTALLATION.md) | Installation methods: binary, source, Electron packaging |
+| [Configuration Reference](docs/CONFIGURATION.md) | Complete configuration file reference |
+| [User Guide](docs/USER_GUIDE.md) | End-user guide for all application features |
+| [API Reference](docs/API_REFERENCE.md) | REST API endpoint documentation |
+| [Architecture Overview](docs/ARCHITECTURE.md) | System design, project structure, and technology stack |
+| [Development Guide](docs/DEVELOPMENT.md) | Setting up a development environment, building, testing |
+| [Electron Desktop App](docs/ELECTRON.md) | Desktop application build, packaging, and usage |
+| [CLI Reference](docs/CLI_REFERENCE.md) | Command-line interface for server, database, and user management |
+| [Contributing](docs/CONTRIBUTING.md) | Contribution guidelines, code style, and workflow |
+
+## Technology Stack
+
+| Layer    | Technology |
+|----------|------------|
+| Backend  | Go 1.25, Gin, xorm |
+| Frontend | Vue 3, Vuetify 3, TypeScript, Vite |
+| Desktop  | Electron 33 |
+| Database | SQLite 3 / MySQL / PostgreSQL |
+| Build    | Vite 7, Go toolchain, electron-builder |
 
 ## License
-[MIT](https://github.com/mayswind/ezbookkeeping/blob/master/LICENSE)
+
+[MIT License](LICENSE) — Copyright (c) 2020-2026 Honey Badger Universe

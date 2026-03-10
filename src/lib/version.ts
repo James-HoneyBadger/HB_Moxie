@@ -3,9 +3,9 @@ import type { VersionInfo } from '@/core/version.ts';
 import { getBasePath } from './web.ts';
 
 const clientVersionHolder: VersionInfo = {
-    version: __EZBOOKKEEPING_VERSION__,
-    commitHash: __EZBOOKKEEPING_BUILD_COMMIT_HASH__,
-    buildTime: __EZBOOKKEEPING_BUILD_UNIX_TIME__
+    version: __HBMOXIE_VERSION__,
+    commitHash: __HBMOXIE_BUILD_COMMIT_HASH__,
+    buildTime: __HBMOXIE_BUILD_UNIX_TIME__
 };
 
 export function formatDisplayVersion(versionInfo: VersionInfo): string {
@@ -31,7 +31,7 @@ export function formatDisplayVersion(versionInfo: VersionInfo): string {
 }
 
 export function isProduction(): boolean {
-    return __EZBOOKKEEPING_IS_PRODUCTION__;
+    return __HBMOXIE_IS_PRODUCTION__;
 }
 
 export function getClientVersionInfo(): VersionInfo {
@@ -46,13 +46,6 @@ export function getClientBuildTime(): string {
     return clientVersionHolder.buildTime || '';
 }
 
-export function getMobileVersionPath(): string {
-    if (isProduction()) {
-        return getBasePath() + '/mobile#/';
-    } else {
-        return getBasePath() + '/mobile.html#/';
-    }
-}
 export function getDesktopVersionPath(): string {
     if (isProduction()) {
         return getBasePath() + '/desktop#/';

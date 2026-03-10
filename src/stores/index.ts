@@ -80,12 +80,58 @@ export const useRootStore = defineStore('root', () => {
         currentNotification.value = content;
     }
 
-    function generateOAuth2LoginUrl(platform: 'mobile' | 'desktop', clientSessionId: string): string {
+    function generateOAuth2LoginUrl(platform: 'desktop', clientSessionId: string): string {
         return services.generateOAuth2LoginUrl(platform, clientSessionId);
     }
 
-    function generateOAuth2LinkUrl(platform: 'mobile' | 'desktop', clientSessionId: string): string {
+    function generateOAuth2LinkUrl(platform: 'desktop', clientSessionId: string): string {
         return services.generateOAuth2LinkUrl(platform, clientSessionId);
+    }
+
+    /**
+     * Common post-login handler: checks app lock, stores token/user info, sets cloud settings.
+     * Extracted from authorize(), authorize2FA(), and authorizeOAuth2() to eliminate redundancy.
+     */
+    function handleAuthSuccess(result: AuthResponse): void {
+        if (settingsStore.appSettings.applicationLock || hasUserAppLockState()) {
+            const appLockState = getUserAppLockState();
+
+            if (!appLockState || appLockState.username !== result.user?.username) {
+                clearCurrentTokenAndUserInfo(true);
+                settingsStore.setEnableApplicationLock(false);
+                settingsStore.setEnableApplicationLockWebAuthn(false);
+                clearWebAuthnConfig();
+            }
+        }
+
+        settingsStore.setApplicationSettingsFromCloudSettings(result.applicationCloudSettings);
+
+        updateCurrentToken(result.token);
+
+        if (result.user && isObject(result.user)) {
+            userStore.storeUserBasicInfo(result.user);
+        }
+
+        if (result.notificationContent) {
+            setNotificationContent(result.notificationContent);
+        }
+    }
+
+    /**
+     * Common auth error handler: logs and normalizes rejection.
+     */
+    function handleAuthError(error: unknown, operation: string, fallbackMessage: string): never {
+        logger.error(`failed to ${operation}`, error);
+
+        const err = error as Record<string, unknown>;
+
+        if (err && err['processed']) {
+            throw error;
+        } else if (err && err['response'] && (err['response'] as Record<string, unknown>)['data'] && ((err['response'] as Record<string, unknown>)['data'] as Record<string, unknown>)['errorMessage']) {
+            throw { error: (err['response'] as Record<string, unknown>)['data'] };
+        } else {
+            throw { message: fallbackMessage };
+        }
     }
 
     function authorize(req: UserLoginRequest): Promise<AuthResponse> {
@@ -103,35 +149,35 @@ export const useRootStore = defineStore('root', () => {
                     return;
                 }
 
-                if (settingsStore.appSettings.applicationLock || hasUserAppLockState()) {
-                    const appLockState = getUserAppLockState();
-
-                    if (!appLockState || appLockState.username !== data.result.user?.username) {
-                        clearCurrentTokenAndUserInfo(true);
-                        settingsStore.setEnableApplicationLock(false);
-                        settingsStore.setEnableApplicationLockWebAuthn(false);
-                        clearWebAuthnConfig();
-                    }
-                }
-
-                settingsStore.setApplicationSettingsFromCloudSettings(data.result.applicationCloudSettings);
-
-                updateCurrentToken(data.result.token);
-
-                if (data.result.user && isObject(data.result.user)) {
-                    userStore.storeUserBasicInfo(data.result.user);
-                }
-
+                handleAuthSuccess(data.result);
                 resolve(data.result);
             }).catch(error => {
-                logger.error('failed to login', error);
+                try {
+                    handleAuthError(error, 'login', 'Unable to log in');
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+    }
 
-                if (error && error.processed) {
-                    reject(error);
-                } else if (error.response && error.response.data && error.response.data.errorMessage) {
-                    reject({ error: error.response.data });
-                } else {
-                    reject({ message: 'Unable to log in' });
+    function autoLogin(): Promise<AuthResponse> {
+        return new Promise((resolve, reject) => {
+            services.autoLogin().then(response => {
+                const data = response.data;
+
+                if (!data || !data.success || !data.result || !data.result.token) {
+                    reject({ message: 'Auto-login failed' });
+                    return;
+                }
+
+                handleAuthSuccess(data.result);
+                resolve(data.result);
+            }).catch(error => {
+                try {
+                    handleAuthError(error, 'auto-login', 'Auto-login failed');
+                } catch (e) {
+                    reject(e);
                 }
             });
         });
@@ -164,35 +210,13 @@ export const useRootStore = defineStore('root', () => {
                     return;
                 }
 
-                if (settingsStore.appSettings.applicationLock || hasUserAppLockState()) {
-                    const appLockState = getUserAppLockState();
-
-                    if (!appLockState || appLockState.username !== data.result.user?.username) {
-                        clearCurrentTokenAndUserInfo(true);
-                        settingsStore.setEnableApplicationLock(false);
-                        settingsStore.setEnableApplicationLockWebAuthn(false);
-                        clearWebAuthnConfig();
-                    }
-                }
-
-                settingsStore.setApplicationSettingsFromCloudSettings(data.result.applicationCloudSettings);
-
-                updateCurrentToken(data.result.token);
-
-                if (data.result.user && isObject(data.result.user)) {
-                    userStore.storeUserBasicInfo(data.result.user);
-                }
-
+                handleAuthSuccess(data.result);
                 resolve(data.result);
             }).catch(error => {
-                logger.error('failed to verify 2fa', error);
-
-                if (error && error.processed) {
-                    reject(error);
-                } else if (error.response && error.response.data && error.response.data.errorMessage) {
-                    reject({ error: error.response.data });
-                } else {
-                    reject({ message: 'Unable to verify' });
+                try {
+                    handleAuthError(error, 'verify 2fa', 'Unable to verify');
+                } catch (e) {
+                    reject(e);
                 }
             });
         });
@@ -212,35 +236,13 @@ export const useRootStore = defineStore('root', () => {
                     return;
                 }
 
-                if (settingsStore.appSettings.applicationLock || hasUserAppLockState()) {
-                    const appLockState = getUserAppLockState();
-
-                    if (!appLockState || appLockState.username !== data.result.user?.username) {
-                        clearCurrentTokenAndUserInfo(true);
-                        settingsStore.setEnableApplicationLock(false);
-                        settingsStore.setEnableApplicationLockWebAuthn(false);
-                        clearWebAuthnConfig();
-                    }
-                }
-
-                settingsStore.setApplicationSettingsFromCloudSettings(data.result.applicationCloudSettings);
-
-                updateCurrentToken(data.result.token);
-
-                if (data.result.user && isObject(data.result.user)) {
-                    userStore.storeUserBasicInfo(data.result.user);
-                }
-
+                handleAuthSuccess(data.result);
                 resolve(data.result);
             }).catch(error => {
-                logger.error('failed to login', error);
-
-                if (error && error.processed) {
-                    reject(error);
-                } else if (error.response && error.response.data && error.response.data.errorMessage) {
-                    reject({ error: error.response.data });
-                } else {
-                    reject({ message: 'Unable to log in' });
+                try {
+                    handleAuthError(error, 'login', 'Unable to log in');
+                } catch (e) {
+                    reject(e);
                 }
             });
         });
@@ -650,6 +652,7 @@ export const useRootStore = defineStore('root', () => {
         generateOAuth2LoginUrl,
         generateOAuth2LinkUrl,
         authorize,
+        autoLogin,
         authorize2FA,
         authorizeOAuth2,
         register,

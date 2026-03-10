@@ -1,12 +1,12 @@
 package middlewares
 
 import (
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // AmapApiProxyAuthCookie adds amap api proxy auth cookie to cookies in response
 func AmapApiProxyAuthCookie(c *core.WebContext, config *settings.Config) {
 	token := c.GetTextualToken()
-	c.SetTokenStringToCookie(token, int(config.TokenExpiredTime), "/_AMapService")
+	c.SetTokenStringToCookie(token, int(config.TokenExpiredTime), "/_AMapService", false)
 }

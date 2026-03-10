@@ -1,33 +1,37 @@
 name: Build backend file for windows
+description: Builds the Go backend binary for Windows x64
 
 inputs:
   go-version:
+    description: Go version to use
     required: false
     default: "1.25.7"
   mingw-version:
+    description: MinGW version to use
     required: false
     default: "15.2.0"
   mingw-revison:
+    description: MinGW revision to use
     required: false
     default: "v13-rev1"
   release-build:
+    description: Whether this is a release build
     required: false
-    type: string
   build-unix-time:
+    description: Unix timestamp for the build
     required: false
-    type: string
   build-date:
+    description: Date string for the build
     required: false
-    type: string
   check-3rd-api:
+    description: Whether to check third-party APIs
     required: false
-    type: string
   skip-tests:
+    description: Tests to skip during build
     required: false
-    type: string
   backend-artifact-name-prefix:
+    description: Prefix for the backend artifact name
     required: true
-    type: string
 
 runs:
   using: "composite"
@@ -66,11 +70,11 @@ runs:
         CHECK_3RD_API: "${{ inputs.check-3rd-api }}"
         SKIP_TESTS: "${{ inputs.skip-tests }}"
       run: |
-        .\build.ps1 backend
+        .\scripts\build.ps1 backend
 
     - name: Upload windows backend artifact
       uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.backend-artifact-name-prefix }}-windows-x64
-        path: ezbookkeeping.exe
+        path: hbmoxie.exe
         if-no-files-found: error

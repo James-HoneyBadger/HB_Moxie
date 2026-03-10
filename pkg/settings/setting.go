@@ -1,6 +1,8 @@
 package settings
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -10,16 +12,16 @@ import (
 
 	"gopkg.in/ini.v1"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/locales"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/locales"
 )
 
 const (
-	ebkWorkDirEnvName                  = "EBK_WORK_DIR"
-	ebkConfigItemValueEnvNamePrefix    = "EBK"
-	ebkConfigItemFilePathEnvNamePrefix = "EBKCFP"
-	defaultConfigPath                  = "/conf/ezbookkeeping.ini"
+	hbmWorkDirEnvName                  = "HBM_WORK_DIR"
+	hbmConfigItemValueEnvNamePrefix    = "HBM"
+	hbmConfigItemFilePathEnvNamePrefix = "HBMCFP"
+	defaultConfigPath                  = "/conf/hbmoxie.ini"
 	defaultRootUrl                     = "%(protocol)s://%(domain)s:%(http_port)s/"
 	defaultStaticRootPath              = "public"
 )
@@ -38,9 +40,7 @@ type Scheme string
 
 // Scheme types
 const (
-	SCHEME_HTTP   Scheme = "http"
-	SCHEME_HTTPS  Scheme = "https"
-	SCHEME_SOCKET Scheme = "socket"
+	SCHEME_HTTP Scheme = "http"
 )
 
 // Level represents log level
@@ -147,12 +147,12 @@ const (
 )
 
 const (
-	defaultHttpAddr string = "0.0.0.0"
+	defaultHttpAddr string = "127.0.0.1"
 	defaultHttpPort uint16 = 8080
 	defaultDomain   string = "localhost"
 
 	defaultDatabaseHost            string = "127.0.0.1:3306"
-	defaultDatabaseName            string = "ezbookkeeping"
+	defaultDatabaseName            string = "hbmoxie"
 	defaultDatabaseMaxIdleConn     uint16 = 2
 	defaultDatabaseMaxOpenConn     uint16 = 0
 	defaultDatabaseConnMaxLifetime uint32 = 14400
@@ -170,7 +170,7 @@ const (
 	defaultInMemoryDuplicateCheckerCleanupInterval uint32 = 60  // 1 minutes
 	defaultDuplicateSubmissionsInterval            uint32 = 300 // 5 minutes
 
-	defaultSecretKey                     string = "ezbookkeeping"
+	defaultSecretKey                     string = "" // empty = auto-generate
 	defaultTokenExpiredTime              uint32 = 2592000 // 30 days
 	defaultTokenMinRefreshInterval       uint32 = 86400   // 1 day
 	defaultTemporaryTokenExpiredTime     uint32 = 300     // 5 minutes
@@ -290,14 +290,8 @@ type Config struct {
 	Domain  string
 	RootUrl string
 
-	CertFile    string
-	CertKeyFile string
-
-	UnixSocketPath string
-
 	StaticRootPath string
 
-	EnableGZip            bool
 	EnableRequestLog      bool
 	EnableRequestIdHeader bool
 
@@ -356,6 +350,9 @@ type Config struct {
 	// Cron
 	EnableRemoveExpiredTokens        bool
 	EnableCreateScheduledTransaction bool
+	EnableAutoBackup                 bool
+	AutoBackupIntervalHours          uint32
+	AutoBackupMaxCount               uint32
 
 	// Secret
 	SecretKeyNoSet                        bool
@@ -376,6 +373,7 @@ type Config struct {
 
 	// Auth
 	EnableInternalAuth                bool
+	EnableDesktopAutoLogin            bool
 	EnableOAuth2Login                 bool
 	EnableTwoFactor                   bool
 	EnableUserForgetPassword          bool
@@ -411,6 +409,7 @@ type Config struct {
 	// Data
 	EnableDataExport  bool
 	EnableDataImport  bool
+	EnableBackup      bool
 	MaxImportFileSize uint32
 
 	// Tip
@@ -589,6 +588,26 @@ func LoadConfiguration(configFilePath string) (*Config, error) {
 	return config, nil
 }
 
+// PersistSecretKey writes an auto-generated secret key back to the config
+// file so that it survives restarts (tokens remain valid across reboots).
+func PersistSecretKey(configFilePath string, secretKey string) error {
+	cfgFile, err := ini.LoadSources(ini.LoadOptions{
+		IgnoreInlineComment: true,
+	}, configFilePath)
+
+	if err != nil {
+		return fmt.Errorf("failed to load config for secret key persistence: %w", err)
+	}
+
+	cfgFile.Section("security").Key("secret_key").SetValue(secretKey)
+
+	if err := cfgFile.SaveTo(configFilePath); err != nil {
+		return fmt.Errorf("failed to save config with secret key: %w", err)
+	}
+
+	return nil
+}
+
 // GetDefaultConfigFilePath returns the defaule config file path
 func GetDefaultConfigFilePath() (string, error) {
 	workingPath, err := getWorkingPath()
@@ -620,26 +639,10 @@ func loadGlobalConfiguration(config *Config, configFile *ini.File, sectionName s
 }
 
 func loadServerConfiguration(config *Config, configFile *ini.File, sectionName string) error {
-	if getConfigItemStringValue(configFile, sectionName, "protocol") == "http" {
-		config.Protocol = SCHEME_HTTP
-
-		config.HttpAddr = getConfigItemStringValue(configFile, sectionName, "http_addr", defaultHttpAddr)
-		config.HttpPort = getConfigItemUint16Value(configFile, sectionName, "http_port", defaultHttpPort)
-	} else if getConfigItemStringValue(configFile, sectionName, "protocol") == "https" {
-		config.Protocol = SCHEME_HTTPS
-
-		config.HttpAddr = getConfigItemStringValue(configFile, sectionName, "http_addr", defaultHttpAddr)
-		config.HttpPort = getConfigItemUint16Value(configFile, sectionName, "http_port", defaultHttpPort)
-
-		config.CertFile = getConfigItemStringValue(configFile, sectionName, "cert_file")
-		config.CertKeyFile = getConfigItemStringValue(configFile, sectionName, "cert_key_file")
-	} else if getConfigItemStringValue(configFile, sectionName, "protocol") == "socket" {
-		config.Protocol = SCHEME_SOCKET
-
-		config.UnixSocketPath = getConfigItemStringValue(configFile, sectionName, "unix_socket")
-	} else {
-		return errs.ErrInvalidProtocol
-	}
+	// Desktop-only: always HTTP on localhost
+	config.Protocol = SCHEME_HTTP
+	config.HttpAddr = getConfigItemStringValue(configFile, sectionName, "http_addr", defaultHttpAddr)
+	config.HttpPort = getConfigItemUint16Value(configFile, sectionName, "http_port", defaultHttpPort)
 
 	config.Domain = getConfigItemStringValue(configFile, sectionName, "domain", defaultDomain)
 	config.RootUrl = getConfigItemStringValue(configFile, sectionName, "root_url", defaultRootUrl)
@@ -660,7 +663,6 @@ func loadServerConfiguration(config *Config, configFile *ini.File, sectionName s
 
 	config.StaticRootPath = finalStaticRootPath
 
-	config.EnableGZip = getConfigItemBoolValue(configFile, sectionName, "enable_gzip", false)
 	config.EnableRequestLog = getConfigItemBoolValue(configFile, sectionName, "log_request", false)
 	config.EnableRequestIdHeader = getConfigItemBoolValue(configFile, sectionName, "request_id_header", true)
 
@@ -956,6 +958,23 @@ func loadDuplicateCheckerConfiguration(config *Config, configFile *ini.File, sec
 func loadCronConfiguration(config *Config, configFile *ini.File, sectionName string) error {
 	config.EnableRemoveExpiredTokens = getConfigItemBoolValue(configFile, sectionName, "enable_remove_expired_tokens", false)
 	config.EnableCreateScheduledTransaction = getConfigItemBoolValue(configFile, sectionName, "enable_create_scheduled_transaction", false)
+	config.EnableAutoBackup = getConfigItemBoolValue(configFile, sectionName, "enable_auto_backup", true)
+
+	autoBackupIntervalHours := getConfigItemUint32Value(configFile, sectionName, "auto_backup_interval_hours", 24)
+
+	if autoBackupIntervalHours < 1 {
+		autoBackupIntervalHours = 24
+	}
+
+	config.AutoBackupIntervalHours = autoBackupIntervalHours
+
+	autoBackupMaxCount := getConfigItemUint32Value(configFile, sectionName, "auto_backup_max_count", 10)
+
+	if autoBackupMaxCount < 1 {
+		autoBackupMaxCount = 10
+	}
+
+	config.AutoBackupMaxCount = autoBackupMaxCount
 
 	return nil
 }
@@ -965,6 +984,16 @@ func loadSecurityConfiguration(config *Config, configFile *ini.File, sectionName
 
 	config.SecretKeyNoSet = !getConfigItemIsSet(configFile, sectionName, "secret_key")
 	config.SecretKey = getConfigItemStringValue(configFile, sectionName, "secret_key", defaultSecretKey)
+
+	// Generate a random secret key if none was configured
+	if config.SecretKey == "" || config.SecretKey == "hbmoxie" {
+		randomBytes := make([]byte, 32)
+		if _, err := rand.Read(randomBytes); err != nil {
+			return fmt.Errorf("failed to generate random secret key: %w", err)
+		}
+		config.SecretKey = hex.EncodeToString(randomBytes)
+		config.SecretKeyNoSet = true
+	}
 
 	config.TokenExpiredTime = getConfigItemUint32Value(configFile, sectionName, "token_expired_time", defaultTokenExpiredTime)
 
@@ -1019,6 +1048,7 @@ func loadSecurityConfiguration(config *Config, configFile *ini.File, sectionName
 
 func loadAuthConfiguration(config *Config, configFile *ini.File, sectionName string) error {
 	config.EnableInternalAuth = getConfigItemBoolValue(configFile, sectionName, "enable_internal_auth", true)
+	config.EnableDesktopAutoLogin = getConfigItemBoolValue(configFile, sectionName, "enable_desktop_auto_login", true)
 	config.EnableOAuth2Login = getConfigItemBoolValue(configFile, sectionName, "enable_oauth2_auth", false)
 	config.EnableTwoFactor = getConfigItemBoolValue(configFile, sectionName, "enable_two_factor", true)
 	config.EnableUserForgetPassword = getConfigItemBoolValue(configFile, sectionName, "enable_forget_password", false)
@@ -1103,6 +1133,7 @@ func loadUserConfiguration(config *Config, configFile *ini.File, sectionName str
 func loadDataConfiguration(config *Config, configFile *ini.File, sectionName string) error {
 	config.EnableDataExport = getConfigItemBoolValue(configFile, sectionName, "enable_export", false)
 	config.EnableDataImport = getConfigItemBoolValue(configFile, sectionName, "enable_import", false)
+	config.EnableBackup = getConfigItemBoolValue(configFile, sectionName, "enable_backup", true)
 	config.MaxImportFileSize = getConfigItemUint32Value(configFile, sectionName, "max_import_file_size", defaultImportFileMaxSize)
 
 	return nil
@@ -1223,7 +1254,7 @@ func loadExchangeRatesConfiguration(config *Config, configFile *ini.File, sectio
 }
 
 func getWorkingPath() (string, error) {
-	workingPath := os.Getenv(ebkWorkDirEnvName)
+	workingPath := os.Getenv(hbmWorkDirEnvName)
 
 	if workingPath != "" {
 		return workingPath, nil
@@ -1438,11 +1469,11 @@ func getConfigItemValueFromEnvironment(sectionName string, itemName string) stri
 }
 
 func getConfigItemFilePathEnvironmentKey(sectionName string, itemName string) string {
-	return fmt.Sprintf("%s_%s_%s", ebkConfigItemFilePathEnvNamePrefix, strings.ToUpper(sectionName), strings.ToUpper(itemName))
+	return fmt.Sprintf("%s_%s_%s", hbmConfigItemFilePathEnvNamePrefix, strings.ToUpper(sectionName), strings.ToUpper(itemName))
 }
 
 func getConfigItemValueEnvironmentKey(sectionName string, itemName string) string {
-	return fmt.Sprintf("%s_%s_%s", ebkConfigItemValueEnvNamePrefix, strings.ToUpper(sectionName), strings.ToUpper(itemName))
+	return fmt.Sprintf("%s_%s_%s", hbmConfigItemValueEnvNamePrefix, strings.ToUpper(sectionName), strings.ToUpper(itemName))
 }
 
 func getLogLevel(logLevelStr string) (Level, error) {

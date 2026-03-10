@@ -1,9 +1,9 @@
 package provider
 
 import (
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/llm/data"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/data"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // LargeLanguageModelProvider defines the structure of large language model provider

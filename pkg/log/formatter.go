@@ -8,7 +8,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 // LogFormatter represents a log formatter

@@ -5,15 +5,15 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/cron"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/cron"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
 )
 
 // CronJobs represents the cron command
 var CronJobs = &cli.Command{
 	Name:  "cron",
-	Usage: "ezBookkeeping cron job utilities",
+	Usage: "HB Moxie cron job utilities",
 	Commands: []*cli.Command{
 		{
 			Name:   "list",
@@ -54,7 +54,7 @@ func listAllCronJobs(c *core.CliContext) error {
 
 	if len(cronJobs) < 1 {
 		log.CliErrorf(c, "[cron_jobs.listAllCronJobs] there are no enabled cron jobs")
-		return err
+		return fmt.Errorf("there are no enabled cron jobs")
 	}
 
 	for i := 0; i < len(cronJobs); i++ {

@@ -3,8 +3,8 @@ package datastore
 import (
 	"xorm.io/xorm"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // Database represents a database instance
@@ -44,9 +44,9 @@ func (db *Database) DoTransaction(c core.Context, fn func(sess *xorm.Session) er
 	return nil
 }
 
-// SetSavePoint sets a save point in the current transaction for Postgres
+// SetSavePoint sets a save point in the current transaction
 func (db *Database) SetSavePoint(sess *xorm.Session, savePointName string) error {
-	if db.databaseType == settings.PostgresDbType {
+	if db.databaseType == settings.PostgresDbType || db.databaseType == settings.MySqlDbType || db.databaseType == settings.Sqlite3DbType {
 		_, err := sess.Exec("SAVEPOINT " + savePointName)
 		return err
 	}
@@ -54,9 +54,9 @@ func (db *Database) SetSavePoint(sess *xorm.Session, savePointName string) error
 	return nil
 }
 
-// RollbackToSavePoint rolls back to the specified save point in the current transaction for Postgres
+// RollbackToSavePoint rolls back to the specified save point in the current transaction
 func (db *Database) RollbackToSavePoint(sess *xorm.Session, savePointName string) error {
-	if db.databaseType == settings.PostgresDbType {
+	if db.databaseType == settings.PostgresDbType || db.databaseType == settings.MySqlDbType || db.databaseType == settings.Sqlite3DbType {
 		_, err := sess.Exec("ROLLBACK TO SAVEPOINT " + savePointName)
 		return err
 	}

@@ -1,16 +1,16 @@
 package llm
 
 import (
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/llm/data"
-	"github.com/mayswind/ezbookkeeping/pkg/llm/provider"
-	"github.com/mayswind/ezbookkeeping/pkg/llm/provider/anthropic"
-	"github.com/mayswind/ezbookkeeping/pkg/llm/provider/googleai"
-	"github.com/mayswind/ezbookkeeping/pkg/llm/provider/lmstudio"
-	"github.com/mayswind/ezbookkeeping/pkg/llm/provider/ollama"
-	"github.com/mayswind/ezbookkeeping/pkg/llm/provider/openai"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/data"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/provider"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/provider/anthropic"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/provider/googleai"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/provider/lmstudio"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/provider/ollama"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/provider/openai"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // LargeLanguageModelProviderContainer contains the current large language model provider

@@ -19,55 +19,31 @@
 import { ref, computed, watch, onMounted } from 'vue';
 
 import { useTheme } from 'vuetify';
-import { register } from 'register-service-worker';
-
 import { useI18n } from '@/locales/helpers.ts';
+
+import { useRouter } from 'vue-router';
 
 import { useRootStore } from '@/stores/index.ts';
 import { useSettingsStore } from '@/stores/setting.ts';
 import { useUserStore } from '@/stores/user.ts';
-import { useTokensStore } from '@/stores/token.ts';
 import { useExchangeRatesStore } from '@/stores/exchangeRates.ts';
+import { useDesktopPageStore } from '@/stores/desktopPage.ts';
 
 import { APPLICATION_LOGO_PATH } from '@/consts/asset.ts';
 import { ThemeType } from '@/core/theme.ts';
-import { isProduction } from '@/lib/version.ts';
 import { initMapProvider } from '@/lib/map/index.ts';
-import { isUserLogined, isUserUnlocked } from '@/lib/userstate.ts';
-import { updateMapCacheExpiration } from '@/lib/cache.ts';
 import { getSystemTheme, setExpenseAndIncomeAmountColor } from '@/lib/ui/common.ts';
 
-const { tt, getCurrentLanguageInfo, setLanguage, initLocale } = useI18n();
+const { tt, getCurrentLanguageInfo, initLocale } = useI18n();
 
 const theme = useTheme();
 
 const rootStore = useRootStore();
 const settingsStore = useSettingsStore();
 const userStore = useUserStore();
-const tokensStore = useTokensStore();
 const exchangeRatesStore = useExchangeRatesStore();
-
-const initialRoutePath: string = (() => {
-    if (!window.location.hash) {
-        return '/';
-    }
-
-    const hash = window.location.hash;
-    const hashIndex = hash.indexOf('#/');
-
-    if (hashIndex < 0) {
-        return '/';
-    }
-
-    const routePath = hash.substring(hashIndex + 1);
-    const queryIndex = routePath.indexOf('?');
-
-    if (queryIndex < 0) {
-        return routePath;
-    }
-
-    return routePath.substring(0, queryIndex);
-})();
+const desktopPageStore = useDesktopPageStore();
+const router = useRouter();
 
 const showNotification = ref<boolean>(false);
 
@@ -102,38 +78,21 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', fun
     }
 });
 
-let localeDefaultSettings = initLocale(userStore.currentUserLanguage, settingsStore.appSettings.timeZone);
+const localeDefaultSettings = initLocale(userStore.currentUserLanguage, settingsStore.appSettings.timeZone);
 settingsStore.updateLocalizedDefaultSettings(localeDefaultSettings);
 
 setExpenseAndIncomeAmountColor(userStore.currentUserExpenseAmountColor, userStore.currentUserIncomeAmountColor);
 
-if (isUserLogined() && initialRoutePath !== '/verify_email' && initialRoutePath !== '/resetpassword' && initialRoutePath !== '/oauth2_callback') {
-    if (!settingsStore.appSettings.applicationLock || isUserUnlocked()) {
-        // refresh token if user is logined
-        tokensStore.refreshTokenAndRevokeOldToken().then(response => {
-            if (response.user) {
-                localeDefaultSettings = setLanguage(response.user.language);
-                settingsStore.updateLocalizedDefaultSettings(localeDefaultSettings);
+// Auto-auth is handled by the router guard (ensureAuthenticated).
+// Just initialize exchange rates on load.
+exchangeRatesStore.removeExpiredExchangeRates(true);
+exchangeRatesStore.autoUpdateExchangeRatesData();
 
-                setExpenseAndIncomeAmountColor(response.user.expenseAmountColor, response.user.incomeAmountColor);
-
-                if (response.notificationContent) {
-                    rootStore.setNotificationContent(response.notificationContent);
-                }
-            }
-
-            updateMapCacheExpiration(settingsStore.appSettings.mapCacheExpiration);
-            exchangeRatesStore.removeExpiredExchangeRates(true);
-            exchangeRatesStore.autoUpdateExchangeRatesData();
-        });
-    }
-}
-
-if (isProduction()) {
-    register('./sw.js', {
-        registrationOptions: {
-            scope: './'
-        }
+// Listen for quick-add transaction from Electron global shortcut / tray menu
+if (window.hbmoxie?.onQuickAddTransaction) {
+    window.hbmoxie.onQuickAddTransaction(() => {
+        desktopPageStore.setShowAddTransactionDialogInTransactionList();
+        router.push('/transaction/list');
     });
 }
 </script>

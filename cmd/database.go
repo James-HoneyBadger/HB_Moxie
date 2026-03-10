@@ -3,16 +3,16 @@ package cmd
 import (
 	"github.com/urfave/cli/v3"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/datastore"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/datastore"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
 )
 
 // Database represents the database command
 var Database = &cli.Command{
 	Name:  "database",
-	Usage: "ezBookkeeping database maintenance",
+	Usage: "HB Moxie database maintenance",
 	Commands: []*cli.Command{
 		{
 			Name:   "update",

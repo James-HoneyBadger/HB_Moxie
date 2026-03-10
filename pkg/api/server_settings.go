@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
-const ezbookkeepingServerSettingsGlobalVariableName = "EZBOOKKEEPING_SERVER_SETTINGS"
-const ezbookkeepingServerSettingsGlobalVariableFullName = "window." + ezbookkeepingServerSettingsGlobalVariableName
-const ezbookkeepingServerSettingsJavascriptFileHeader = ezbookkeepingServerSettingsGlobalVariableFullName +
-	"=" + ezbookkeepingServerSettingsGlobalVariableFullName + "||{};\n"
+const hbmoxieServerSettingsGlobalVariableName = "HBMOXIE_SERVER_SETTINGS"
+const hbmoxieServerSettingsGlobalVariableFullName = "window." + hbmoxieServerSettingsGlobalVariableName
+const hbmoxieServerSettingsJavascriptFileHeader = hbmoxieServerSettingsGlobalVariableFullName +
+	"=" + hbmoxieServerSettingsGlobalVariableFullName + "||{};\n"
 
 // ServerSettingsApi represents server settings api
 type ServerSettingsApi struct {
@@ -33,7 +33,7 @@ var (
 func (a *ServerSettingsApi) ServerSettingsJavascriptHandler(c *core.WebContext) ([]byte, string, *errs.Error) {
 	config := a.CurrentConfig()
 	builder := &strings.Builder{}
-	builder.WriteString(ezbookkeepingServerSettingsJavascriptFileHeader)
+	builder.WriteString(hbmoxieServerSettingsJavascriptFileHeader)
 
 	a.appendBooleanSetting(builder, "a", config.EnableInternalAuth)
 	a.appendBooleanSetting(builder, "o", config.EnableOAuth2Login)
@@ -45,6 +45,11 @@ func (a *ServerSettingsApi) ServerSettingsJavascriptHandler(c *core.WebContext) 
 	a.appendBooleanSetting(builder, "s", config.EnableScheduledTransaction)
 	a.appendBooleanSetting(builder, "e", config.EnableDataExport)
 	a.appendBooleanSetting(builder, "i", config.EnableDataImport)
+	a.appendBooleanSetting(builder, "b", config.EnableBackup)
+
+	if config.EnableDesktopAutoLogin {
+		a.appendBooleanSetting(builder, "dal", config.EnableDesktopAutoLogin)
+	}
 
 	a.appendStringSetting(builder, "op", config.OAuth2Provider)
 
@@ -137,7 +142,7 @@ func (a *ServerSettingsApi) ServerSettingsJavascriptHandler(c *core.WebContext) 
 }
 
 func (a *ServerSettingsApi) appendStringSetting(builder *strings.Builder, key string, value string) {
-	builder.WriteString(ezbookkeepingServerSettingsGlobalVariableFullName)
+	builder.WriteString(hbmoxieServerSettingsGlobalVariableFullName)
 	builder.WriteString("[")
 	a.appendEncodedString(builder, key)
 	builder.WriteString("]=")
@@ -148,7 +153,7 @@ func (a *ServerSettingsApi) appendStringSetting(builder *strings.Builder, key st
 }
 
 func (a *ServerSettingsApi) appendMultiLanguageTipSetting(builder *strings.Builder, key string, value settings.MultiLanguageContentConfig) {
-	builder.WriteString(ezbookkeepingServerSettingsGlobalVariableFullName)
+	builder.WriteString(hbmoxieServerSettingsGlobalVariableFullName)
 	builder.WriteString("[")
 	a.appendEncodedString(builder, key)
 	builder.WriteString("]={\n")
@@ -168,7 +173,7 @@ func (a *ServerSettingsApi) appendMultiLanguageTipSetting(builder *strings.Build
 }
 
 func (a *ServerSettingsApi) appendBooleanSetting(builder *strings.Builder, key string, value bool) {
-	builder.WriteString(ezbookkeepingServerSettingsGlobalVariableFullName)
+	builder.WriteString(hbmoxieServerSettingsGlobalVariableFullName)
 	builder.WriteString("[")
 	a.appendEncodedString(builder, key)
 	builder.WriteString("]=")
@@ -183,7 +188,7 @@ func (a *ServerSettingsApi) appendBooleanSetting(builder *strings.Builder, key s
 }
 
 func (a *ServerSettingsApi) appendIntegerSetting(builder *strings.Builder, key string, value int) {
-	builder.WriteString(ezbookkeepingServerSettingsGlobalVariableFullName)
+	builder.WriteString(hbmoxieServerSettingsGlobalVariableFullName)
 	builder.WriteString("[")
 	a.appendEncodedString(builder, key)
 	builder.WriteString("]=")
@@ -203,6 +208,14 @@ func (a *ServerSettingsApi) appendEncodedString(builder *strings.Builder, conten
 		case '\'':
 			builder.WriteRune('\\')
 			builder.WriteRune('\'')
+		case '<':
+			builder.WriteString("\\x3c")
+		case '>':
+			builder.WriteString("\\x3e")
+		case '&':
+			builder.WriteString("\\x26")
+		case '/':
+			builder.WriteString("\\x2f")
 		case '\n':
 			builder.WriteRune('\\')
 			builder.WriteRune('n')

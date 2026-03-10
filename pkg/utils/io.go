@@ -34,6 +34,8 @@ func ListFileNamesWithPrefixAndSuffix(path string, prefix string, suffix string)
 		return nil
 	}
 
+	defer dir.Close()
+
 	fileInfos, err := dir.Readdir(0)
 
 	if err != nil {

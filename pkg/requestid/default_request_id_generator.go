@@ -10,11 +10,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 // Length and mask of all information in request id
@@ -91,16 +91,8 @@ func getServerUniqId(c core.Context, config *settings.Config) (uint16, error) {
 }
 
 func getInstanceUniqId(config *settings.Config) uint16 {
-	var instanceUniqFlag string
-
-	if config.Protocol == settings.SCHEME_SOCKET {
-		instanceUniqFlag = fmt.Sprintf("%s_%s", config.UnixSocketPath, config.SecretKey)
-	} else {
-		instanceUniqFlag = fmt.Sprintf("%d_%s", config.HttpPort, config.SecretKey)
-	}
-
+	instanceUniqFlag := fmt.Sprintf("%d_%s", config.HttpPort, config.SecretKey)
 	return uint16(crc32.ChecksumIEEE([]byte(instanceUniqFlag)))
-
 }
 
 // ParseRequestIdInfo returns a info struct which contains all information in request id

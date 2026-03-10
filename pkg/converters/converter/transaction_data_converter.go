@@ -3,8 +3,8 @@ package converter
 import (
 	"time"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
 )
 
 // TransactionDataExporter defines the structure of transaction data exporter

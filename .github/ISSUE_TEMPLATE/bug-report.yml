@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report a bug in ezBookkeeping
+description: Report a bug in HB Moxie
 body:
   - type: checkboxes
     id: checkboxes
@@ -7,7 +7,7 @@ body:
       label: Before You Submit
       description: Please check whether the following items have been completed.
       options:
-        - label: I've already checked this bug hasn't been raised in [issues](https://github.com/mayswind/ezbookkeeping/issues)
+        - label: I've already checked that this bug hasn't been raised in [issues](https://github.com/James-HoneyBadger/HB_Moxie/issues)
           required: true
 
   - type: textarea
@@ -31,10 +31,10 @@ body:
       required: true
 
   - type: input
-    id: ezbookkeeping-version
+    id: hbmoxie-version
     attributes:
-      label: ezBookkeeping Version
-      description: ezBookkeeping version and commit hash of your instance, e.g. "v1.0.0 (20e2444)"
+      label: HB Moxie Version
+      description: HB Moxie version and commit hash of your instance, e.g. "v1.0.0 (20e2444)"
     validations:
       required: true
 
@@ -42,7 +42,7 @@ body:
     id: server-os
     attributes:
       label: Server Operating System
-      description: The operating system information you are using to deploy ezBookkeeping, e.g "Debian GNU/Linux 11 amd64"
+      description: The operating system information you are using to deploy HB Moxie, e.g "Debian GNU/Linux 11 amd64"
 
   - type: input
     id: server-database
@@ -53,9 +53,9 @@ body:
   - type: dropdown
     id: reproduce-on-demo-site
     attributes:
-      label: Can you reproduce this bug on the ezBookkeeping demo site?
+      label: Can you reproduce this bug on a fresh HB Moxie instance?
       description: |
-        ezBookkeeping demo site: https://ezbookkeeping-demo.mayswind.net/
+        HB Moxie repository: https://github.com/James-HoneyBadger/HB_Moxie
       options:
         - "No"
         - "Yes"

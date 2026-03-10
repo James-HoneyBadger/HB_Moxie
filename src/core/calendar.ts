@@ -3,19 +3,10 @@ import type { TypeAndName } from '@/core/base.ts';
 export enum CalendarType {
     Gregorian = 0,
     Buddhist = 1,
-    Chinese = 2,
-    Persian = 3
+    Hebrew = 2
 }
 
-export interface ChineseCalendarLocaleData {
-    readonly numerals: string[];
-    readonly monthNames: string[];
-    readonly dayNames: string[];
-    readonly leapMonthPrefix: string;
-    readonly solarTermNames: string[];
-}
-
-export interface PersianCalendarLocaleData {
+export interface HebrewCalendarLocaleData {
     readonly monthNames: string[];
     readonly monthShortNames: string[];
 }
@@ -28,8 +19,8 @@ export class CalendarDisplayType implements TypeAndName {
     public static readonly LanguageDefaultType: number = 0;
     public static readonly Gregorian = new CalendarDisplayType(1, 'Gregorian', 'Gregorian', CalendarType.Gregorian);
     public static readonly Buddhist = new CalendarDisplayType(2, 'Buddhist', 'Buddhist', CalendarType.Buddhist);
-    public static readonly GregorianWithChinese = new CalendarDisplayType(3, 'GregorianWithChinese', 'Gregorian with Chinese Calendar', CalendarType.Gregorian, CalendarType.Chinese);
-    public static readonly GregorianWithPersian = new CalendarDisplayType(4, 'GregorianWithPersian', 'Gregorian with Persian Calendar', CalendarType.Gregorian, CalendarType.Persian);
+    public static readonly GregorianWithHebrew = new CalendarDisplayType(3, 'GregorianWithHebrew', 'Gregorian with Hebrew Calendar', CalendarType.Gregorian, CalendarType.Hebrew);
+    public static readonly Hebrew = new CalendarDisplayType(4, 'Hebrew', 'Hebrew', CalendarType.Hebrew);
 
     public static readonly Default = CalendarDisplayType.Gregorian;
 
@@ -72,7 +63,7 @@ export class DateDisplayType implements TypeAndName {
     public static readonly LanguageDefaultType: number = 0;
     public static readonly Gregorian = new DateDisplayType(1, 'Gregorian', 'Gregorian', CalendarType.Gregorian);
     public static readonly Buddhist = new DateDisplayType(2, 'Buddhist', 'Buddhist', CalendarType.Buddhist);
-    public static readonly Persian = new DateDisplayType(3, 'Persian', 'Persian', CalendarType.Persian);
+    public static readonly Hebrew = new DateDisplayType(3, 'Hebrew', 'Hebrew', CalendarType.Hebrew);
 
     public static readonly Default = DateDisplayType.Gregorian;
 

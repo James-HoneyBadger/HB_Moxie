@@ -97,12 +97,6 @@
                     </router-link>
                 </li>
                 <li class="nav-link">
-                    <a href="javascript:void(0);" @click="showMobileQrCode = true">
-                        <v-icon class="nav-item-icon" :icon="mdiCellphone"/>
-                        <span class="nav-item-title">{{ tt('Use on Mobile Device') }}</span>
-                    </a>
-                </li>
-                <li class="nav-link">
                     <router-link to="/about">
                         <v-icon class="nav-item-icon" :icon="mdiInformationOutline"/>
                         <span class="nav-item-title">{{ tt('About') }}</span>
@@ -169,15 +163,7 @@
                                     <v-list-item :prepend-icon="mdiCogOutline"
                                                  :title="tt('Application Settings')"
                                                  to="/app/settings"></v-list-item>
-                                    <v-divider class="my-2"/>
-                                    <v-list-item :prepend-icon="mdiLockOutline"
-                                                 :title="tt('Lock Application')"
-                                                 v-if="isEnableApplicationLock"
-                                                 @click="lock"></v-list-item>
-                                    <v-list-item :disabled="logouting"
-                                                 :prepend-icon="mdiLogout"
-                                                 :title="tt('Log Out')"
-                                                 @click="logout"></v-list-item>
+
                                 </v-list>
                             </v-menu>
                         </v-avatar>
@@ -190,8 +176,6 @@
                 </div>
             </div>
         </div>
-
-        <switch-to-mobile-dialog v-model:show="showMobileQrCode" />
 
         <div class="layout-overlay" :class="{ 'visible': showVerticalOverlayMenu }" @click="showVerticalOverlayMenu = false"></div>
 
@@ -206,14 +190,13 @@
 <script setup lang="ts">
 import SnackBar from '@/components/desktop/SnackBar.vue';
 
-import { ref, computed, useTemplateRef } from 'vue';
+import { ref, computed } from 'vue';
 
 import { useDisplay, useTheme } from 'vuetify';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 
 import { useI18n } from '@/locales/helpers.ts';
 
-import { useRootStore } from '@/stores/index.ts';
 import { useSettingsStore } from '@/stores/setting.ts';
 import { useUserStore } from '@/stores/user.ts';
 import { useDesktopPageStore } from '@/stores/desktopPage.ts';
@@ -221,7 +204,7 @@ import { useDesktopPageStore } from '@/stores/desktopPage.ts';
 import { APPLICATION_LOGO_PATH } from '@/consts/asset.ts';
 import { ThemeType } from '@/core/theme.ts';
 import { isUserScheduledTransactionEnabled } from '@/lib/server_settings.ts';
-import { getSystemTheme, setExpenseAndIncomeAmountColor } from '@/lib/ui/common.ts';
+import { getSystemTheme } from '@/lib/ui/common.ts';
 
 import {
     mdiMenu,
@@ -237,38 +220,27 @@ import {
     mdiCompassOutline,
     mdiSwapHorizontal,
     mdiCogOutline,
-    mdiCellphone,
     mdiInformationOutline,
     mdiThemeLightDark,
     mdiWeatherSunny,
     mdiWeatherNight,
     mdiAccount,
     mdiAccountCogOutline,
-    mdiLockOutline,
-    mdiLogout
 } from '@mdi/js';
-
-type SnackBarType = InstanceType<typeof SnackBar>;
 
 const display = useDisplay();
 const theme = useTheme();
 const route = useRoute();
-const router = useRouter();
 
-const { tt, initLocale } = useI18n();
+const { tt } = useI18n();
 
-const rootStore = useRootStore();
 const settingsStore = useSettingsStore();
 const userStore = useUserStore();
 const desktopPageStore = useDesktopPageStore();
 
-const snackbar = useTemplateRef<SnackBarType>('snackbar');
-
-const logouting = ref<boolean>(false);
 const isVerticalNavScrolled = ref<boolean>(false);
 const showVerticalOverlayMenu = ref<boolean>(false);
 const showLoading = ref<boolean>(false);
-const showMobileQrCode = ref<boolean>(false);
 
 const mdAndDown = computed<boolean>(() => display.mdAndDown.value);
 const currentRoutePath = computed<string>(() => route.path);
@@ -294,41 +266,9 @@ const currentTheme = computed<string>({
 });
 
 const showAddTransactionButtonInDesktopNavbar = computed<boolean>(() => settingsStore.appSettings.showAddTransactionButtonInDesktopNavbar);
-const isEnableApplicationLock = computed<boolean>(() => settingsStore.appSettings.applicationLock);
 
 function handleNavScroll(e: Event): void {
     isVerticalNavScrolled.value = (e.target as HTMLElement).scrollTop > 0;
-}
-
-function lock(): void {
-    rootStore.lock();
-    router.replace('/unlock');
-}
-
-function logout(): void {
-    logouting.value = true;
-    showLoading.value = true;
-
-    rootStore.logout().then(() => {
-        logouting.value = false;
-        showLoading.value = false;
-
-        settingsStore.clearAppSettings();
-
-        const localeDefaultSettings = initLocale(userStore.currentUserLanguage, settingsStore.appSettings.timeZone);
-        settingsStore.updateLocalizedDefaultSettings(localeDefaultSettings);
-
-        setExpenseAndIncomeAmountColor(userStore.currentUserExpenseAmountColor, userStore.currentUserIncomeAmountColor);
-
-        router.replace('/login');
-    }).catch(error => {
-        logouting.value = false;
-        showLoading.value = false;
-
-        if (!error.processed) {
-            snackbar.value?.showError(error);
-        }
-    });
 }
 
 function showAddDialogInTransactionListPage(): void {

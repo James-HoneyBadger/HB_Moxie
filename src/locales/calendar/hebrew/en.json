@@ -1,0 +1,32 @@
+{
+    "monthNames": [
+        "Tishrei",
+        "Cheshvan",
+        "Kislev",
+        "Tevet",
+        "Shevat",
+        "Adar",
+        "Adar II",
+        "Nisan",
+        "Iyar",
+        "Sivan",
+        "Tammuz",
+        "Av",
+        "Elul"
+    ],
+    "monthShortNames": [
+        "Tish",
+        "Che",
+        "Kis",
+        "Tev",
+        "She",
+        "Adr",
+        "Ad2",
+        "Nis",
+        "Iya",
+        "Siv",
+        "Tam",
+        "Av",
+        "Elu"
+    ]
+}

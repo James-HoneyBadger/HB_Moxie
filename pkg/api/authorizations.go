@@ -6,14 +6,14 @@ import (
 
 	"github.com/pquerna/otp/totp"
 
-	"github.com/mayswind/ezbookkeeping/pkg/avatars"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/duplicatechecker"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/services"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/avatars"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/duplicatechecker"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/services"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // AuthorizationsApi represents authorization api
@@ -352,7 +352,7 @@ func (a *AuthorizationsApi) TwoFactorAuthorizeByRecoveryCodeHandler(c *core.WebC
 		applicationCloudSettingSlice = &userApplicationCloudSettings.Settings
 	}
 
-	log.Infof(c, "[authorizations.TwoFactorAuthorizeByRecoveryCodeHandler] user \"uid:%d\" has authorized two-factor via recovery code \"%s\", token will be expired at %d", user.Uid, credential.RecoveryCode, claims.ExpiresAt)
+	log.Infof(c, "[authorizations.TwoFactorAuthorizeByRecoveryCodeHandler] user \"uid:%d\" has authorized two-factor via recovery code, token will be expired at %d", user.Uid, claims.ExpiresAt)
 
 	authResp := a.getAuthResponse(c, token, false, user, applicationCloudSettingSlice)
 	return authResp, nil
@@ -531,6 +531,65 @@ func (a *AuthorizationsApi) OAuth2CallbackAuthorizeHandler(c *core.WebContext) (
 	}
 
 	log.Infof(c, "[authorizations.OAuth2CallbackAuthorizeHandler] user \"uid:%d\" has logged in, token will be expired at %d", user.Uid, claims.ExpiresAt)
+
+	authResp := a.getAuthResponse(c, token, false, user, applicationCloudSettingSlice)
+	return authResp, nil
+}
+
+// DesktopAutoLoginHandler handles auto-login for desktop single-user mode.
+// When only one non-deleted user exists, this returns a valid token without
+// requiring password entry.
+func (a *AuthorizationsApi) DesktopAutoLoginHandler(c *core.WebContext) (any, *errs.Error) {
+	config := a.CurrentConfig()
+
+	if !config.EnableDesktopAutoLogin {
+		return nil, errs.ErrCannotLoginByPassword
+	}
+
+	user, err := a.users.GetFirstUser(c)
+
+	if err != nil {
+		log.Errorf(c, "[authorizations.DesktopAutoLoginHandler] failed to get first user, because %s", err.Error())
+		return nil, errs.Or(err, errs.ErrSystemError)
+	}
+
+	if user == nil {
+		log.Warnf(c, "[authorizations.DesktopAutoLoginHandler] no user exists")
+		return nil, errs.ErrUserNotFound
+	}
+
+	if user.Disabled {
+		log.Warnf(c, "[authorizations.DesktopAutoLoginHandler] auto-login failed, user \"%s\" is disabled", user.Username)
+		return nil, errs.ErrUserIsDisabled
+	}
+
+	err = a.users.UpdateUserLastLoginTime(c, user.Uid)
+
+	if err != nil {
+		log.Warnf(c, "[authorizations.DesktopAutoLoginHandler] failed to update last login time for user \"uid:%d\", because %s", user.Uid, err.Error())
+	}
+
+	token, claims, err := a.tokens.CreateToken(c, user)
+
+	if err != nil {
+		log.Errorf(c, "[authorizations.DesktopAutoLoginHandler] failed to create token for user \"uid:%d\", because %s", user.Uid, err.Error())
+		return nil, errs.ErrTokenGenerating
+	}
+
+	c.SetTextualToken(token)
+	c.SetTokenClaims(claims)
+	c.SetTokenContext("")
+
+	userApplicationCloudSettings, err := a.userAppCloudSettings.GetUserApplicationCloudSettingsByUid(c, user.Uid)
+	var applicationCloudSettingSlice *models.ApplicationCloudSettingSlice = nil
+
+	if err != nil {
+		log.Warnf(c, "[authorizations.DesktopAutoLoginHandler] failed to get latest user application cloud settings for user \"uid:%d\", because %s", user.Uid, err.Error())
+	} else if userApplicationCloudSettings != nil && len(userApplicationCloudSettings.Settings) > 0 {
+		applicationCloudSettingSlice = &userApplicationCloudSettings.Settings
+	}
+
+	log.Infof(c, "[authorizations.DesktopAutoLoginHandler] user \"uid:%d\" auto-logged in", user.Uid)
 
 	authResp := a.getAuthResponse(c, token, false, user, applicationCloudSettingSlice)
 	return authResp, nil

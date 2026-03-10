@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/services"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/services"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 // UserApplicationCloudSettingsApi represents user application cloud settings api
@@ -116,17 +116,16 @@ func (a *UserApplicationCloudSettingsApi) ApplicationSettingsUpdateHandler(c *co
 				}
 			}
 		} else { // Check if the partial update settings are the same as the existing settings or the settings to update are not set to sync
-			needUpdate := true
+			needUpdate := false
 
 			for _, setting := range userAppCloudSettingUpdateReq.Settings {
 				cloudSetting, exists := oldApplicationCloudSettingsMap[setting.SettingKey]
 
 				if !exists {
-					needUpdate = false
 					log.Infof(c, "[user_app_cloud_settings.ApplicationSettingsUpdateHandler] user application cloud setting key \"%s\" is not set to sync (try count %d)", setting.SettingKey, i+1)
-				} else if cloudSetting.SettingValue == setting.SettingValue {
-					needUpdate = false
-					log.Infof(c, "[user_app_cloud_settings.ApplicationSettingsUpdateHandler] user application cloud setting key \"%s\" value \"%s\" is not changed, no need to update (try count %d)", setting.SettingKey, setting.SettingValue, i+1)
+				} else if cloudSetting.SettingValue != setting.SettingValue {
+					needUpdate = true
+					break
 				}
 			}
 

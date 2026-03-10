@@ -1025,7 +1025,7 @@ function updateGeoLocation(forceUpdate: boolean): void {
     geoMenuState.value = false;
 
     if (!isSupportGeoLocation) {
-        logger.warn('this browser does not support geo location');
+        logger.warn('geo location is not supported');
 
         if (forceUpdate) {
             snackbar.value?.showMessage('Unable to retrieve current position');

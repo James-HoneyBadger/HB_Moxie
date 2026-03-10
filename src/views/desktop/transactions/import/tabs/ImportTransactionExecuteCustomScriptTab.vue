@@ -342,6 +342,10 @@ function onMessage(event: MessageEvent<SandboxResponse>): void {
         return;
     }
 
+    if (event.origin !== 'null' && event.origin !== window.location.origin) {
+        return;
+    }
+
     executingScript.value = false;
 
     const data = event.data;

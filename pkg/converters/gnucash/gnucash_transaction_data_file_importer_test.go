@@ -8,11 +8,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/mayswind/ezbookkeeping/pkg/converters/converter"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/converter"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 const gnucashMinimumValidDataCase = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" +

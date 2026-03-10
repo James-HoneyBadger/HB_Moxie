@@ -2,18 +2,19 @@ package oidc
 
 import (
 	"context"
+	"sync"
 
 	"golang.org/x/oauth2"
 
 	"github.com/coreos/go-oidc/v3/oidc"
 
-	"github.com/mayswind/ezbookkeeping/pkg/auth/oauth2/data"
-	"github.com/mayswind/ezbookkeeping/pkg/auth/oauth2/provider"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/httpclient"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/auth/oauth2/data"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/auth/oauth2/provider"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/httpclient"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // OIDCClaims represents OIDC claims
@@ -35,6 +36,8 @@ type OIDCProvider struct {
 	oauth2Config       *oauth2.Config
 	oidcProvider       *oidc.Provider
 	oidcVerifier       *oidc.IDTokenVerifier
+	configOnce         sync.Once
+	configErr          error
 }
 
 // GetOAuth2AuthUrl returns the authentication url of the OIDC provider
@@ -135,40 +138,44 @@ func (p *OIDCProvider) GetUserInfo(c core.Context, oauth2Token *oauth2.Token) (*
 }
 
 func (p *OIDCProvider) getOAuth2Config(c core.Context) (*oauth2.Config, error) {
-	if p.oauth2Config != nil {
-		return p.oauth2Config, nil
-	}
+	p.configOnce.Do(func() {
+		var ctx context.Context = c
 
-	var ctx context.Context = c
+		if !p.oidcCheckIssuerURL {
+			ctx = oidc.InsecureIssuerURLContext(c, p.oidcIssuerURL)
+		}
 
-	if !p.oidcCheckIssuerURL {
-		ctx = oidc.InsecureIssuerURLContext(c, p.oidcIssuerURL)
-	}
+		oidcProvider, err := oidc.NewProvider(ctx, p.oidcIssuerURL)
 
-	oidcProvider, err := oidc.NewProvider(ctx, p.oidcIssuerURL)
+		if err != nil {
+			log.Errorf(c, "[oidc_provider.getOAuth2Config] failed to create oidc provider, because %s", err.Error())
+			p.configErr = err
+			return
+		}
 
-	if err != nil {
-		log.Errorf(c, "[oidc_provider.getOAuth2Config] failed to create oidc provider, because %s", err.Error())
-		return nil, err
-	}
+		oidcVerifier := oidcProvider.Verifier(&oidc.Config{
+			ClientID:        p.oauth2ClientID,
+			SkipIssuerCheck: !p.oidcCheckIssuerURL,
+		})
 
-	oidcVerifier := oidcProvider.Verifier(&oidc.Config{
-		ClientID:        p.oauth2ClientID,
-		SkipIssuerCheck: !p.oidcCheckIssuerURL,
+		oauth2Config := &oauth2.Config{
+			ClientID:     p.oauth2ClientID,
+			ClientSecret: p.oauth2ClientSecret,
+			Endpoint:     oidcProvider.Endpoint(),
+			RedirectURL:  p.redirectUrl,
+			Scopes:       []string{oidc.ScopeOpenID, "profile", "email"},
+		}
+
+		p.oauth2Config = oauth2Config
+		p.oidcProvider = oidcProvider
+		p.oidcVerifier = oidcVerifier
 	})
 
-	oauth2Config := &oauth2.Config{
-		ClientID:     p.oauth2ClientID,
-		ClientSecret: p.oauth2ClientSecret,
-		Endpoint:     oidcProvider.Endpoint(),
-		RedirectURL:  p.redirectUrl,
-		Scopes:       []string{oidc.ScopeOpenID, "profile", "email"},
+	if p.configErr != nil {
+		return nil, p.configErr
 	}
 
-	p.oauth2Config = oauth2Config
-	p.oidcProvider = oidcProvider
-	p.oidcVerifier = oidcVerifier
-	return oauth2Config, nil
+	return p.oauth2Config, nil
 }
 
 // NewOIDCProvider returns a new OIDC provider

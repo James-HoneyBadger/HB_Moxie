@@ -35,16 +35,6 @@
                             <v-skeleton-loader class="skeleton-no-margin" type="text" style="width: 100px" :loading="true" v-if="loading"></v-skeleton-loader>
                             <span v-if="!loading">{{ oldProfile.username }}</span>
                         </div>
-                        <div class="d-flex text-body-1 align-center" style="height: 40px;">
-                            <span v-if="!loading && emailVerified">{{ tt('Email address is verified') }}</span>
-                            <span v-if="!loading && !emailVerified">{{ tt('Email address is not verified') }}</span>
-                            <v-btn class="ms-2 px-2" size="small" variant="text" :disabled="loading || resending"
-                                   @click="resendVerifyEmail" v-if="isUserVerifyEmailEnabled() && !loading && !emailVerified">
-                                {{ tt('Resend Validation Email') }}
-                                <v-progress-circular indeterminate size="18" class="ms-2" v-if="resending"></v-progress-circular>
-                            </v-btn>
-                            <v-skeleton-loader class="skeleton-no-margin mt-2 mb-1" type="text" style="width: 160px" :loading="true" v-if="loading"></v-skeleton-loader>
-                        </div>
                     </div>
                 </v-card-text>
 
@@ -413,7 +403,6 @@ import type { UserProfileResponse } from '@/models/user.ts';
 import { Account } from '@/models/account.ts';
 
 import { generateRandomUUID } from '@/lib/misc.ts';
-import { isUserVerifyEmailEnabled } from '@/lib/server_settings.ts';
 
 import {
     mdiAccount,
@@ -428,9 +417,7 @@ const { tt } = useI18n();
 const {
     newProfile,
     oldProfile,
-    emailVerified,
     loading,
-    resending,
     saving,
     allAccounts,
     allVisibleAccounts,
@@ -588,21 +575,6 @@ function removeAvatar(): void {
                 snackbar.value?.showError(error);
             }
         });
-    });
-}
-
-function resendVerifyEmail(): void {
-    resending.value = true;
-
-    rootStore.resendVerifyEmailByLoginedUser().then(() => {
-        resending.value = false;
-        snackbar.value?.showMessage('Validation email has been sent');
-    }).catch(error => {
-        resending.value = false;
-
-        if (!error.processed) {
-            snackbar.value?.showError(error);
-        }
     });
 }
 

@@ -285,7 +285,7 @@ import ImportTransactionDefineColumnTab from './tabs/ImportTransactionDefineColu
 import ImportTransactionExecuteCustomScriptTab from './tabs/ImportTransactionExecuteCustomScriptTab.vue';
 import ImportTransactionCheckDataTab from './tabs/ImportTransactionCheckDataTab.vue';
 
-import { ref, computed, useTemplateRef, watch } from 'vue';
+import { ref, computed, useTemplateRef, watch, onBeforeUnmount } from 'vue';
 
 import { useI18n } from '@/locales/helpers.ts';
 
@@ -395,8 +395,23 @@ const additionalOptionsMenuState = ref<boolean>(false);
 const clientSessionId = ref<string>('');
 const currentStep = ref<ImportTransactionDialogStep>('uploadFile');
 const importProcess = ref<number>(0);
-const fileType = ref<string>('ezbookkeeping');
-const fileSubType = ref<string>('ezbookkeeping_csv');
+
+let activeShowProcessTimer: number | undefined = undefined;
+let activeShowProcessTimeout: number | undefined = undefined;
+
+onBeforeUnmount(() => {
+    if (activeShowProcessTimer) {
+        clearInterval(activeShowProcessTimer);
+        activeShowProcessTimer = undefined;
+    }
+    if (activeShowProcessTimeout) {
+        clearTimeout(activeShowProcessTimeout);
+        activeShowProcessTimeout = undefined;
+    }
+});
+
+const fileType = ref<string>('hbmoxie');
+const fileSubType = ref<string>('hbmoxie_csv');
 const fileEncoding = ref<string>('auto');
 const detectingFileEncoding = ref<boolean>(false);
 const autoDetectedFileEncoding = ref<string | undefined>(undefined);
@@ -549,7 +564,7 @@ const exportFileGuideDocumentUrl = computed<string | undefined>(() => {
 
     const language = document.language ? document.language + '/' : '';
     const anchor = document.anchor ? '#' + document.anchor : '';
-    return `https://ezbookkeeping.mayswind.net/${language}export_and_import${anchor}`;
+    return `https://github.com/James-HoneyBadger/HB_Moxie/${language}export_and_import${anchor}`;
 });
 
 const exportFileGuideDocumentLanguageName = computed<string | undefined>(() => allSupportedImportFileTypesMap.value[fileType.value]?.document?.displayLanguageName);
@@ -599,8 +614,8 @@ function loadInitFileTypeFromSettings(): void {
 }
 
 function open(): Promise<void> {
-    fileType.value = 'ezbookkeeping';
-    fileSubType.value = 'ezbookkeeping_csv';
+    fileType.value = 'hbmoxie';
+    fileSubType.value = 'hbmoxie_csv';
 
     if (settingsStore.appSettings.rememberLastSelectedFileTypeInImportTransactionDialog && settingsStore.appSettings.lastSelectedFileTypeInImportTransactionDialog) {
         loadInitFileTypeFromSettings();
@@ -848,7 +863,7 @@ function parseData(): void {
                 return;
             }
 
-            type = 'ezbookkeeping_json';
+            type = 'hbmoxie_json';
             encoding = undefined;
             uploadFile = KnownFileType.JSON.createFile(executeCustomScriptResult, 'import');
         }
@@ -929,17 +944,18 @@ function submit(): void {
     }).then(() => {
         submitting.value = true;
 
-        let showProcessTimer : number | undefined = undefined;
-
         if (transactions.length > 100) {
-            setTimeout(() => {
+            // @ts-expect-error the return value of setTimeout is number, but lint shows it as NodeJS.Timer
+            activeShowProcessTimeout = setTimeout(() => {
+                activeShowProcessTimeout = undefined;
+
                 if (!submitting.value) {
                     logger.warn('transaction import is not submitting');
                     return;
                 }
 
                 // @ts-expect-error the return value of setInterval is number, but lint shows it as NodeJS.Timer
-                showProcessTimer = setInterval(() => {
+                activeShowProcessTimer = setInterval(() => {
                     if (submitting.value) {
                         transactionsStore.getImportTransactionsProcess({
                             clientSessionId: clientSessionId.value
@@ -948,13 +964,13 @@ function submit(): void {
                                 importProcess.value = response;
                             } else {
                                 importProcess.value = 0;
-                                clearInterval(showProcessTimer);
-                                showProcessTimer = undefined;
+                                clearInterval(activeShowProcessTimer);
+                                activeShowProcessTimer = undefined;
                             }
                         }).catch(() => {
                             importProcess.value = 0;
-                            clearInterval(showProcessTimer);
-                            showProcessTimer = undefined;
+                            clearInterval(activeShowProcessTimer);
+                            activeShowProcessTimer = undefined;
                         });
                     }
                 }, 2000);
@@ -965,10 +981,10 @@ function submit(): void {
             transactions: transactions,
             clientSessionId: clientSessionId.value
         }).then(response => {
-            if (showProcessTimer) {
+            if (activeShowProcessTimer) {
                 importProcess.value = 0;
-                clearInterval(showProcessTimer);
-                showProcessTimer = undefined;
+                clearInterval(activeShowProcessTimer);
+                activeShowProcessTimer = undefined;
             }
 
             importedCount.value = response;
@@ -981,10 +997,10 @@ function submit(): void {
 
             submitting.value = false;
         }).catch(error => {
-            if (showProcessTimer) {
+            if (activeShowProcessTimer) {
                 importProcess.value = 0;
-                clearInterval(showProcessTimer);
-                showProcessTimer = undefined;
+                clearInterval(activeShowProcessTimer);
+                activeShowProcessTimer = undefined;
             }
 
             submitting.value = false;

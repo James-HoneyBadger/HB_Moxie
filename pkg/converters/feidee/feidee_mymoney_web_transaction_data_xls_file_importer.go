@@ -3,11 +3,11 @@ package feidee
 import (
 	"time"
 
-	"github.com/mayswind/ezbookkeeping/pkg/converters/converter"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/datatable"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/excel"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/converter"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/datatable"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/excel"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
 )
 
 var feideeMymoneyWebDataColumnNameMapping = map[datatable.TransactionDataTableColumn]string{

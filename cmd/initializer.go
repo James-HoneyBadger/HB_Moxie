@@ -4,18 +4,20 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/mayswind/ezbookkeeping/pkg/avatars"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/datastore"
-	"github.com/mayswind/ezbookkeeping/pkg/duplicatechecker"
-	"github.com/mayswind/ezbookkeeping/pkg/exchangerates"
-	"github.com/mayswind/ezbookkeeping/pkg/llm"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/mail"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
-	"github.com/mayswind/ezbookkeeping/pkg/storage"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
-	"github.com/mayswind/ezbookkeeping/pkg/uuid"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/avatars"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/datastore"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/duplicatechecker"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/exchangerates"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/mail"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/services"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/storage"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/uuid"
 )
 
 func initializeSystem(c *core.CliContext) (*settings.Config, error) {
@@ -59,7 +61,18 @@ func initializeSystem(c *core.CliContext) (*settings.Config, error) {
 	}
 
 	if config.SecretKeyNoSet {
-		log.BootWarnf(c, "[initializer.initializeSystem] \"secret_key\" in config file is not set, please change it to keep your user data safe")
+		// Auto-persist the generated secret key so tokens survive restarts
+		if err := settings.PersistSecretKey(configFilePath, config.SecretKey); err != nil {
+			if !isDisableBootLog {
+				log.BootWarnf(c, "[initializer.initializeSystem] failed to persist auto-generated secret_key: %s", err.Error())
+				log.BootWarnf(c, "[initializer.initializeSystem] \"secret_key\" in config file is not set, please change it to keep your user data safe")
+			}
+		} else {
+			config.SecretKeyNoSet = false
+			if !isDisableBootLog {
+				log.BootInfof(c, "[initializer.initializeSystem] auto-generated and persisted secret_key to config file")
+			}
+		}
 	}
 
 	settings.SetCurrentConfig(config)
@@ -151,7 +164,63 @@ func initializeSystem(c *core.CliContext) (*settings.Config, error) {
 		log.BootInfof(c, "[initializer.initializeSystem] has loaded configuration %s", cfgJson)
 	}
 
+	// Ensure a default user exists for single-user mode
+	err = ensureDefaultUser(c, isDisableBootLog)
+
+	if err != nil {
+		if !isDisableBootLog {
+			log.BootErrorf(c, "[initializer.initializeSystem] failed to ensure default user, because %s", err.Error())
+		}
+		return nil, err
+	}
+
 	return config, nil
+}
+
+func ensureDefaultUser(c *core.CliContext, isDisableBootLog bool) error {
+	user, err := services.Users.GetFirstUser(c)
+
+	if err != nil {
+		return err
+	}
+
+	if user != nil {
+		if !isDisableBootLog {
+			log.BootInfof(c, "[initializer.ensureDefaultUser] default user \"%s\" (uid:%d) already exists", user.Username, user.Uid)
+		}
+		return nil
+	}
+
+	// No users exist — create the default single-user account
+	generatedPassword, err := utils.GetRandomNumberOrLetter(16)
+
+	if err != nil {
+		return err
+	}
+
+	defaultUser := &models.User{
+		Username:             "admin",
+		Email:                "admin@hbmoxie.local",
+		Nickname:             "HB Moxie User",
+		Password:             generatedPassword,
+		DefaultCurrency:      "USD",
+		FirstDayOfWeek:       core.WEEKDAY_SUNDAY,
+		TransactionEditScope: models.TRANSACTION_EDIT_SCOPE_ALL,
+		EmailVerified:        true,
+	}
+
+	err = services.Users.CreateUser(c, defaultUser, false)
+
+	if err != nil {
+		return err
+	}
+
+	if !isDisableBootLog {
+		log.BootInfof(c, "[initializer.ensureDefaultUser] created default user \"%s\" (uid:%d)", defaultUser.Username, defaultUser.Uid)
+		log.BootWarnf(c, "[initializer.ensureDefaultUser] IMPORTANT: default password is \"%s\" — please change it immediately", generatedPassword)
+	}
+
+	return nil
 }
 
 func getConfigWithoutSensitiveData(config *settings.Config) *settings.Config {

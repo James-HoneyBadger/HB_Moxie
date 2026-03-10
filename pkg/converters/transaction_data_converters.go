@@ -1,24 +1,24 @@
 package converters
 
 import (
-	"github.com/mayswind/ezbookkeeping/pkg/converters/alipay"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/beancount"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/camt"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/converter"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/custom"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/datatable"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/default"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/feidee"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/fireflyIII"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/gnucash"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/iif"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/jdcom"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/mt"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/ofx"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/qif"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/wechat"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/alipay"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/beancount"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/camt"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/converter"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/custom"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/datatable"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/default"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/feidee"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/fireflyIII"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/gnucash"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/iif"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/jdcom"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/mt"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/ofx"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/qif"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/wechat"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
 )
 
 // GetTransactionDataExporter returns the transaction data exporter according to the file type
@@ -34,11 +34,11 @@ func GetTransactionDataExporter(fileType string) converter.TransactionDataExport
 
 // GetTransactionDataImporter returns the transaction data importer according to the file type
 func GetTransactionDataImporter(fileType string) (converter.TransactionDataImporter, error) {
-	if fileType == "ezbookkeeping_csv" {
+	if fileType == "hbmoxie_csv" {
 		return _default.DefaultTransactionDataCSVFileConverter, nil
-	} else if fileType == "ezbookkeeping_tsv" {
+	} else if fileType == "hbmoxie_tsv" {
 		return _default.DefaultTransactionDataTSVFileConverter, nil
-	} else if fileType == "ezbookkeeping_json" {
+	} else if fileType == "hbmoxie_json" {
 		return _default.DefaultTransactionDataJsonFileImporter, nil
 	} else if fileType == "ofx" {
 		return ofx.OFXTransactionDataImporter, nil

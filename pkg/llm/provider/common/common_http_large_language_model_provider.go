@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/httpclient"
-	"github.com/mayswind/ezbookkeeping/pkg/llm/data"
-	"github.com/mayswind/ezbookkeeping/pkg/llm/provider"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/httpclient"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/data"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/provider"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // HttpLargeLanguageModelAdapter defines the structure of http large language model adapter
@@ -70,6 +70,11 @@ func (p *CommonHttpLargeLanguageModelProvider) getTextualResponse(c core.Context
 
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Errorf(c, "[common_http_large_language_model_provider.getTextualResponse] failed to read response body for user \"uid:%d\", because %s", uid, err.Error())
+		return nil, errs.ErrFailedToRequestRemoteApi
+	}
 
 	if resp.StatusCode != 200 {
 		log.Errorf(c, "[common_http_large_language_model_provider.getTextualResponse] failed to get large language model api response for user \"uid:%d\", because response code is %d", uid, resp.StatusCode)

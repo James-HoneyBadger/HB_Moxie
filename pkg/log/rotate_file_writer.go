@@ -10,7 +10,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
 )
 
 const (
@@ -108,6 +108,8 @@ func (w *RotateFileWriter) rotateFile() error {
 	err = os.Rename(currentFileName, archiveFileName)
 
 	if err != nil {
+		// Try to reopen the original file to prevent nil dereference
+		_ = w.openFile()
 		return errs.NewLoggingError(fmt.Sprintf("cannot rename log file \"%s\" to \"%s\", because %s", currentFileName, archiveFileName, err.Error()), err)
 	}
 
@@ -133,6 +135,12 @@ func (w *RotateFileWriter) openFile() error {
 	}
 
 	w.file = file
+
+	info, err := file.Stat()
+	if err == nil {
+		w.totalSize = info.Size()
+	}
+
 	return nil
 }
 

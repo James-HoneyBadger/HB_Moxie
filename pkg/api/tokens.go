@@ -4,14 +4,14 @@ import (
 	"sort"
 	"time"
 
-	"github.com/mayswind/ezbookkeeping/pkg/avatars"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/services"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/avatars"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/services"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 // TokensApi represents token api
@@ -281,7 +281,7 @@ func (a *TokensApi) TokenRevokeAllHandler(c *core.WebContext) (any, *errs.Error)
 	}
 
 	claims := c.GetTokenClaims()
-	currentTokenIndex := 0
+	currentTokenIndex := -1
 
 	for i := 0; i < len(tokens); i++ {
 		token := tokens[i]
@@ -292,7 +292,9 @@ func (a *TokensApi) TokenRevokeAllHandler(c *core.WebContext) (any, *errs.Error)
 		}
 	}
 
-	tokens = append(tokens[:currentTokenIndex], tokens[currentTokenIndex+1:]...)
+	if currentTokenIndex >= 0 {
+		tokens = append(tokens[:currentTokenIndex], tokens[currentTokenIndex+1:]...)
+	}
 
 	if len(tokens) < 1 {
 		return nil, errs.ErrTokenRecordNotFound

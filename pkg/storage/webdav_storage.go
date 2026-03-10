@@ -7,11 +7,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/httpclient"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/httpclient"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // WebDAVObjectStorage represents WebDAV object storage
@@ -67,6 +67,8 @@ func (s *WebDAVObjectStorage) Exists(ctx core.Context, path string) (bool, error
 		log.Errorf(ctx, "[webdav_storage.Exists] cannot check file exists, because %s", err.Error())
 		return false, err
 	}
+
+	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusOK {
 		return true, nil
@@ -225,6 +227,8 @@ func (s *WebDAVObjectStorage) directoryExists(ctx core.Context, path string) (bo
 		log.Errorf(ctx, "[webdav_storage.directoryExists] cannot check directory exists, because %s", err.Error())
 		return false, err
 	}
+
+	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusMultiStatus || resp.StatusCode == http.StatusOK {
 		return true, nil

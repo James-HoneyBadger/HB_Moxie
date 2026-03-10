@@ -45,7 +45,7 @@ var ALL_ALLOWED_CLOUD_SYNC_APP_SETTING_KEY_TYPES = map[string]UserApplicationClo
 	"hideCategoriesWithoutAccounts": USER_APPLICATION_CLOUD_SETTING_TYPE_BOOLEAN,
 	// Exchange Rates Data Page
 	"currencySortByInExchangeRatesPage": USER_APPLICATION_CLOUD_SETTING_TYPE_NUMBER,
-	// Browser Cache Management
+	// Data Cache Management
 	"mapCacheExpiration":               USER_APPLICATION_CLOUD_SETTING_TYPE_NUMBER,
 	"exchangeRatesDataCacheExpiration": USER_APPLICATION_CLOUD_SETTING_TYPE_NUMBER,
 	// Statistics Settings

@@ -13,7 +13,7 @@ import { useExchangeRatesStore } from '@/stores/exchangeRates.ts';
 import type { NumeralSystem } from '@/core/numeral.ts';
 import type { WeekDayValue } from '@/core/datetime.ts';
 import type { LocalizedTimezoneInfo } from '@/core/timezone.ts';
-import { TransactionType, TransactionQuickAddButtonActionType } from '@/core/transaction.ts';
+import { TransactionType } from '@/core/transaction.ts';
 import { TemplateType } from '@/core/template.ts';
 import { DISPLAY_HIDDEN_AMOUNT } from '@/consts/numeral.ts';
 import { TRANSACTION_MAX_PICTURE_COUNT } from '@/consts/transaction.ts';
@@ -179,13 +179,7 @@ export function useTransactionEditPageBase(type: TransactionEditPageType, initMo
 
     const quickSaveButtonTitle = computed<string>(() => {
         if (mode.value === TransactionEditPageMode.Add) {
-            const quickAddActionType = TransactionQuickAddButtonActionType.valueOf(settingsStore.appSettings.quickAddButtonActionInMobileTransactionEditPage);
-
-            if (quickAddActionType && quickAddActionType.type !== TransactionQuickAddButtonActionType.OpenMenu.type) {
-                return quickAddActionType.name;
-            } else {
-                return 'Add';
-            }
+            return 'Add';
         } else {
             return 'Save';
         }

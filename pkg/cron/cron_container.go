@@ -5,10 +5,10 @@ import (
 
 	"github.com/go-co-op/gocron/v2"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // CronJobSchedulerContainer contains the current cron job scheduler
@@ -83,6 +83,10 @@ func (c *CronJobSchedulerContainer) registerAllJobs(ctx core.Context, config *se
 
 	if config.EnableCreateScheduledTransaction {
 		Container.registerIntervalJob(ctx, CreateScheduledTransactionJob)
+	}
+
+	if config.EnableAutoBackup {
+		Container.registerIntervalJob(ctx, NewAutoBackupJob(config))
 	}
 }
 

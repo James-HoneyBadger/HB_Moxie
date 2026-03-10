@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/mayswind/ezbookkeeping/pkg/llm/data"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/data"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
 )
 
 func TestOllamaLargeLanguageModelAdapter_buildJsonRequestBody_TextualUserPrompt(t *testing.T) {

@@ -98,20 +98,20 @@ export const CHARDET_ENCODING_NAME_MAPPING: Record<string, string> = {
 
 export const SUPPORTED_IMPORT_FILE_CATEGORY_AND_TYPES: ImportFileCategoryAndTypes[] = [
     {
-        categoryName: 'ezBookkeeping File Format',
+        categoryName: 'HB Moxie File Format',
         fileTypes: [
             {
-                type: 'ezbookkeeping',
-                name: 'ezbookkeeping Data Export File',
+                type: 'hbmoxie',
+                name: 'hbmoxie Data Export File',
                 extensions: '.csv,.tsv',
                 subTypes: [
                     {
-                        type: 'ezbookkeeping_csv',
+                        type: 'hbmoxie_csv',
                         name: 'CSV (Comma-separated values) File',
                         extensions: '.csv',
                     },
                     {
-                        type: 'ezbookkeeping_tsv',
+                        type: 'hbmoxie_tsv',
                         name: 'TSV (Tab-separated values) File',
                         extensions: '.tsv',
                     }
@@ -201,6 +201,54 @@ export const SUPPORTED_IMPORT_FILE_CATEGORY_AND_TYPES: ImportFileCategoryAndType
                     anchor: 'how-to-import-delimiter-separated-values-dsv-file-or-data'
                 }
             },
+        ]
+    },
+    {
+        categoryName: 'Quicken File Format',
+        fileTypes: [
+            {
+                type: 'qfx',
+                name: 'Quicken Financial Exchange (QFX) File',
+                extensions: '.qfx'
+            },
+            {
+                type: 'qif',
+                name: 'Quicken Interchange Format (QIF) File',
+                extensions: '.qif',
+                subTypes: [
+                    {
+                        type: 'qif_ymd',
+                        name: 'Year-month-day format',
+                    },
+                    {
+                        type: 'qif_mdy',
+                        name: 'Month-day-year format',
+                    },
+                    {
+                        type: 'qif_dmy',
+                        name: 'Day-month-year format',
+                    }
+                ],
+                supportedAdditionalOptions: {
+                    payeeAsTag: false,
+                    payeeAsDescription: true
+                }
+            },
+            {
+                type: 'iif',
+                name: 'Intuit Interchange Format (IIF) File',
+                extensions: '.iif'
+            }
+        ]
+    },
+    {
+        categoryName: 'Microsoft Money File Format',
+        fileTypes: [
+            {
+                type: 'ofx',
+                name: 'Open Financial Exchange (OFX) File',
+                extensions: '.ofx'
+            }
         ]
     },
     {

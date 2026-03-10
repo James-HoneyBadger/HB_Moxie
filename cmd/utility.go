@@ -7,17 +7,17 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/mail"
-	"github.com/mayswind/ezbookkeeping/pkg/requestid"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/mail"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/requestid"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 // Utilities represents the utilities command
 var Utilities = &cli.Command{
 	Name:  "utility",
-	Usage: "ezBookkeeping utilities",
+	Usage: "HB Moxie utilities",
 	Commands: []*cli.Command{
 		{
 			Name:   "parse-default-request-id",
@@ -54,6 +54,11 @@ func parseRequestId(c *core.CliContext) error {
 	}
 
 	err = requestid.InitializeRequestIdGenerator(c, config)
+
+	if err != nil {
+		return err
+	}
+
 	defaultGenerator, err := requestid.NewDefaultRequestIdGenerator(c, config)
 
 	if err != nil {
@@ -89,7 +94,7 @@ func sendTestMail(c *core.CliContext) error {
 
 	err = mail.Container.SendMail(&mail.MailMessage{
 		To:      toAddress,
-		Subject: "ezBookkeeping test e-mail",
+		Subject: "HB Moxie test e-mail",
 		Body:    "This is a test e-mail",
 	})
 

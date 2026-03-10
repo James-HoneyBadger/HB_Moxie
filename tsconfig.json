@@ -2,7 +2,7 @@
     "extends": "@vue/tsconfig/tsconfig.dom.json",
     "compilerOptions": {
         "target": "ES2022",
-        "lib": ["DOM", "ES2022", "WebWorker"],
+        "lib": ["DOM", "ES2022"],
         "types": ["vite/client"],
         "strict": true,
         "noImplicitReturns": true,

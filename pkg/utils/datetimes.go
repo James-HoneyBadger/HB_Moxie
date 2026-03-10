@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
 )
 
 const (
@@ -400,6 +400,11 @@ func GetUnixTimeFromTransactionTime(transactionTime int64) int64 {
 // GetTransactionTimeRangeByYearMonth returns the transaction time range by specified year and month
 func GetTransactionTimeRangeByYearMonth(year int32, month int32) (int64, int64, error) {
 	startMinUnixTime, err := ParseFromLongDateTimeToMinUnixTime(fmt.Sprintf("%d-%02d-01 00:00:00", year, month))
+
+	if err != nil {
+		return 0, 0, err
+	}
+
 	startMaxUnixTime, err := ParseFromLongDateTimeToMaxUnixTime(fmt.Sprintf("%d-%02d-01 00:00:00", year, month))
 
 	if err != nil {

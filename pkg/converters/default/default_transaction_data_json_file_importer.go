@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/mayswind/ezbookkeeping/pkg/converters/converter"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/datatable"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/converter"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/datatable"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 var allJsonDataSupportedColumns = []datatable.TransactionDataTableColumn{
@@ -26,10 +26,10 @@ var allJsonDataSupportedColumns = []datatable.TransactionDataTableColumn{
 	datatable.TRANSACTION_DATA_TABLE_DESCRIPTION,
 }
 
-// defaultTransactionDataJsonImporter defines the structure of ezbookkeeping default json importer for transaction data
+// defaultTransactionDataJsonImporter defines the structure of hbmoxie default json importer for transaction data
 type defaultTransactionDataJsonImporter struct{}
 
-// Initialize an ezbookkeeping default transaction data json file importer singleton instance
+// Initialize an hbmoxie default transaction data json file importer singleton instance
 var (
 	DefaultTransactionDataJsonFileImporter = &defaultTransactionDataJsonImporter{}
 )
@@ -49,10 +49,10 @@ func (c *defaultTransactionDataJsonImporter) ParseImportedData(ctx core.Context,
 	}
 
 	dataTableImporter := converter.CreateNewImporterWithTypeNameMapping(
-		ezbookkeepingTransactionTypeNameMapping,
-		ezbookkeepingGeoLocationSeparator,
-		ezbookkeepingGeoLocationOrder,
-		ezbookkeepingTagSeparator,
+		hbmoxieTransactionTypeNameMapping,
+		hbmoxieGeoLocationSeparator,
+		hbmoxieGeoLocationOrder,
+		hbmoxieTagSeparator,
 	)
 
 	return dataTableImporter.ParseImportedData(ctx, user, transactionDataTable, defaultTimezone, additionalOptions, accountMap, expenseCategoryMap, incomeCategoryMap, transferCategoryMap, tagMap)

@@ -23,8 +23,8 @@
                 <div class="d-flex align-center justify-center h-100">
                     <v-card variant="flat" class="w-100 mt-0 px-4 pt-12" max-width="500">
                         <v-card-text>
-                            <h4 class="text-h4 mb-2">{{ tt('Welcome to ezBookkeeping') }}</h4>
-                            <p class="mb-0" v-if="isInternalAuthEnabled()">{{ tt('Please log in with your ezBookkeeping account') }}</p>
+                            <h4 class="text-h4 mb-2">{{ tt('Welcome to HB_Moxie') }}</h4>
+                            <p class="mb-0" v-if="isInternalAuthEnabled()">{{ tt('Please log in with your HB_Moxie account') }}</p>
                             <p class="mt-1 mb-0" v-if="tips">{{ tips }}</p>
                         </v-card-text>
 
@@ -88,11 +88,6 @@
 
                                     <v-col cols="12" class="py-0 mt-1 mb-4">
                                         <div class="d-flex align-center justify-space-between flex-wrap">
-                                            <a href="javascript:void(0);"
-                                               :class="{ 'disabled': loggingInByPassword || loggingInByOAuth2 || verifying }"
-                                               @click="showMobileQrCode = true">
-                                                <span class="nav-item-title">{{ tt('Use on Mobile Device') }}</span>
-                                            </a>
                                             <v-spacer/>
                                             <router-link class="text-primary" to="/forgetpassword"
                                                          :class="{ 'disabled': !isUserForgetPasswordEnabled() || loggingInByPassword || loggingInByOAuth2 || verifying }">
@@ -153,7 +148,7 @@
 
                                 <v-col cols="12" class="text-center text-sm">
                                     <span>Powered by </span>
-                                    <a href="https://github.com/mayswind/ezbookkeeping" target="_blank">ezBookkeeping</a>&nbsp;<span>{{ version }}</span>
+                                    <a href="https://github.com/James-HoneyBadger/HB_Moxie" target="_blank">HB Moxie</a>&nbsp;<span>{{ version }}</span>
                                 </v-col>
                             </v-row>
                         </v-card-text>
@@ -162,7 +157,6 @@
             </v-col>
         </v-row>
 
-        <switch-to-mobile-dialog v-model:show="showMobileQrCode" />
         <snack-bar ref="snackbar" />
     </div>
 </template>
@@ -171,7 +165,7 @@
 import { VTextField } from 'vuetify/components/VTextField';
 import SnackBar from '@/components/desktop/SnackBar.vue';
 
-import { ref, computed, useTemplateRef, nextTick } from 'vue';
+import { ref, computed, useTemplateRef, nextTick, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useTheme } from 'vuetify';
 
@@ -190,7 +184,8 @@ import {
     isUserForgetPasswordEnabled,
     isUserVerifyEmailEnabled,
     isInternalAuthEnabled,
-    isOAuth2Enabled
+    isOAuth2Enabled,
+    isDesktopAutoLoginEnabled
 } from '@/lib/server_settings.ts';
 
 import {
@@ -232,9 +227,24 @@ const passcodeInput = useTemplateRef<VTextField>('passcodeInput');
 const snackbar = useTemplateRef<SnackBarType>('snackbar');
 
 const show2faInput = ref<boolean>(false);
-const showMobileQrCode = ref<boolean>(false);
 
 const isDarkMode = computed<boolean>(() => theme.global.name.value === ThemeType.Dark);
+
+const autoLoggingIn = ref<boolean>(false);
+
+// Attempt auto-login in desktop mode when enabled
+onMounted(() => {
+    if (isDesktopAutoLoginEnabled() && window.hbmoxie?.isDesktopApp) {
+        autoLoggingIn.value = true;
+        rootStore.autoLogin().then(authResponse => {
+            doAfterLogin(authResponse);
+            router.replace('/');
+        }).catch(() => {
+            // Auto-login failed (e.g. no user, disabled user) — fall back to manual login
+            autoLoggingIn.value = false;
+        });
+    }
+});
 
 function login(): void {
     if (!username.value) {

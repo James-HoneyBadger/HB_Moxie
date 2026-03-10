@@ -11,17 +11,17 @@ import (
 
 	orderedmap "github.com/wk8/go-ordered-map/v2"
 
-	"github.com/mayswind/ezbookkeeping/pkg/converters"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/converter"
-	"github.com/mayswind/ezbookkeeping/pkg/converters/datatable"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/duplicatechecker"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/services"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/converter"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/datatable"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/duplicatechecker"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/services"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 const pageCountForAccountStatement = 1000
@@ -788,12 +788,13 @@ func (a *TransactionsApi) TransactionAmountsHandler(c *core.WebContext) (any, *e
 	uid := c.GetCurrentUid()
 
 	accounts, err := a.accounts.GetAllAccountsByUid(c, uid)
-	accountMap := a.accounts.GetAccountMapByList(accounts)
 
 	if err != nil {
 		log.Errorf(c, "[transactions.TransactionAmountsHandler] failed to get all accounts for user \"uid:%d\", because %s", uid, err.Error())
 		return nil, errs.Or(err, errs.ErrOperationFailed)
 	}
+
+	accountMap := a.accounts.GetAccountMapByList(accounts)
 
 	amountsResp := orderedmap.New[string, *models.TransactionAmountsResponseItem]()
 

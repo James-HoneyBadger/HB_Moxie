@@ -3,9 +3,9 @@ package openai
 import (
 	"net/http"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/llm/provider"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/provider"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 const openAICompatibleChatCompletionsPath = "chat/completions"

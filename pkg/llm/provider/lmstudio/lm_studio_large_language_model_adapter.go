@@ -6,13 +6,13 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/llm/data"
-	"github.com/mayswind/ezbookkeeping/pkg/llm/provider"
-	"github.com/mayswind/ezbookkeeping/pkg/llm/provider/common"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/data"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/provider"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/provider/common"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 const lmStudioChatPath = "api/v1/chat"

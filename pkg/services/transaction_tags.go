@@ -6,12 +6,12 @@ import (
 
 	"xorm.io/xorm"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/datastore"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
-	"github.com/mayswind/ezbookkeeping/pkg/uuid"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/datastore"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/uuid"
 )
 
 const pageCountForLoadAllTransactionTagIndexes = 1000
@@ -265,7 +265,7 @@ func (s *TransactionTagService) CreateTags(c core.Context, uid int64, tags []*mo
 		newTags = append(newTags, tag)
 	}
 
-	tagUuids := s.GenerateUuids(uuid.UUID_TYPE_TAG_INDEX, uint16(len(newTags)))
+	tagUuids := s.GenerateUuids(uuid.UUID_TYPE_TAG, uint16(len(newTags)))
 
 	if len(tagUuids) < len(newTags) {
 		return errs.ErrSystemIsBusy

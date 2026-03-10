@@ -8,9 +8,9 @@ import (
 	"github.com/go-co-op/gocron/v2"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/duplicatechecker"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/duplicatechecker"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 func TestCronJobSchedulerContainerRegisterIntervalJob(t *testing.T) {

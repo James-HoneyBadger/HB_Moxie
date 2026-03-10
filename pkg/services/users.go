@@ -11,18 +11,18 @@ import (
 
 	"xorm.io/xorm"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/datastore"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/locales"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/mail"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
-	"github.com/mayswind/ezbookkeeping/pkg/storage"
-	"github.com/mayswind/ezbookkeeping/pkg/templates"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
-	"github.com/mayswind/ezbookkeeping/pkg/uuid"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/datastore"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/locales"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/mail"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/storage"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/templates"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/uuid"
 )
 
 const verifyEmailUrlFormat = "%sdesktop#/verify_email?token=%s"
@@ -98,6 +98,20 @@ func (s *UserService) GetUserById(c core.Context, uid int64) (*models.User, erro
 		return nil, err
 	} else if !has {
 		return nil, errs.ErrUserNotFound
+	}
+
+	return user, nil
+}
+
+// GetFirstUser returns the first non-deleted user in the database (for single-user mode)
+func (s *UserService) GetFirstUser(c core.Context) (*models.User, error) {
+	user := &models.User{}
+	has, err := s.UserDB().NewSession(c).Where("deleted=?", false).Limit(1).Get(user)
+
+	if err != nil {
+		return nil, err
+	} else if !has {
+		return nil, nil
 	}
 
 	return user, nil
@@ -297,11 +311,11 @@ func (s *UserService) UpdateUser(c core.Context, user *models.User, modifyUserLa
 		updateCols = append(updateCols, "fiscal_year_start")
 	}
 
-	if core.CALENDAR_DISPLAY_TYPE_DEFAULT <= user.CalendarDisplayType && user.CalendarDisplayType <= core.CALENDAR_DISPLAY_TYPE_GREGORAIN_WITH_PERSIAN {
+	if core.CALENDAR_DISPLAY_TYPE_DEFAULT <= user.CalendarDisplayType && user.CalendarDisplayType <= core.CALENDAR_DISPLAY_TYPE_HEBREW {
 		updateCols = append(updateCols, "calendar_display_type")
 	}
 
-	if core.DATE_DISPLAY_TYPE_DEFAULT <= user.DateDisplayType && user.DateDisplayType <= core.DATE_DISPLAY_TYPE_PERSIAN {
+	if core.DATE_DISPLAY_TYPE_DEFAULT <= user.DateDisplayType && user.DateDisplayType <= core.DATE_DISPLAY_TYPE_HEBREW {
 		updateCols = append(updateCols, "date_display_type")
 	}
 
@@ -741,5 +755,5 @@ func (s *UserService) SendVerifyEmail(user *models.User, verifyEmailToken string
 
 // IsPasswordEqualsUserPassword returns whether the given password is correct
 func (s *UserService) IsPasswordEqualsUserPassword(password string, user *models.User) bool {
-	return user.Password == utils.EncodePassword(password, user.Salt)
+	return utils.SecureCompare(utils.EncodePassword(password, user.Salt), user.Password)
 }

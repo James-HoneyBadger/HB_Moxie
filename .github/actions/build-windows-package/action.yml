@@ -1,15 +1,16 @@
 name: Build packages for windows
+description: Packages the Windows desktop application
 
 inputs:
   package-file-name-prefix:
+    description: Prefix for the package file name
     required: true
-    type: string
   package-artifact-name-prefix:
+    description: Prefix for the package artifact name
     required: true
-    type: string
   backend-artifact-name-prefix:
+    description: Prefix for the backend artifact name
     required: true
-    type: string
 
 runs:
   using: "composite"
@@ -35,19 +36,19 @@ runs:
     - name: Package windows-x64 package
       shell: pwsh
       run: |
-        New-Item -ItemType Directory -Path "ezbookkeeping"
-        New-Item -ItemType Directory -Path "ezbookkeeping\data"
-        New-Item -ItemType Directory -Path "ezbookkeeping\storage"
-        New-Item -ItemType Directory -Path "ezbookkeeping\log"
-        Copy-Item ${{ runner.temp }}\backend\ezbookkeeping.exe -Destination ezbookkeeping\
-        Copy-Item -Recurse -Force package\public -Destination ezbookkeeping\public
-        Copy-Item -Recurse -Force conf -Destination ezbookkeeping\conf
-        Copy-Item -Recurse -Force templates -Destination ezbookkeeping\templates
-        Copy-Item .\LICENSE -Destination ezbookkeeping\
-        Push-Location ezbookkeeping
+        New-Item -ItemType Directory -Path "hbmoxie"
+        New-Item -ItemType Directory -Path "hbmoxie\data"
+        New-Item -ItemType Directory -Path "hbmoxie\storage"
+        New-Item -ItemType Directory -Path "hbmoxie\log"
+        Copy-Item ${{ runner.temp }}\backend\hbmoxie.exe -Destination hbmoxie\
+        Copy-Item -Recurse -Force package\public -Destination hbmoxie\public
+        Copy-Item -Recurse -Force conf -Destination hbmoxie\conf
+        Copy-Item -Recurse -Force templates -Destination hbmoxie\templates
+        Copy-Item .\LICENSE -Destination hbmoxie\
+        Push-Location hbmoxie
         7z a -r -tzip -mx9 ..\${{ inputs.package-file-name-prefix }}-windows-x64.zip *
         Pop-Location
-        Remove-Item -Recurse -Force ezbookkeeping
+        Remove-Item -Recurse -Force hbmoxie
 
     - name: Upload windows artifact
       uses: actions/upload-artifact@v4

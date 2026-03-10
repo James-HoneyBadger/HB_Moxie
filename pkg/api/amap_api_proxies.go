@@ -7,9 +7,9 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 const amapCustomMapStylesUrl = "https://webapi.amap.com/v4/map/styles"
@@ -44,13 +44,17 @@ func (p *AmapApiProxy) AmapApiProxyHandler(c *core.WebContext) (*httputil.Revers
 
 	director := func(req *http.Request) {
 		targetRawUrl := fmt.Sprintf("%s?%s&jscode=%s", targetUrl, req.URL.RawQuery, p.CurrentConfig().AmapApplicationSecret)
-		targetUrl, _ := url.Parse(targetRawUrl)
+		targetUrl, parseErr := url.Parse(targetRawUrl)
+
+		if parseErr != nil {
+			return
+		}
 
 		oldCookies := req.Cookies()
 		req.Header.Del("Cookie")
 
 		for i := 0; i < len(oldCookies); i++ {
-			if strings.HasPrefix(oldCookies[i].Name, "ebk_") {
+			if strings.HasPrefix(oldCookies[i].Name, "hbm_") {
 				continue
 			}
 

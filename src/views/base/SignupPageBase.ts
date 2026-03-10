@@ -11,7 +11,6 @@ import { CategoryType } from '@/core/category.ts';
 import type { RegisterResponse } from '@/models/auth_response.ts';
 import type { User } from '@/models/user.ts';
 
-import { updateMapCacheExpiration } from '@/lib/cache.ts';
 import { setExpenseAndIncomeAmountColor } from '@/lib/ui/common.ts';
 
 export function useSignupPageBase() {
@@ -116,7 +115,6 @@ export function useSignupPageBase() {
             setExpenseAndIncomeAmountColor(response.user.expenseAmountColor, response.user.incomeAmountColor);
         }
 
-        updateMapCacheExpiration(settingsStore.appSettings.mapCacheExpiration);
         exchangeRatesStore.removeExpiredExchangeRates(true);
         exchangeRatesStore.autoUpdateExchangeRatesData();
 

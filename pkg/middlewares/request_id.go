@@ -1,9 +1,9 @@
 package middlewares
 
 import (
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/requestid"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/requestid"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 const requestIdHeader = "X-Request-ID"

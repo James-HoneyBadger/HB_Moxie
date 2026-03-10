@@ -4,13 +4,14 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"strconv"
 	"strings"
 	"sync"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/httpclient"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/httpclient"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 const openStreetMapTileImageUrlFormat = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"                                                                                                                              // https://tile.openstreetmap.org/{z}/{x}/{y}.png
@@ -117,6 +118,18 @@ func (p *MapImageProxy) mapImageProxyHandler(c *core.WebContext, fn func(c *core
 		return nil, errs.ErrImageExtensionNotSupported
 	}
 
+	if _, err := strconv.Atoi(zoomLevel); err != nil {
+		return nil, errs.ErrParameterInvalid
+	}
+
+	if _, err := strconv.Atoi(coordinateX); err != nil {
+		return nil, errs.ErrParameterInvalid
+	}
+
+	if _, err := strconv.Atoi(coordinateY); err != nil {
+		return nil, errs.ErrParameterInvalid
+	}
+
 	var err *errs.Error
 	targetUrl, err = fn(c, mapProvider)
 
@@ -134,7 +147,11 @@ func (p *MapImageProxy) mapImageProxyHandler(c *core.WebContext, fn func(c *core
 		imageRawUrl = strings.Replace(imageRawUrl, "{x}", coordinateX, -1)
 		imageRawUrl = strings.Replace(imageRawUrl, "{y}", coordinateY, -1)
 		imageRawUrl = strings.Replace(imageRawUrl, "{scale}", scale, -1)
-		imageUrl, _ := url.Parse(imageRawUrl)
+		imageUrl, parseErr := url.Parse(imageRawUrl)
+
+		if parseErr != nil {
+			return
+		}
 
 		req.URL = imageUrl
 		req.RequestURI = req.URL.RequestURI()

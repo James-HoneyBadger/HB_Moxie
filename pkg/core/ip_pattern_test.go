@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
 )
 
 func TestIPPattern_GobEncode(t *testing.T) {

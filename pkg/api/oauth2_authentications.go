@@ -7,17 +7,17 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/mayswind/ezbookkeeping/pkg/auth/oauth2"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/duplicatechecker"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/locales"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/services"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
-	"github.com/mayswind/ezbookkeeping/pkg/validators"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/auth/oauth2"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/duplicatechecker"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/locales"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/services"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/validators"
 )
 
 const oauth2CallbackPageUrlSuccessFormat = "%sdesktop#/oauth2_callback?platform=%s&provider=%s&token=%s"
@@ -62,7 +62,7 @@ func (a *OAuth2AuthenticationApi) LoginHandler(c *core.WebContext) (string, *err
 		return a.redirectToFailedCallbackPage(c, errs.NewIncompleteOrIncorrectSubmissionError(err))
 	}
 
-	if oauth2LoginReq.Platform != "mobile" && oauth2LoginReq.Platform != "desktop" {
+	if oauth2LoginReq.Platform != "desktop" {
 		return a.redirectToFailedCallbackPage(c, errs.ErrInvalidOAuth2LoginRequest)
 	}
 
@@ -86,7 +86,12 @@ func (a *OAuth2AuthenticationApi) LoginHandler(c *core.WebContext) (string, *err
 		uid = claims.Uid
 		user, err := a.users.GetUserById(c, uid)
 
-		if err != nil && !errors.Is(err, errs.ErrUserNotFound) {
+		if err != nil {
+			if errors.Is(err, errs.ErrUserNotFound) {
+				log.Warnf(c, "[oauth2_authentications.LoginHandler] user \"uid:%d\" not found", uid)
+				return a.redirectToFailedCallbackPage(c, errs.ErrUserNotFound)
+			}
+
 			log.Errorf(c, "[oauth2_authentications.LoginHandler] failed to get user by id %d, because %s", uid, err.Error())
 			return a.redirectToFailedCallbackPage(c, errs.Or(err, errs.ErrOperationFailed))
 		}
@@ -104,7 +109,7 @@ func (a *OAuth2AuthenticationApi) LoginHandler(c *core.WebContext) (string, *err
 	}
 
 	remark = fmt.Sprintf("%s|%s|%d|%s", oauth2LoginReq.Platform, oauth2LoginReq.ClientSessionId, uid, verifier)
-	state := fmt.Sprintf("%s|%s|%s", oauth2LoginReq.Platform, oauth2LoginReq.ClientSessionId, utils.MD5EncodeToString([]byte(remark)))
+	state := fmt.Sprintf("%s|%s|%s", oauth2LoginReq.Platform, oauth2LoginReq.ClientSessionId, utils.SHA256EncodeToString([]byte(remark)))
 
 	redirectUrl, err := oauth2.GetOAuth2AuthUrl(c, state, verifier)
 
@@ -153,7 +158,7 @@ func (a *OAuth2AuthenticationApi) CallbackHandler(c *core.WebContext) (string, *
 		return a.redirectToFailedCallbackPage(c, errs.ErrInvalidOAuth2State)
 	}
 
-	if platform != "mobile" && platform != "desktop" {
+	if platform != "desktop" {
 		return a.redirectToFailedCallbackPage(c, errs.ErrInvalidOAuth2LoginRequest)
 	}
 
@@ -180,7 +185,7 @@ func (a *OAuth2AuthenticationApi) CallbackHandler(c *core.WebContext) (string, *
 
 	verifier := remarkParts[3]
 	expectedRemark := fmt.Sprintf("%s|%s|%d|%s", platform, clientSessionId, uid, verifier)
-	expectedState := fmt.Sprintf("%s|%s|%s", platform, clientSessionId, utils.MD5EncodeToString([]byte(expectedRemark)))
+	expectedState := fmt.Sprintf("%s|%s|%s", platform, clientSessionId, utils.SHA256EncodeToString([]byte(expectedRemark)))
 
 	if oauth2CallbackReq.State != expectedState {
 		log.Errorf(c, "[oauth2_authentications.CallbackHandler] mismatched random string in oauth 2.0 state, expected \"%s\", got \"%s\"", expectedState, oauth2CallbackReq.State)

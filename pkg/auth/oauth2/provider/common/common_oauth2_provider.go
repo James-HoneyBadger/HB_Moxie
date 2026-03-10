@@ -6,13 +6,13 @@ import (
 
 	"golang.org/x/oauth2"
 
-	"github.com/mayswind/ezbookkeeping/pkg/auth/oauth2/data"
-	"github.com/mayswind/ezbookkeeping/pkg/auth/oauth2/provider"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/httpclient"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/auth/oauth2/data"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/auth/oauth2/provider"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/httpclient"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // CommonOAuth2Provider represents common OAuth 2.0 provider
@@ -74,6 +74,11 @@ func (p *CommonOAuth2Provider) GetUserInfo(c core.Context, oauth2Token *oauth2.T
 
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Errorf(c, "[common_oauth2_provider.GetUserInfo] failed to read user info response body, because %s", err.Error())
+		return nil, errs.ErrFailedToRequestRemoteApi
+	}
 
 	if resp.StatusCode != 200 {
 		log.Errorf(c, "[common_oauth2_provider.GetUserInfo] failed to get user info response, because response code is %d", resp.StatusCode)

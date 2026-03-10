@@ -6,8 +6,8 @@ import (
 
 	"github.com/xuri/excelize/v2"
 
-	"github.com/mayswind/ezbookkeeping/pkg/converters/datatable"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/datatable"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
 )
 
 // excelOOXMLSheet defines the structure of excel (Office Open XML) file sheet

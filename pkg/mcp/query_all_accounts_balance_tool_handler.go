@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"reflect"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 // MCPQueryAllAccountsBalanceResponse represents the response structure for querying accounts balance
@@ -44,7 +44,7 @@ func (h *mcpQueryAllAccountsBalanceToolHandler) Name() string {
 
 // Description returns the description of the MCP tool
 func (h *mcpQueryAllAccountsBalanceToolHandler) Description() string {
-	return "Query all accounts balance for the current user in ezBookkeeping."
+	return "Query all accounts balance for the current user in HB Moxie."
 }
 
 // InputType returns the input type for the MCP tool request

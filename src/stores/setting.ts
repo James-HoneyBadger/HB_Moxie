@@ -234,12 +234,6 @@ export const useSettingsStore = defineStore('settings', () => {
     }
 
     // Transaction Edit Page
-    function setQuickAddButtonActionInMobileTransactionEditPage(value: number): void {
-        updateApplicationSettingsValue('quickAddButtonActionInMobileTransactionEditPage', value);
-        appSettings.value.quickAddButtonActionInMobileTransactionEditPage = value;
-        updateUserApplicationCloudSettingValue('quickAddButtonActionInMobileTransactionEditPage', value);
-    }
-
     function setAutoSaveTransactionDraft(value: string): void {
         updateApplicationSettingsValue('autoSaveTransactionDraft', value);
         appSettings.value.autoSaveTransactionDraft = value;
@@ -250,12 +244,6 @@ export const useSettingsStore = defineStore('settings', () => {
         updateApplicationSettingsValue('autoGetCurrentGeoLocation', value);
         appSettings.value.autoGetCurrentGeoLocation = value;
         updateUserApplicationCloudSettingValue('autoGetCurrentGeoLocation', value);
-    }
-
-    function setAlwaysShowTransactionPicturesInMobileTransactionEditPage(value: boolean): void {
-        updateApplicationSettingsValue('alwaysShowTransactionPicturesInMobileTransactionEditPage', value);
-        appSettings.value.alwaysShowTransactionPicturesInMobileTransactionEditPage = value;
-        updateUserApplicationCloudSettingValue('alwaysShowTransactionPicturesInMobileTransactionEditPage', value);
     }
 
     // Import Transaction Dialog
@@ -318,13 +306,7 @@ export const useSettingsStore = defineStore('settings', () => {
         updateUserApplicationCloudSettingValue('currencySortByInExchangeRatesPage', value);
     }
 
-    // Browser Cache Management
-    function setMapCacheExpiration(value: number): void {
-        updateApplicationSettingsValue('mapCacheExpiration', value);
-        appSettings.value.mapCacheExpiration = value;
-        updateUserApplicationCloudSettingValue('mapCacheExpiration', value);
-    }
-
+    // Data Cache
     function setExchangeRatesDataCacheExpiration(value: number): void {
         updateApplicationSettingsValue('exchangeRatesDataCacheExpiration', value);
         appSettings.value.exchangeRatesDataCacheExpiration = value;
@@ -537,10 +519,8 @@ export const useSettingsStore = defineStore('settings', () => {
         setShowTotalAmountInTransactionListPage,
         setShowTagInTransactionListPage,
         // -- Transaction Edit Page
-        setQuickAddButtonActionInMobileTransactionEditPage,
         setAutoSaveTransactionDraft,
         setAutoGetCurrentGeoLocation,
-        setAlwaysShowTransactionPicturesInMobileTransactionEditPage,
         // -- Import Transaction Dialog
         setRememberLastSelectedFileTypeInImportTransactionDialog,
         setLastSelectedFileTypeInImportTransactionDialog,
@@ -553,8 +533,7 @@ export const useSettingsStore = defineStore('settings', () => {
         setHideCategoriesWithoutAccounts,
         // -- Exchange Rates Data Page
         setCurrencySortByInExchangeRatesPage,
-        // -- Browser Cache Management
-        setMapCacheExpiration,
+        // -- Data Cache
         setExchangeRatesDataCacheExpiration,
         // -- Statistics Settings
         setStatisticsDefaultChartDataType,

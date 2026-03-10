@@ -6,18 +6,18 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	clis "github.com/mayswind/ezbookkeeping/pkg/cli"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	clis "github.com/James-HoneyBadger/HB_Moxie/pkg/cli"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 // UserData represents the data command
 var UserData = &cli.Command{
 	Name:  "userdata",
-	Usage: "ezBookkeeping user data maintenance",
+	Usage: "HB Moxie user data maintenance",
 	Commands: []*cli.Command{
 		{
 			Name:   "user-add",
@@ -360,7 +360,7 @@ var UserData = &cli.Command{
 					Name:     "type",
 					Aliases:  []string{"t"},
 					Required: true,
-					Usage:    "Import file type (supports \"ezbookkeeping_csv\", \"ezbookkeeping_tsv\")",
+					Usage:    "Import file type (supports \"hbmoxie_csv\", \"hbmoxie_tsv\")",
 				},
 			},
 		},
@@ -870,6 +870,11 @@ func exportUserTransaction(c *core.CliContext) error {
 
 	fileExists, err := utils.IsExists(filePath)
 
+	if err != nil {
+		log.CliErrorf(c, "[user_data.exportUserTransaction] failed to check file path")
+		return err
+	}
+
 	if fileExists {
 		log.CliErrorf(c, "[user_data.exportUserTransaction] specified file path already exists")
 		return os.ErrExist
@@ -914,12 +919,17 @@ func importUserTransaction(c *core.CliContext) error {
 
 	fileExists, err := utils.IsExists(filePath)
 
-	if !fileExists {
-		log.CliErrorf(c, "[user_data.importUserTransaction] import file does not exist")
-		return os.ErrExist
+	if err != nil {
+		log.CliErrorf(c, "[user_data.importUserTransaction] failed to check file path")
+		return err
 	}
 
-	if filetype != "ezbookkeeping_csv" && filetype != "ezbookkeeping_tsv" {
+	if !fileExists {
+		log.CliErrorf(c, "[user_data.importUserTransaction] import file does not exist")
+		return os.ErrNotExist
+	}
+
+	if filetype != "hbmoxie_csv" && filetype != "hbmoxie_tsv" {
 		log.CliErrorf(c, "[user_data.importUserTransaction] unknown file type \"%s\"", filetype)
 		return errs.ErrImportFileTypeNotSupported
 	}
@@ -950,8 +960,8 @@ func printUserInfo(user *models.User) {
 	fmt.Printf("[Username] %s\n", user.Username)
 	fmt.Printf("[Email] %s\n", user.Email)
 	fmt.Printf("[Nickname] %s\n", user.Nickname)
-	fmt.Printf("[Password] %s\n", user.Password)
-	fmt.Printf("[Salt] %s\n", user.Salt)
+	fmt.Printf("[Password] %s\n", "********")
+	fmt.Printf("[Salt] %s\n", "********")
 	fmt.Printf("[DefaultAccountId] %d\n", user.DefaultAccountId)
 	fmt.Printf("[TransactionEditScope] %s (%d)\n", user.TransactionEditScope, user.TransactionEditScope)
 	fmt.Printf("[Language] %s\n", user.Language)

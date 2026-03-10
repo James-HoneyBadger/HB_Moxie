@@ -9,10 +9,10 @@ export function getBasePath(): string {
     return path.substring(0, lastSlashIndex);
 }
 
-export function navigateToHomePage(type: 'desktop' | 'mobile'): void {
-    if (__EZBOOKKEEPING_IS_PRODUCTION__) {
-        window.location.replace(`${type}#/`);
+export function navigateToHomePage(): void {
+    if (__HBMOXIE_IS_PRODUCTION__) {
+        window.location.replace(`desktop#/`);
     } else {
-        window.location.replace(`${type}.html#/`);
+        window.location.replace(`desktop.html#/`);
     }
 }

@@ -1,102 +1,102 @@
 :root {
-    --ebk-amount-color-green: 0, 150, 136;
-    --ebk-amount-color-red: 212, 63, 63;
-    --ebk-amount-color-yellow: 226, 182, 10;
+    --hbm-amount-color-green: 0, 150, 136;
+    --hbm-amount-color-red: 212, 63, 63;
+    --hbm-amount-color-yellow: 226, 182, 10;
 }
 
 :root.expense-amount-color-green {
     .v-theme--light,
     .v-theme--dark {
-        --v-theme-expense: var(--ebk-amount-color-green);
+        --v-theme-expense: var(--hbm-amount-color-green);
     }
 
     .text-expense {
-        color: rgb(var(--ebk-amount-color-green));
+        color: rgb(var(--hbm-amount-color-green));
     }
 
     .bg-expense {
         color: rgb(var(--v-theme-on-primary)) !important;
-        background-color: rgb(var(--ebk-amount-color-green));
+        background-color: rgb(var(--hbm-amount-color-green));
     }
 }
 
 :root.income-amount-color-green {
     .v-theme--light,
     .v-theme--dark {
-        --v-theme-income: var(--ebk-amount-color-green);
+        --v-theme-income: var(--hbm-amount-color-green);
     }
 
     .text-income {
-        color: rgb(var(--ebk-amount-color-green));
+        color: rgb(var(--hbm-amount-color-green));
     }
 
     .bg-income {
         color: rgb(var(--v-theme-on-primary)) !important;
-        background-color: rgb(var(--ebk-amount-color-green));
+        background-color: rgb(var(--hbm-amount-color-green));
     }
 }
 
 :root.expense-amount-color-red {
     .v-theme--light,
     .v-theme--dark {
-        --v-theme-expense: var(--ebk-amount-color-red);
+        --v-theme-expense: var(--hbm-amount-color-red);
     }
 
     .text-expense {
-        color: rgb(var(--ebk-amount-color-red));
+        color: rgb(var(--hbm-amount-color-red));
     }
 
     .bg-expense {
         color: rgb(var(--v-theme-on-primary)) !important;
-        background-color: rgb(var(--ebk-amount-color-red));
+        background-color: rgb(var(--hbm-amount-color-red));
     }
 }
 
 :root.income-amount-color-red {
     .v-theme--light,
     .v-theme--dark {
-        --v-theme-income: var(--ebk-amount-color-red);
+        --v-theme-income: var(--hbm-amount-color-red);
     }
 
     .text-income {
-        color: rgb(var(--ebk-amount-color-red));
+        color: rgb(var(--hbm-amount-color-red));
     }
 
     .bg-income {
         color: rgb(var(--v-theme-on-primary)) !important;
-        background-color: rgb(var(--ebk-amount-color-red));
+        background-color: rgb(var(--hbm-amount-color-red));
     }
 }
 
 :root.expense-amount-color-yellow {
     .v-theme--light,
     .v-theme--dark {
-        --v-theme-expense: var(--ebk-amount-color-yellow);
+        --v-theme-expense: var(--hbm-amount-color-yellow);
     }
 
     .text-expense {
-        color: rgb(var(--ebk-amount-color-yellow));
+        color: rgb(var(--hbm-amount-color-yellow));
     }
 
     .bg-expense {
         color: rgb(var(--v-theme-on-primary)) !important;
-        background-color: rgb(var(--ebk-amount-color-yellow));
+        background-color: rgb(var(--hbm-amount-color-yellow));
     }
 }
 
 :root.income-amount-color-yellow {
     .v-theme--light,
     .v-theme--dark {
-        --v-theme-income: var(--ebk-amount-color-yellow);
+        --v-theme-income: var(--hbm-amount-color-yellow);
     }
 
     .text-income {
-        color: rgb(var(--ebk-amount-color-yellow));
+        color: rgb(var(--hbm-amount-color-yellow));
     }
 
     .bg-income {
         color: rgb(var(--v-theme-on-primary)) !important;
-        background-color: rgb(var(--ebk-amount-color-yellow));
+        background-color: rgb(var(--hbm-amount-color-yellow));
     }
 }
 

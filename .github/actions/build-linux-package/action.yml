@@ -1,0 +1,68 @@
+name: Build packages for Linux
+description: Builds and packages the Linux desktop application
+
+inputs:
+  go-version:
+    description: Go version to use
+    required: false
+    default: "1.25.7"
+  node-version:
+    description: Node.js version to use
+    required: false
+    default: "22"
+  release-build:
+    description: Whether this is a release build
+    required: false
+  build-unix-time:
+    description: Unix timestamp for the build
+    required: false
+  build-date:
+    description: Date string for the build
+    required: false
+  check-3rd-api:
+    description: Whether to check third-party APIs
+    required: false
+  skip-tests:
+    description: Tests to skip during build
+    required: false
+  platform-name:
+    description: Target platform name (e.g. linux-amd64)
+    required: true
+  package-file-name-prefix:
+    description: Prefix for the package file name
+    required: true
+  package-artifact-name-prefix:
+    description: Prefix for the package artifact name
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Go
+      uses: actions/setup-go@v6
+      with:
+        go-version: ${{ inputs.go-version }}
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Build package
+      shell: bash
+      env:
+        RELEASE_BUILD: "${{ inputs.release-build }}"
+        BUILD_PIPELINE: "1"
+        BUILD_UNIXTIME: "${{ inputs.build-unix-time }}"
+        BUILD_DATE: "${{ inputs.build-date }}"
+        CHECK_3RD_API: "${{ inputs.check-3rd-api }}"
+        SKIP_TESTS: "${{ inputs.skip-tests }}"
+      run: |
+        ./scripts/build.sh package -o "${{ inputs.package-file-name-prefix }}-${{ inputs.platform-name }}.tar.gz"
+
+    - name: Upload package artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.package-artifact-name-prefix }}-${{ inputs.platform-name }}
+        path: ${{ inputs.package-file-name-prefix }}-${{ inputs.platform-name }}.tar.gz
+        if-no-files-found: error

@@ -6,21 +6,23 @@ import (
 
 	"github.com/gin-gonic/gin/binding"
 
-	"github.com/mayswind/ezbookkeeping/pkg/avatars"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/locales"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/services"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
-	"github.com/mayswind/ezbookkeeping/pkg/validators"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/avatars"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/duplicatechecker"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/locales"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/services"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/validators"
 )
 
 // UsersApi represents user api
 type UsersApi struct {
 	ApiUsingConfig
+	ApiUsingDuplicateChecker
 	ApiWithUserInfo
 	users    *services.UserService
 	tokens   *services.TokenService
@@ -32,6 +34,12 @@ var (
 	Users = &UsersApi{
 		ApiUsingConfig: ApiUsingConfig{
 			container: settings.Container,
+		},
+		ApiUsingDuplicateChecker: ApiUsingDuplicateChecker{
+			ApiUsingConfig: ApiUsingConfig{
+				container: settings.Container,
+			},
+			container: duplicatechecker.Container,
 		},
 		ApiWithUserInfo: ApiWithUserInfo{
 			ApiUsingConfig: ApiUsingConfig{
@@ -118,11 +126,14 @@ func (a *UsersApi) UserRegisterHandler(c *core.WebContext) (any, *errs.Error) {
 		if err != nil {
 			log.Errorf(c, "[users.UserRegisterHandler] failed to create email verify token for user \"uid:%d\", because %s", user.Uid, err.Error())
 		} else {
-			go func() {
-				err = a.users.SendVerifyEmail(user, token, c.GetClientLocale())
+			clientLocale := c.GetClientLocale()
+			userEmail := user.Email
 
-				if err != nil {
-					log.Warnf(c, "[users.UserRegisterHandler] cannot send verify email to \"%s\", because %s", user.Email, err.Error())
+			go func() {
+				sendErr := a.users.SendVerifyEmail(user, token, clientLocale)
+
+				if sendErr != nil {
+					log.Warnf(nil, "[users.UserRegisterHandler] cannot send verify email to \"%s\", because %s", userEmail, sendErr.Error())
 				}
 			}()
 		}
@@ -152,7 +163,7 @@ func (a *UsersApi) UserRegisterHandler(c *core.WebContext) (any, *errs.Error) {
 // UserEmailVerifyHandler sets user email address verified
 func (a *UsersApi) UserEmailVerifyHandler(c *core.WebContext) (any, *errs.Error) {
 	var userVerifyEmailReq models.UserVerifyEmailRequest
-	err := c.ShouldBindJSON(&userVerifyEmailReq)
+	_ = c.ShouldBindJSON(&userVerifyEmailReq)
 
 	uid := c.GetCurrentUid()
 	user, err := a.users.GetUserById(c, uid)
@@ -559,11 +570,13 @@ func (a *UsersApi) UserUpdateProfileHandler(c *core.WebContext) (any, *errs.Erro
 			if err != nil {
 				log.Errorf(c, "[users.UserUpdateProfileHandler] failed to create email verify token for user \"uid:%d\", because %s", user.Uid, err.Error())
 			} else {
+				userEmail := user.Email
+				clientLocale := c.GetClientLocale()
 				go func() {
-					err = a.users.SendVerifyEmail(user, token, c.GetClientLocale())
+					sendErr := a.users.SendVerifyEmail(user, token, clientLocale)
 
-					if err != nil {
-						log.Warnf(c, "[users.UserUpdateProfileHandler] cannot send verify email to \"%s\", because %s", user.Email, err.Error())
+					if sendErr != nil {
+						log.Warnf(nil, "[users.UserUpdateProfileHandler] cannot send verify email to \"%s\", because %s", userEmail, sendErr.Error())
 					}
 				}()
 			}
@@ -706,8 +719,20 @@ func (a *UsersApi) UserSendVerifyEmailByUnloginUserHandler(c *core.WebContext) (
 		return nil, errs.ErrEmailValidationNotAllowed
 	}
 
+	err := a.CheckFailureCount(c, 0)
+
+	if err != nil {
+		log.Warnf(c, "[users.UserSendVerifyEmailByUnloginUserHandler] cannot send verify email, because %s", err.Error())
+		return nil, errs.Or(err, errs.ErrFailureCountLimitReached)
+	}
+
 	var userResendVerifyEmailReq models.UserResendVerifyEmailRequest
-	err := c.ShouldBindJSON(&userResendVerifyEmailReq)
+	err = c.ShouldBindJSON(&userResendVerifyEmailReq)
+
+	if err != nil {
+		log.Warnf(c, "[users.UserSendVerifyEmailByUnloginUserHandler] parse request failed, because %s", err.Error())
+		return nil, errs.NewIncompleteOrIncorrectSubmissionError(err)
+	}
 
 	user, err := a.users.GetUserByEmail(c, userResendVerifyEmailReq.Email)
 
@@ -720,6 +745,7 @@ func (a *UsersApi) UserSendVerifyEmailByUnloginUserHandler(c *core.WebContext) (
 	}
 
 	if !a.users.IsPasswordEqualsUserPassword(userResendVerifyEmailReq.Password, user) {
+		_ = a.CheckAndIncreaseFailureCount(c, 0)
 		log.Warnf(c, "[users.UserSendVerifyEmailByUnloginUserHandler] request password not equals to the user password")
 		return nil, errs.ErrUserPasswordWrong
 	}
@@ -745,11 +771,13 @@ func (a *UsersApi) UserSendVerifyEmailByUnloginUserHandler(c *core.WebContext) (
 		return nil, errs.ErrTokenGenerating
 	}
 
+	userEmail := user.Email
+	clientLocale := c.GetClientLocale()
 	go func() {
-		err = a.users.SendVerifyEmail(user, token, c.GetClientLocale())
+		sendErr := a.users.SendVerifyEmail(user, token, clientLocale)
 
-		if err != nil {
-			log.Warnf(c, "[users.UserSendVerifyEmailByUnloginUserHandler] cannot send email to \"%s\", because %s", user.Email, err.Error())
+		if sendErr != nil {
+			log.Warnf(nil, "[users.UserSendVerifyEmailByUnloginUserHandler] cannot send email to \"%s\", because %s", userEmail, sendErr.Error())
 		}
 	}()
 
@@ -789,11 +817,13 @@ func (a *UsersApi) UserSendVerifyEmailByLoginedUserHandler(c *core.WebContext) (
 		return nil, errs.ErrTokenGenerating
 	}
 
+	userEmail := user.Email
+	clientLocale := c.GetClientLocale()
 	go func() {
-		err = a.users.SendVerifyEmail(user, token, c.GetClientLocale())
+		sendErr := a.users.SendVerifyEmail(user, token, clientLocale)
 
-		if err != nil {
-			log.Warnf(c, "[users.UserSendVerifyEmailByLoginedUserHandler] cannot send email to \"%s\", because %s", user.Email, err.Error())
+		if sendErr != nil {
+			log.Warnf(nil, "[users.UserSendVerifyEmailByLoginedUserHandler] cannot send email to \"%s\", because %s", userEmail, sendErr.Error())
 		}
 	}()
 

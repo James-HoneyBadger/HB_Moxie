@@ -17,14 +17,9 @@ import {
 } from '@/locales/index.ts';
 
 import {
-    ALL_LANGUAGES as CHINESE_CALENDAR_ALL_LANGUAGES,
-    DEFAULT_CONTENT as CHINESE_CALENDAR_DEFAULT_CONTENT
-} from '@/locales/calendar/chinese/index.ts';
-
-import {
-    ALL_LANGUAGES as PERSIAN_CALENDAR_ALL_LANGUAGES,
-    DEFAULT_CONTENT as PERSIAN_CALENDAR_DEFAULT_CONTENT
-} from '@/locales/calendar/persian/index.ts';
+    ALL_LANGUAGES as HEBREW_CALENDAR_ALL_LANGUAGES,
+    DEFAULT_CONTENT as HEBREW_CALENDAR_DEFAULT_CONTENT
+} from '@/locales/calendar/hebrew/index.ts';
 
 import {
     entries,
@@ -36,8 +31,7 @@ import {
 } from '@/core/text.ts';
 
 import {
-    type ChineseCalendarLocaleData,
-    type PersianCalendarLocaleData,
+    type HebrewCalendarLocaleData,
     CalendarType,
     CalendarDisplayType,
     DateDisplayType
@@ -205,7 +199,6 @@ import {
     getYearMonthDayDateTime,
     parseDateTimeFromUnixTime,
     parseDateTimeFromString,
-    getGregorianCalendarYearMonthDays,
     getDateTimeFormatType,
     getFiscalYearTimeRangeFromUnixTime,
     getFiscalYearTimeRangeFromYear,
@@ -220,11 +213,11 @@ import {
 } from '@/lib/datetime.ts';
 
 import {
-    type ChineseYearMonthDayInfo,
-    getChineseYearMonthAllDayInfos,
-    getChineseYearMonthDayInfo,
-    getChineseCalendarAlternateDisplayDate
-} from '@/lib/calendar/chinese_calendar.ts';
+    type HebrewYearMonthDayInfo,
+    getHebrewYearMonthAllDayInfos,
+    getHebrewYearMonthDayInfo,
+    getHebrewCalendarAlternateDisplayDate
+} from '@/lib/calendar/hebrew_calendar.ts';
 
 import {
     appendDigitGroupingSymbolAndDecimalSeparator,
@@ -477,27 +470,14 @@ export function useI18n() {
         return moment.localeData();
     }
 
-    function getChineseCalendarLocaleData(): ChineseCalendarLocaleData {
-        const localeData = CHINESE_CALENDAR_ALL_LANGUAGES[locale.value] ?? CHINESE_CALENDAR_DEFAULT_CONTENT;
-        const chineseCalendarLocaleData: ChineseCalendarLocaleData = {
-            numerals: localeData['numerals'],
-            monthNames: localeData['monthNames'],
-            dayNames: localeData['dayNames'],
-            leapMonthPrefix: localeData['leapMonthPrefix'],
-            solarTermNames: localeData['solarTermNames']
+    function getHebrewCalendarLocaleData(): HebrewCalendarLocaleData {
+        const localeData = HEBREW_CALENDAR_ALL_LANGUAGES[locale.value] ?? HEBREW_CALENDAR_DEFAULT_CONTENT;
+        const hebrewCalendarLocaleData: HebrewCalendarLocaleData = {
+            monthNames: localeData['monthNames'] ?? [],
+            monthShortNames: localeData['monthShortNames'] ?? []
         };
 
-        return chineseCalendarLocaleData;
-    }
-
-    function getPersianCalendarLocaleData(): PersianCalendarLocaleData {
-        const localeData = PERSIAN_CALENDAR_ALL_LANGUAGES[locale.value] ?? PERSIAN_CALENDAR_DEFAULT_CONTENT;
-        const persianCalendarLocaleData: PersianCalendarLocaleData = {
-            monthNames: localeData['monthNames'],
-            monthShortNames: localeData['monthShortNames']
-        };
-
-        return persianCalendarLocaleData;
+        return hebrewCalendarLocaleData;
     }
 
     function getAllCurrencyDisplayTypes(numeralSystem: NumeralSystem, decimalSeparator: string): TypeAndDisplayName[] {
@@ -738,8 +718,7 @@ export function useI18n() {
             numeralSystem: numeralSystem,
             calendarType: calendarType,
             localeData: getDateTimeLocaleData(),
-            chineseCalendarLocaleData: getChineseCalendarLocaleData(),
-            persianCalendarLocaleData: getPersianCalendarLocaleData()
+            hebrewCalendarLocaleData: getHebrewCalendarLocaleData()
         };
     }
 
@@ -848,24 +827,6 @@ export function useI18n() {
         }
 
         return currencyDisplayType;
-    }
-
-    function getCalendarAlternateDisplayDate(dateTime: DateTime, dateTimeFormatOptions: DateTimeFormatOptions): CalendarAlternateDate {
-        const numeralSystem = getCurrentNumeralSystemType();
-        let displayDate = numeralSystem.replaceWesternArabicDigitsToLocalizedDigits(dateTime.getLocalizedCalendarDay(dateTimeFormatOptions));
-
-        if (dateTime.isLocalizedCalendarFirstDayOfMonth(dateTimeFormatOptions)) {
-            displayDate = dateTime.getLocalizedCalendarMonthDisplayShortName(dateTimeFormatOptions);
-        }
-
-        const alternateDate: CalendarAlternateDate = {
-            year: dateTime.getGregorianCalendarYear(),
-            month: dateTime.getGregorianCalendarMonth(),
-            day: dateTime.getGregorianCalendarDay(),
-            displayDate: displayDate
-        };
-
-        return alternateDate;
     }
 
     // public functions
@@ -1962,31 +1923,15 @@ export function useI18n() {
             return undefined;
         }
 
-        const dateTimeFormatOptions = getDateTimeFormatOptions({ calendarType: calendarDisplayType });
-
-        if (calendarDisplayType === CalendarType.Chinese) {
-            const chineseCalendarLocaleData = getChineseCalendarLocaleData();
-            const chineseDates: ChineseYearMonthDayInfo[] | undefined = getChineseYearMonthAllDayInfos(yearMonth, chineseCalendarLocaleData);
-
-            if (!chineseDates) {
-                return undefined;
-            }
+        if (calendarDisplayType === CalendarType.Hebrew) {
+            const hebrewCalendarLocaleData = getHebrewCalendarLocaleData();
+            const hebrewDates: HebrewYearMonthDayInfo[] = getHebrewYearMonthAllDayInfos(yearMonth, hebrewCalendarLocaleData);
 
             const ret: CalendarAlternateDate[] = [];
 
-            for (const chineseDate of chineseDates) {
-                const alternateDate = getChineseCalendarAlternateDisplayDate(chineseDate);
+            for (const hebrewDate of hebrewDates) {
+                const alternateDate = getHebrewCalendarAlternateDisplayDate(hebrewDate);
                 ret.push(alternateDate);
-            }
-
-            return ret;
-        } else if (calendarDisplayType === CalendarType.Persian) {
-            const monthDays: number = getGregorianCalendarYearMonthDays(yearMonth);
-            const ret: CalendarAlternateDate[] = [];
-
-            for (let i = 1; i <= monthDays; i++) {
-                const dateTime = getYearMonthDayDateTime(yearMonth.year, yearMonth.month1base, i);
-                ret.push(getCalendarAlternateDisplayDate(dateTime, dateTimeFormatOptions));
             }
 
             return ret;
@@ -2002,20 +1947,15 @@ export function useI18n() {
             return undefined;
         }
 
-        const dateTimeFormatOptions = getDateTimeFormatOptions({ calendarType: calendarDisplayType });
+        if (calendarDisplayType === CalendarType.Hebrew) {
+            const hebrewCalendarLocaleData = getHebrewCalendarLocaleData();
+            const hebrewDate: HebrewYearMonthDayInfo | undefined = getHebrewYearMonthDayInfo(yearMonthDay, hebrewCalendarLocaleData);
 
-        if (calendarDisplayType === CalendarType.Chinese) {
-            const chineseCalendarLocaleData = getChineseCalendarLocaleData();
-            const chineseDate: ChineseYearMonthDayInfo | undefined = getChineseYearMonthDayInfo(yearMonthDay, chineseCalendarLocaleData);
-
-            if (!chineseDate) {
+            if (!hebrewDate) {
                 return undefined;
             }
 
-            return getChineseCalendarAlternateDisplayDate(chineseDate);
-        } else if (calendarDisplayType === CalendarType.Persian) {
-            const dateTime = getYearMonthDayDateTime(yearMonthDay.year, yearMonthDay.month, yearMonthDay.day);
-            return getCalendarAlternateDisplayDate(dateTime, dateTimeFormatOptions);
+            return getHebrewCalendarAlternateDisplayDate(hebrewDate);
         }
 
         return undefined;

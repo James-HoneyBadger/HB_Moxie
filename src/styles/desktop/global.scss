@@ -48,7 +48,7 @@ input[type=number] {
 /** Custom class **/
 :root {
     --default-icon-color: #000;
-    --ebk-primary-color: 198, 126, 72;
+    --hbm-primary-color: 198, 126, 72;
     --v-expand-panel-title-bg: rgba(var(--v-theme-on-surface), var(--v-hover-opacity));
     --v-card-title-bg: rgba(var(--v-theme-on-surface), var(--v-hover-opacity));
 }
@@ -64,14 +64,14 @@ input[type=number] {
 }
 
 .pin-codes-input {
-    --ebk-pin-code-input-height: 56px;
-    --ebk-pin-code-input-gap: 12px;
-    --ebk-pin-code-transition-duration: 0ms;
+    --hbm-pin-code-input-height: 56px;
+    --hbm-pin-code-input-gap: 12px;
+    --hbm-pin-code-transition-duration: 0ms;
 }
 
 @media (min-width: 1280px) {
     .pin-codes-input {
-        --ebk-pin-code-input-gap: 20px;
+        --hbm-pin-code-input-gap: 20px;
     }
 }
 
@@ -91,13 +91,13 @@ input[type=number] {
 .auth-logo {
     position: absolute;
     z-index: 1;
-    inset-block-start: 2rem;
-    inset-inline-start: 2.3rem;
+    inset-block-start: 1.5rem;
+    inset-inline-start: 1.8rem;
 }
 
 .auth-logo img {
-    width: 2em;
-    height: 2em;
+    width: 3.5em;
+    height: 3.5em;
 }
 
 .auth-wrapper {

@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"sort"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/httpclient"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/httpclient"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // HttpExchangeRatesDataSource defines the structure of http exchange rates data source
@@ -52,8 +52,13 @@ func (e *CommonHttpExchangeRatesDataProvider) GetLatestExchangeRates(c core.Cont
 			return nil, errs.ErrFailedToRequestRemoteApi
 		}
 
-		defer resp.Body.Close()
 		body, err := io.ReadAll(resp.Body)
+		resp.Body.Close()
+
+		if err != nil {
+			log.Errorf(c, "[common_http_exchange_rates_data_provider.GetLatestExchangeRates] failed to read response body for user \"uid:%d\", because %s", uid, err.Error())
+			return nil, errs.ErrFailedToRequestRemoteApi
+		}
 
 		if resp.StatusCode != 200 {
 			log.Errorf(c, "[common_http_exchange_rates_data_provider.GetLatestExchangeRates] failed to get latest exchange rate data response for user \"uid:%d\", because response code is %d", uid, resp.StatusCode)

@@ -8,7 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
 )
 
 const webContextRequestIdFieldKey = "REQUEST_ID"
@@ -32,7 +32,7 @@ const ClientTimezoneNameHeaderName = "X-Timezone-Name"
 const tokenHeaderName = "Authorization"
 const tokenHeaderValuePrefix = "bearer "
 const tokenQueryStringParam = "token"
-const tokenCookieParam = "ebk_auth_token"
+const tokenCookieParam = "hbm_auth_token"
 
 // WebContext represents the request and response context
 type WebContext struct {
@@ -172,11 +172,11 @@ func (c *WebContext) GetTokenStringFromCookie() string {
 	return tokenCookie
 }
 
-func (c *WebContext) SetTokenStringToCookie(token string, tokenExpiredTime int, path string) {
+func (c *WebContext) SetTokenStringToCookie(token string, tokenExpiredTime int, path string, secure bool) {
 	if token != "" {
-		c.SetCookie(tokenCookieParam, token, tokenExpiredTime, path, "", false, true)
+		c.SetCookie(tokenCookieParam, token, tokenExpiredTime, path, "", secure, true)
 	} else {
-		c.SetCookie(tokenCookieParam, "", -1, path, "", false, true)
+		c.SetCookie(tokenCookieParam, "", -1, path, "", secure, true)
 	}
 }
 

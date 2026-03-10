@@ -1,5 +1,5 @@
 import type { TypeAndName, TypeAndDisplayName } from '@/core/base.ts';
-import type { CalendarType, ChineseCalendarLocaleData, PersianCalendarLocaleData } from '@/core/calendar.ts';
+import type { CalendarType, HebrewCalendarLocaleData } from '@/core/calendar.ts';
 import type { NumeralSystem } from '@/core/numeral.ts';
 
 export type DateTimeUnit = 'years' | 'months' | 'days' | 'hours' | 'minutes' | 'seconds';
@@ -54,8 +54,7 @@ export interface DateTimeFormatOptions {
     numeralSystem: NumeralSystem;
     calendarType: CalendarType;
     localeData: DateTimeLocaleData;
-    chineseCalendarLocaleData: ChineseCalendarLocaleData;
-    persianCalendarLocaleData: PersianCalendarLocaleData;
+    hebrewCalendarLocaleData: HebrewCalendarLocaleData;
 }
 
 export interface DateTimeLocaleData {

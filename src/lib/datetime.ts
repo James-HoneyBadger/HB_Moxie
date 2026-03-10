@@ -2,13 +2,11 @@ import moment from 'moment-timezone';
 import { type unitOfTime } from 'moment/moment';
 import 'moment-timezone/moment-timezone-utils';
 
-import jalaali, { type JalaaliDateObject } from 'jalaali-js';
-
 import {
     itemAndIndex
 } from '@/core/base.ts';
 import {
-    type ChineseCalendarLocaleData,
+    type HebrewCalendarLocaleData,
     CalendarType
 } from '@/core/calendar.ts';
 import {
@@ -61,9 +59,9 @@ import {
 } from './common.ts';
 
 import {
-    type ChineseYearMonthDayInfo,
-    getChineseYearMonthDayInfo
-} from '@/lib/calendar/chinese_calendar.ts';
+    type HebrewYearMonthDayInfo,
+    getHebrewYearMonthDayInfo
+} from '@/lib/calendar/hebrew_calendar.ts';
 
 interface DateTimeFormatResult {
     value: number | string;
@@ -124,8 +122,7 @@ class MomentDateTime implements DateTime {
     };
 
     private readonly instance: moment.Moment;
-    private chineseDateInfo?: ChineseYearMonthDayInfo | undefined = undefined;
-    private persianDateInfo?: JalaaliDateObject | undefined = undefined;
+    private hebrewDateInfo?: HebrewYearMonthDayInfo | undefined = undefined;
 
     private constructor(instance: moment.Moment) {
         this.instance = instance;
@@ -138,10 +135,8 @@ class MomentDateTime implements DateTime {
     public getLocalizedCalendarYear(options: DateTimeFormatOptions): string {
         if (options && options.calendarType === CalendarType.Buddhist) {
             return (this.instance.year() + 543).toString();
-        } else if (options && options.calendarType === CalendarType.Chinese) {
-            return this.getChineseDateInfo(options.chineseCalendarLocaleData)?.displayYear ?? '';
-        } else if (options && options.calendarType === CalendarType.Persian) {
-            return this.getPersianDateInfo().jy.toString();
+        } else if (options && options.calendarType === CalendarType.Hebrew) {
+            return this.getHebrewDateInfo(options.hebrewCalendarLocaleData)?.displayYear ?? '';
         }
 
         return this.instance.year().toString();
@@ -183,10 +178,8 @@ class MomentDateTime implements DateTime {
     }
 
     public getLocalizedCalendarMonth(options: DateTimeFormatOptions): string {
-        if (options && options.calendarType === CalendarType.Chinese) {
-            return this.getChineseDateInfo(options.chineseCalendarLocaleData)?.displayMonth ?? '';
-        } else if (options && options.calendarType === CalendarType.Persian) {
-            return this.getPersianDateInfo().jm.toString();
+        if (options && options.calendarType === CalendarType.Hebrew) {
+            return this.getHebrewDateInfo(options.hebrewCalendarLocaleData)?.displayMonth ?? '';
         }
 
         return (this.instance.month() + 1).toString();
@@ -197,10 +190,8 @@ class MomentDateTime implements DateTime {
             return '';
         }
 
-        if (options && options.calendarType === CalendarType.Chinese) {
-            return this.getChineseDateInfo(options.chineseCalendarLocaleData)?.displayMonth ?? '';
-        } else if (options && options.calendarType === CalendarType.Persian) {
-            return options.persianCalendarLocaleData.monthNames[this.getPersianDateInfo().jm - 1] ?? '';
+        if (options && options.calendarType === CalendarType.Hebrew) {
+            return this.getHebrewDateInfo(options.hebrewCalendarLocaleData)?.displayMonth ?? '';
         }
 
         const names = options.localeData.months();
@@ -212,10 +203,12 @@ class MomentDateTime implements DateTime {
             return '';
         }
 
-        if (options && options.calendarType === CalendarType.Chinese) {
-            return this.getChineseDateInfo(options.chineseCalendarLocaleData)?.displayMonth ?? '';
-        } else if (options && options.calendarType === CalendarType.Persian) {
-            return options.persianCalendarLocaleData.monthShortNames[this.getPersianDateInfo().jm - 1] ?? '';
+        if (options && options.calendarType === CalendarType.Hebrew) {
+            const info = this.getHebrewDateInfo(options.hebrewCalendarLocaleData);
+            if (info) {
+                return options.hebrewCalendarLocaleData.monthShortNames[info.month - 1] ?? '';
+            }
+            return '';
         }
 
         const names = options.localeData.monthsShort();
@@ -227,20 +220,16 @@ class MomentDateTime implements DateTime {
     }
 
     public getLocalizedCalendarDay(options: DateTimeFormatOptions): string {
-        if (options && options.calendarType === CalendarType.Chinese) {
-            return this.getChineseDateInfo(options.chineseCalendarLocaleData)?.displayDay ?? '';
-        } else if (options && options.calendarType === CalendarType.Persian) {
-            return this.getPersianDateInfo().jd.toString();
+        if (options && options.calendarType === CalendarType.Hebrew) {
+            return this.getHebrewDateInfo(options.hebrewCalendarLocaleData)?.displayDay ?? '';
         }
 
         return this.instance.date().toString();
     }
 
     public isLocalizedCalendarFirstDayOfMonth(options: DateTimeFormatOptions): boolean {
-        if (options && options.calendarType === CalendarType.Chinese) {
-            return this.getChineseDateInfo(options.chineseCalendarLocaleData)?.day === 1;
-        } else if (options && options.calendarType === CalendarType.Persian) {
-            return this.getPersianDateInfo().jd === 1;
+        if (options && options.calendarType === CalendarType.Hebrew) {
+            return this.getHebrewDateInfo(options.hebrewCalendarLocaleData)?.day === 1;
         }
 
         return this.instance.date() === 1;
@@ -416,24 +405,16 @@ class MomentDateTime implements DateTime {
         return new MomentDateTime(moment());
     }
 
-    private getChineseDateInfo(localeData: ChineseCalendarLocaleData): ChineseYearMonthDayInfo | undefined {
-        if (!this.chineseDateInfo) {
-            this.chineseDateInfo = getChineseYearMonthDayInfo({
+    private getHebrewDateInfo(localeData: HebrewCalendarLocaleData): HebrewYearMonthDayInfo | undefined {
+        if (!this.hebrewDateInfo) {
+            this.hebrewDateInfo = getHebrewYearMonthDayInfo({
                 year: this.instance.year(),
                 month: this.instance.month() + 1,
                 day: this.instance.date()
             }, localeData);
         }
 
-        return this.chineseDateInfo;
-    }
-
-    private getPersianDateInfo(): JalaaliDateObject {
-        if (!this.persianDateInfo) {
-            this.persianDateInfo = jalaali.toJalaali(this.instance.year(), this.instance.month() + 1, this.instance.date());
-        }
-
-        return this.persianDateInfo;
+        return this.hebrewDateInfo;
     }
 
     static isGregorianCalendarYearFirstTime(dateTime: MomentDateTime): boolean {

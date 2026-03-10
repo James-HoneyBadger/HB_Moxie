@@ -3,8 +3,8 @@ package duplicatechecker
 import (
 	"time"
 
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // DuplicateCheckerContainer contains the current duplicate checker

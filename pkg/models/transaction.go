@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 const MaximumTagsCountOfTransaction = 10

@@ -17,7 +17,6 @@ import {
 
 import {
     BASE_API_URL_PATH,
-    BASE_QRCODE_PATH,
     BASE_PROXY_URL_PATH,
     BASE_AMAP_API_PROXY_URL_PATH,
     DEFAULT_API_TIMEOUT,
@@ -49,6 +48,12 @@ import type {
     ClearAccountTransactionsRequest,
     DataStatisticsResponse
 } from '@/models/data_management.ts';
+import type {
+    BackupCreateRequest,
+    BackupRestoreRequest,
+    BackupDeleteRequest,
+    BackupListResponse
+} from '@/models/backup.ts';
 import type {
     UserCustomExchangeRateUpdateRequest,
     UserCustomExchangeRateDeleteRequest,
@@ -260,26 +265,29 @@ axios.interceptors.response.use(response => {
 
     return response;
 }, error => {
-    if ('cancelableUuid' in error.response.config && error.response.config.cancelableUuid && cancelableRequests[error.response.config.cancelableUuid]) {
-        logger.debug('Response canceled by user request, url: ' + error.response.config.url + ', cancelableUuid: ' + error.response.config.cancelableUuid);
-        delete cancelableRequests[error.response.config.cancelableUuid];
-        return Promise.reject({ canceled: true });
-    }
+    // Guard against network errors where error.response is undefined
+    if (error.response && error.response.config) {
+        if ('cancelableUuid' in error.response.config && error.response.config.cancelableUuid && cancelableRequests[error.response.config.cancelableUuid]) {
+            logger.debug('Response canceled by user request, url: ' + error.response.config.url + ', cancelableUuid: ' + error.response.config.cancelableUuid);
+            delete cancelableRequests[error.response.config.cancelableUuid];
+            return Promise.reject({ canceled: true });
+        }
 
-    if (error.response && !error.response.config.ignoreError && error.response.data && error.response.data.errorCode) {
-        const errorCode = error.response.data.errorCode;
+        if (!error.response.config.ignoreError && error.response.data && error.response.data.errorCode) {
+            const errorCode = error.response.data.errorCode;
 
-        if (errorCode === 202001 // unauthorized access
-            || errorCode === 202002 // current token is invalid
-            || errorCode === 202003 // current token is expired
-            || errorCode === 202004 // current token type is invalid
-            || errorCode === 202005 // current token requires two-factor authorization
-            || errorCode === 202006 // current token does not require two-factor authorization
-            || errorCode === 202012 // token is empty
-        ) {
-            clearCurrentTokenAndUserInfo(false);
-            location.reload();
-            return Promise.reject({ processed: true });
+            if (errorCode === 202001 // unauthorized access
+                || errorCode === 202002 // current token is invalid
+                || errorCode === 202003 // current token is expired
+                || errorCode === 202004 // current token type is invalid
+                || errorCode === 202005 // current token requires two-factor authorization
+                || errorCode === 202006 // current token does not require two-factor authorization
+                || errorCode === 202012 // token is empty
+            ) {
+                clearCurrentTokenAndUserInfo(false);
+                location.reload();
+                return Promise.reject({ processed: true });
+            }
         }
     }
 
@@ -292,6 +300,9 @@ export default {
     },
     authorize: (data: UserLoginRequest): ApiResponsePromise<AuthResponse> => {
         return axios.post<ApiResponse<AuthResponse>>('authorize.json', data);
+    },
+    autoLogin: (): ApiResponsePromise<AuthResponse> => {
+        return axios.post<ApiResponse<AuthResponse>>('auto_login.json', {});
     },
     authorize2FA: ({ passcode, token }: { passcode: string, token: string }): ApiResponsePromise<AuthResponse> => {
         return axios.post<ApiResponse<AuthResponse>>('2fa/authorize.json', {
@@ -357,7 +368,7 @@ export default {
         return axios.get<ApiResponse<boolean>>('logout.json');
     },
     refreshToken: (): ApiResponsePromise<TokenRefreshResponse> => {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             needBlockRequest = true;
 
             axios.post<ApiResponse<TokenRefreshResponse>>('v1/tokens/refresh.json', {}, {
@@ -372,6 +383,12 @@ export default {
             }).then(newToken => {
                 blockedRequests.forEach(func => func(newToken));
                 blockedRequests.length = 0;
+            }).catch(error => {
+                // Ensure blocked requests are always drained on failure
+                needBlockRequest = false;
+                blockedRequests.forEach(func => func(undefined));
+                blockedRequests.length = 0;
+                reject(error);
             });
         });
     },
@@ -486,6 +503,27 @@ export default {
         return axios.post<ApiResponse<boolean>>('v1/data/clear/transactions/by_account.json', req, {
             timeout: DEFAULT_CLEAR_ALL_TRANSACTIONS_API_TIMEOUT
         } as ApiRequestConfig);
+    },
+    getBackupList: (): ApiResponsePromise<BackupListResponse[]> => {
+        return axios.get<ApiResponse<BackupListResponse[]>>('v1/backups/list.json');
+    },
+    createBackup: (req: BackupCreateRequest): ApiResponsePromise<BackupListResponse> => {
+        return axios.post<ApiResponse<BackupListResponse>>('v1/backups/create.json', req, {
+            timeout: DEFAULT_EXPORT_API_TIMEOUT
+        } as ApiRequestConfig);
+    },
+    downloadBackup: (fileName: string): Promise<AxiosResponse<BlobPart>> => {
+        return axios.get<BlobPart>('v1/backups/download.zip?file_name=' + encodeURIComponent(fileName), {
+            timeout: DEFAULT_EXPORT_API_TIMEOUT
+        } as ApiRequestConfig);
+    },
+    restoreBackup: (req: BackupRestoreRequest): ApiResponsePromise<boolean> => {
+        return axios.post<ApiResponse<boolean>>('v1/backups/restore.json', req, {
+            timeout: DEFAULT_EXPORT_API_TIMEOUT
+        } as ApiRequestConfig);
+    },
+    deleteBackup: (req: BackupDeleteRequest): ApiResponsePromise<boolean> => {
+        return axios.post<ApiResponse<boolean>>('v1/backups/delete.json', req);
     },
     getAllAccounts: ({ visibleOnly }: { visibleOnly: boolean }): ApiResponsePromise<AccountInfoResponse[]> => {
         return axios.get<ApiResponse<AccountInfoResponse[]>>('v1/accounts/list.json?visible_only=' + visibleOnly);
@@ -822,14 +860,11 @@ export default {
     cancelRequest: (cancelableUuid: string) => {
         cancelableRequests[cancelableUuid] = true;
     },
-    generateOAuth2LoginUrl: (platform: 'mobile' | 'desktop', clientSessionId: string): string => {
+    generateOAuth2LoginUrl: (platform: 'desktop', clientSessionId: string): string => {
         return `${getBasePath()}/oauth2/login?platform=${platform}&client_session_id=${clientSessionId}`;
     },
-    generateOAuth2LinkUrl: (platform: 'mobile' | 'desktop', clientSessionId: string): string => {
+    generateOAuth2LinkUrl: (platform: 'desktop', clientSessionId: string): string => {
         return `${getBasePath()}/oauth2/login?platform=${platform}&client_session_id=${clientSessionId}&token=${getCurrentToken()}`;
-    },
-    generateQrCodeUrl: (qrCodeName: string): string => {
-        return `${getBasePath()}${BASE_QRCODE_PATH}/${qrCodeName}.png`;
     },
     getMapProxyTileImageAndAnnotationImageUrlPatterns(): string[] {
         return [

@@ -25,14 +25,16 @@ export const useSystemsStore = defineStore('systems', () => {
                         match: false,
                         version: data.result
                     });
+                    return;
                 }
 
                 if (data.result.commitHash && clientVersionInfo.commitHash !== data.result.commitHash) {
-                    logger.warn(`client commit hash \"${clientVersionInfo.commitHash}\" does not match server commit hash \"${data.result.commitHash}\"`);
+                    logger.warn(`client commit hash "${clientVersionInfo.commitHash}" does not match server commit hash "${data.result.commitHash}"`);
                     resolve({
                         match: false,
                         version: data.result
                     });
+                    return;
                 }
 
                 resolve({

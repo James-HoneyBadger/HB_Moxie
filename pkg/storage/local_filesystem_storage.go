@@ -4,10 +4,11 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 // LocalFileSystemObjectStorage represents local file system object storage
@@ -65,5 +66,12 @@ func (s *LocalFileSystemObjectStorage) Delete(ctx core.Context, path string) err
 }
 
 func (s *LocalFileSystemObjectStorage) getFinalPath(path string) string {
-	return filepath.Join(s.rootPath, path)
+	finalPath := filepath.Join(s.rootPath, path)
+	cleanPath := filepath.Clean(finalPath)
+
+	if !strings.HasPrefix(cleanPath, filepath.Clean(s.rootPath)+string(filepath.Separator)) && cleanPath != filepath.Clean(s.rootPath) {
+		return s.rootPath
+	}
+
+	return cleanPath
 }

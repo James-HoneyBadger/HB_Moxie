@@ -6,6 +6,7 @@ import (
 	"crypto/md5"
 	"crypto/rand"
 	"crypto/sha256"
+	"crypto/subtle"
 	"encoding/base64"
 	"encoding/hex"
 	"strings"
@@ -13,7 +14,7 @@ import (
 
 	"golang.org/x/crypto/pbkdf2"
 
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
 )
 
 const (
@@ -166,6 +167,18 @@ func MD5EncodeToString(data []byte) string {
 	return hex.EncodeToString(hash)
 }
 
+// SHA256Encode returns a hashed byte slice by sha256
+func SHA256Encode(data []byte) []byte {
+	hash := sha256.Sum256(data)
+	return hash[:]
+}
+
+// SHA256EncodeToString returns a hashed hex string by sha256
+func SHA256EncodeToString(data []byte) string {
+	hash := SHA256Encode(data)
+	return hex.EncodeToString(hash)
+}
+
 // AESGCMEncrypt returns a encrypted string by aes-gcm
 func AESGCMEncrypt(key []byte, plainText []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
@@ -228,6 +241,11 @@ func AESGCMDecrypt(key []byte, ciphertext []byte) ([]byte, error) {
 func EncodePassword(password string, salt string) string {
 	encodedPassword := pbkdf2.Key([]byte(password), []byte(salt), 10000, 48, sha256.New) // 256^48 = 64^64
 	return strings.TrimRight(base64.StdEncoding.EncodeToString(encodedPassword), "=")
+}
+
+// SecureCompare performs a constant-time string comparison to prevent timing attacks
+func SecureCompare(a, b string) bool {
+	return subtle.ConstantTimeCompare([]byte(a), []byte(b)) == 1
 }
 
 // EncryptSecret returns a encrypted secret

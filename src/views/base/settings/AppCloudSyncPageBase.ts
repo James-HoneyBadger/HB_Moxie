@@ -15,117 +15,112 @@ export interface ApplicationCloudSettingItem {
     readonly settingKey: string;
     readonly relatedSettingKeys?: string[];
     readonly settingName: string;
-    readonly mobile: boolean;
-    readonly desktop: boolean;
 }
 
 export const ALL_APPLICATION_CLOUD_SETTINGS: CategorizedApplicationCloudSettingItems[] = [
     {
         categoryName: 'Basic Settings',
         items: [
-            { settingKey: 'showAccountBalance', settingName: 'Show Account Balance', mobile: true, desktop: true },
-            { settingKey: 'autoUpdateExchangeRatesData', settingName: 'Auto-update Exchange Rates Data', mobile: true, desktop: true }
+            { settingKey: 'showAccountBalance', settingName: 'Show Account Balance' },
+            { settingKey: 'autoUpdateExchangeRatesData', settingName: 'Auto-update Exchange Rates Data' }
         ]
     },
     {
         categoryName: 'Navigation Bar',
         items: [
-            { settingKey: 'showAddTransactionButtonInDesktopNavbar', settingName: 'Show Add Transaction Button', mobile: false, desktop: true }
+            { settingKey: 'showAddTransactionButtonInDesktopNavbar', settingName: 'Show Add Transaction Button' }
         ]
     },
     {
         categoryName: 'Overview Page',
         items: [
-            { settingKey: 'showAmountInHomePage', settingName: 'Show Amount', mobile: true, desktop: true },
-            { settingKey: 'timezoneUsedForStatisticsInHomePage', settingName: 'Timezone Used for Statistics', mobile: true, desktop: true },
-            { settingKey: 'overviewAccountFilterInHomePage', settingName: 'Accounts Included in Overview Statistics', mobile: true, desktop: true },
-            { settingKey: 'overviewTransactionCategoryFilterInHomePage', settingName: 'Transaction Categories Included in Overview Statistics', mobile: true, desktop: true }
+            { settingKey: 'showAmountInHomePage', settingName: 'Show Amount' },
+            { settingKey: 'timezoneUsedForStatisticsInHomePage', settingName: 'Timezone Used for Statistics' },
+            { settingKey: 'overviewAccountFilterInHomePage', settingName: 'Accounts Included in Overview Statistics' },
+            { settingKey: 'overviewTransactionCategoryFilterInHomePage', settingName: 'Transaction Categories Included in Overview Statistics' }
         ]
     },
     {
         categoryName: 'Transaction List Page',
         items: [
-            { settingKey: 'itemsCountInTransactionListPage', settingName: 'Transactions Per Page', mobile: false, desktop: true },
-            { settingKey: 'showTotalAmountInTransactionListPage', settingName: 'Show Monthly Total Amount', mobile: true, desktop: true },
-            { settingKey: 'showTagInTransactionListPage', settingName: 'Show Transaction Tags', mobile: true, desktop: true }
+            { settingKey: 'itemsCountInTransactionListPage', settingName: 'Transactions Per Page' },
+            { settingKey: 'showTotalAmountInTransactionListPage', settingName: 'Show Monthly Total Amount' },
+            { settingKey: 'showTagInTransactionListPage', settingName: 'Show Transaction Tags' }
         ]
     },
     {
         categoryName: 'Transaction Edit Page',
         items: [
-            { settingKey: 'quickAddButtonActionInMobileTransactionEditPage', settingName: 'Quick Add Button Action', mobile: true, desktop: false },
-            { settingKey: 'autoSaveTransactionDraft', settingName: 'Automatically Save Draft', mobile: true, desktop: true },
-            { settingKey: 'autoGetCurrentGeoLocation', settingName: 'Automatically Add Geolocation', mobile: true, desktop: true },
-            { settingKey: 'alwaysShowTransactionPicturesInMobileTransactionEditPage', settingName: 'Always Show Transaction Pictures', mobile: true, desktop: false }
+            { settingKey: 'autoSaveTransactionDraft', settingName: 'Automatically Save Draft' },
+            { settingKey: 'autoGetCurrentGeoLocation', settingName: 'Automatically Add Geolocation' }
         ]
     },
     {
         categoryName: 'Import Transaction Dialog',
         items: [
-            { settingKey: 'rememberLastSelectedFileTypeInImportTransactionDialog', relatedSettingKeys: ['lastSelectedFileTypeInImportTransactionDialog'], settingName: 'Remember Last Selected File Type', mobile: false, desktop: true }
+            { settingKey: 'rememberLastSelectedFileTypeInImportTransactionDialog', relatedSettingKeys: ['lastSelectedFileTypeInImportTransactionDialog'], settingName: 'Remember Last Selected File Type' }
         ]
     },
     {
         categoryName: 'Insights Explorer Page',
         items: [
-            { settingKey: 'insightsExplorerDefaultDateRangeType', settingName: 'Default Date Range', mobile: false, desktop: true },
-            { settingKey: 'showTagInInsightsExplorerPage', settingName: 'Show Transaction Tags', mobile: false, desktop: true }
+            { settingKey: 'insightsExplorerDefaultDateRangeType', settingName: 'Default Date Range' },
+            { settingKey: 'showTagInInsightsExplorerPage', settingName: 'Show Transaction Tags' }
         ]
     },
     {
         categoryName: 'Account List Page',
         items: [
-            { settingKey: 'totalAmountExcludeAccountIds', settingName: 'Accounts Included in Total', mobile: true, desktop: true },
-            { settingKey: 'accountCategoryOrders', settingName: 'Account Category Order', mobile: true, desktop: true },
-            { settingKey: 'hideCategoriesWithoutAccounts', settingName: 'Hide Categories Without Accounts', mobile: false, desktop: true }
+            { settingKey: 'totalAmountExcludeAccountIds', settingName: 'Accounts Included in Total' },
+            { settingKey: 'accountCategoryOrders', settingName: 'Account Category Order' },
+            { settingKey: 'hideCategoriesWithoutAccounts', settingName: 'Hide Categories Without Accounts' }
         ]
     },
     {
         categoryName: 'Exchange Rates Data Page',
         items: [
-            { settingKey: 'currencySortByInExchangeRatesPage', settingName: 'Sort by', mobile: true, desktop: true }
+            { settingKey: 'currencySortByInExchangeRatesPage', settingName: 'Sort by' }
         ]
     },
     {
-        categoryName: 'Browser Cache Management',
+        categoryName: 'Data Cache',
         items: [
-            { settingKey: 'mapCacheExpiration', settingName: 'Cache Expiration for Map Data', mobile: true, desktop: true },
-            { settingKey: 'exchangeRatesDataCacheExpiration', settingName: 'Cache Expiration for Exchange Rates Data', mobile: true, desktop: true }
+            { settingKey: 'exchangeRatesDataCacheExpiration', settingName: 'Cache Expiration for Exchange Rates Data' }
         ]
     },
     {
         categoryName: 'Statistics Settings',
         categorySubName: 'Common Settings',
         items: [
-            { settingKey: 'statistics.defaultChartDataType', settingName: 'Default Chart Data Type', mobile: true, desktop: true },
-            { settingKey: 'statistics.defaultTimezoneType', settingName: 'Timezone Used for Date Range', mobile: true, desktop: true },
-            { settingKey: 'statistics.defaultAccountFilter', settingName: 'Default Account Filter', mobile: true, desktop: true },
-            { settingKey: 'statistics.defaultTransactionCategoryFilter', settingName: 'Default Transaction Category Filter', mobile: true, desktop: true },
-            { settingKey: 'statistics.defaultSortingType', settingName: 'Default Sort Order', mobile: true, desktop: true }
+            { settingKey: 'statistics.defaultChartDataType', settingName: 'Default Chart Data Type' },
+            { settingKey: 'statistics.defaultTimezoneType', settingName: 'Timezone Used for Date Range' },
+            { settingKey: 'statistics.defaultAccountFilter', settingName: 'Default Account Filter' },
+            { settingKey: 'statistics.defaultTransactionCategoryFilter', settingName: 'Default Transaction Category Filter' },
+            { settingKey: 'statistics.defaultSortingType', settingName: 'Default Sort Order' }
         ]
     },
     {
         categoryName: 'Statistics Settings',
         categorySubName: 'Categorical Analysis Settings',
         items: [
-            { settingKey: 'statistics.defaultCategoricalChartType', settingName: 'Default Chart Type', mobile: true, desktop: true },
-            { settingKey: 'statistics.defaultCategoricalChartDataRangeType', settingName: 'Default Date Range', mobile: true, desktop: true }
+            { settingKey: 'statistics.defaultCategoricalChartType', settingName: 'Default Chart Type' },
+            { settingKey: 'statistics.defaultCategoricalChartDataRangeType', settingName: 'Default Date Range' }
         ]
     },
     {
         categoryName: 'Statistics Settings',
         categorySubName: 'Trend Analysis Settings',
         items: [
-            { settingKey: 'statistics.defaultTrendChartType', settingName: 'Default Chart Type', mobile: false, desktop: true },
-            { settingKey: 'statistics.defaultTrendChartDataRangeType', settingName: 'Default Date Range', mobile: true, desktop: true }
+            { settingKey: 'statistics.defaultTrendChartType', settingName: 'Default Chart Type' },
+            { settingKey: 'statistics.defaultTrendChartDataRangeType', settingName: 'Default Date Range' }
         ]
     },
     {
         categoryName: 'Statistics Settings',
         categorySubName: 'Asset Trends Settings',
         items: [
-            { settingKey: 'statistics.defaultAssetTrendsChartType', settingName: 'Default Chart Type', mobile: false, desktop: true },
-            { settingKey: 'statistics.defaultAssetTrendsChartDataRangeType', settingName: 'Default Date Range', mobile: true, desktop: true }
+            { settingKey: 'statistics.defaultAssetTrendsChartType', settingName: 'Default Chart Type' },
+            { settingKey: 'statistics.defaultAssetTrendsChartDataRangeType', settingName: 'Default Date Range' }
         ]
     }
 ];

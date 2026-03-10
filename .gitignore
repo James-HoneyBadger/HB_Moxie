@@ -148,15 +148,21 @@ dist/
 # Roo Code
 .roo/
 
+# Python cache
+.mypy_cache/
+__pycache__/
+
 # Binary and build files
-ezbookkeeping
+hbmoxie
+hbmoxie_bin
+admin/hbmoxie-admin
 package/
 
 # Environment variable files
 .env
 **/.env
 
-# Other directories
+# Runtime directories
 data/
 storage/
 log/

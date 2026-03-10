@@ -52,7 +52,7 @@ const classes = computed<string>(() => {
 
 <style>
 .item-icon {
-    font-size: var(--ebk-icon-font-size);
+    font-size: var(--hbm-icon-font-size);
     display: inline-block;
     vertical-align: middle;
     background-size: 100% auto;

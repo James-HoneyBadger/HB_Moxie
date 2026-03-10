@@ -3,13 +3,13 @@ package api
 import (
 	"time"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/duplicatechecker"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/services"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/duplicatechecker"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/services"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
 )
 
 // ForgetPasswordsApi represents user forget password api
@@ -98,11 +98,14 @@ func (a *ForgetPasswordsApi) UserForgetPasswordRequestHandler(c *core.WebContext
 		return nil, errs.ErrTokenGenerating
 	}
 
-	go func() {
-		err = a.forgetPasswords.SendPasswordResetEmail(c, user, token, c.GetClientLocale())
+	clientLocale := c.GetClientLocale()
+	userEmail := user.Email
 
-		if err != nil {
-			log.Warnf(c, "[forget_passwords.UserForgetPasswordRequestHandler] cannot send email to \"%s\", because %s", user.Email, err.Error())
+	go func() {
+		sendErr := a.forgetPasswords.SendPasswordResetEmail(c, user, token, clientLocale)
+
+		if sendErr != nil {
+			log.Warnf(c, "[forget_passwords.UserForgetPasswordRequestHandler] cannot send email to \"%s\", because %s", userEmail, sendErr.Error())
 		}
 	}()
 

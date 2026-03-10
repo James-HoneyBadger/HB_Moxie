@@ -30,4 +30,5 @@ var (
 	ErrInvalidOAuth2UserIdentifier                    = NewSystemError(SystemSubcategorySetting, 23, http.StatusInternalServerError, "invalid oauth 2.0 user identifier")
 	ErrInvalidOAuth2Provider                          = NewSystemError(SystemSubcategorySetting, 24, http.StatusInternalServerError, "invalid oauth 2.0 provider")
 	ErrInvalidOAuth2StateExpiredTime                  = NewSystemError(SystemSubcategorySetting, 25, http.StatusInternalServerError, "invalid oauth 2.0 state expired time")
+	ErrSecretKeyNotSet                                = NewSystemError(SystemSubcategorySetting, 26, http.StatusInternalServerError, "secret_key is not set in config, refusing to start in production mode")
 )

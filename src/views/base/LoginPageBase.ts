@@ -8,12 +8,11 @@ import { useExchangeRatesStore } from '@/stores/exchangeRates.ts';
 
 import type { AuthResponse } from '@/models/auth_response.ts';
 
-import { updateMapCacheExpiration } from '@/lib/cache.ts';
 import { getOAuth2Provider, getOIDCCustomDisplayNames, getLoginPageTips } from '@/lib/server_settings.ts';
 import { getClientDisplayVersion } from '@/lib/version.ts';
 import { setExpenseAndIncomeAmountColor } from '@/lib/ui/common.ts';
 
-export function useLoginPageBase(platform: 'mobile' | 'desktop') {
+export function useLoginPageBase(platform: 'desktop') {
     const { getServerMultiLanguageConfigContent, getLocalizedOAuth2LoginText, setLanguage } = useI18n();
 
     const rootStore = useRootStore();
@@ -55,7 +54,6 @@ export function useLoginPageBase(platform: 'mobile' | 'desktop') {
             setExpenseAndIncomeAmountColor(authResponse.user.expenseAmountColor, authResponse.user.incomeAmountColor);
         }
 
-        updateMapCacheExpiration(settingsStore.appSettings.mapCacheExpiration);
         exchangeRatesStore.removeExpiredExchangeRates(true);
         exchangeRatesStore.autoUpdateExchangeRatesData();
 

@@ -300,14 +300,14 @@ init(props.length, props.modelValue);
 
 <style>
 .pin-codes-input {
-    --ebk-pin-code-border-color: #bbb;
-    --ebk-pin-code-focued-color: #c67e48;
-    --ebk-pin-code-border-radius: 8px;
-    --ebk-pin-code-input-height: 46px;
-    --ebk-pin-code-input-gap: 8px;
-    --ebk-pin-code-transition-duration: 200ms;
+    --hbm-pin-code-border-color: #bbb;
+    --hbm-pin-code-focued-color: #c67e48;
+    --hbm-pin-code-border-radius: 8px;
+    --hbm-pin-code-input-height: 46px;
+    --hbm-pin-code-input-gap: 8px;
+    --hbm-pin-code-transition-duration: 200ms;
     display: grid;
-    gap: var(--ebk-pin-code-input-gap);
+    gap: var(--hbm-pin-code-input-gap);
 }
 
 .pin-code-input {
@@ -319,7 +319,7 @@ init(props.length, props.modelValue);
     padding-inline-start: 10px;
     padding-inline-end: 10px;
     width: 100%;
-    height: var(--ebk-pin-code-input-height) !important;
+    height: var(--hbm-pin-code-input-height) !important;
 }
 
 .pin-code-input input:focus {
@@ -333,15 +333,15 @@ init(props.length, props.modelValue);
     right: 0;
     top: 0;
     bottom: 0;
-    border: 1px solid var(--ebk-pin-code-border-color);
-    border-radius: var(--ebk-pin-code-border-radius);
+    border: 1px solid var(--hbm-pin-code-border-color);
+    border-radius: var(--hbm-pin-code-border-radius);
     pointer-events: none;
     box-sizing: border-box;
-    transition-duration: var(--ebk-pin-code-transition-duration);
+    transition-duration: var(--hbm-pin-code-transition-duration);
 }
 
 .pin-code-input-outline.pin-code-input-focued::after {
     border-width: 2px;
-    border-color: var(--ebk-pin-code-focued-color);
+    border-color: var(--hbm-pin-code-focued-color);
 }
 </style>

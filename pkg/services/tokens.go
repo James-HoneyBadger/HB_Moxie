@@ -11,13 +11,13 @@ import (
 	"github.com/golang-jwt/jwt/v5/request"
 	"xorm.io/xorm"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/datastore"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/settings"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/datastore"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 const tokenMaxExpiredAtUnixTime = int64(253402300799) // 9999-12-31 23:59:59 UTC
@@ -424,7 +424,6 @@ func (s *TokenService) createToken(c core.Context, user *models.User, tokenType 
 
 	tokenRecord := &models.TokenRecord{
 		Uid:              user.Uid,
-		UserTokenId:      s.getUserTokenId(),
 		TokenType:        tokenType,
 		UserAgent:        userAgent,
 		Context:          context,
@@ -433,7 +432,13 @@ func (s *TokenService) createToken(c core.Context, user *models.User, tokenType 
 		LastSeenUnixTime: now.Unix(),
 	}
 
-	if tokenRecord.Secret, err = utils.GetRandomString(10); err != nil {
+	tokenRecord.UserTokenId, err = s.getUserTokenId()
+
+	if err != nil {
+		return "", nil, nil, err
+	}
+
+	if tokenRecord.Secret, err = utils.GetRandomString(32); err != nil {
 		return "", nil, nil, err
 	}
 
@@ -500,12 +505,17 @@ func (s *TokenService) createTokenRecord(c core.Context, tokenRecord *models.Tok
 	})
 }
 
-func (s *TokenService) getUserTokenId() int64 {
+func (s *TokenService) getUserTokenId() (int64, error) {
 	nanoSeconds := time.Now().Nanosecond()
-	randomNumber, _ := utils.GetRandomInteger(math.MaxInt32)
+	randomNumber, err := utils.GetRandomInteger(math.MaxInt32)
+
+	if err != nil {
+		return 0, err
+	}
+
 	userTokenId := (int64(nanoSeconds) << 32) | int64(randomNumber)
 
-	return userTokenId
+	return userTokenId, nil
 }
 
 func (s *TokenService) getUserAgent(ctx *core.WebContext) string {

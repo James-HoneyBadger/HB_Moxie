@@ -8,16 +8,16 @@ import { isString, isObject } from './common.ts';
 import { isEnableApplicationLock } from './settings.ts';
 import logger from './logger.ts';
 
-const appLockSecretBaseStringPrefix: string = 'EBK_LOCK_SECRET_';
+const appLockSecretBaseStringPrefix: string = 'HBM_LOCK_SECRET_';
 
-const tokenLocalStorageKey: string = 'ebk_user_token';
-const webauthnConfigLocalStorageKey: string = 'ebk_user_webauthn_config';
-const userInfoLocalStorageKey: string = 'ebk_user_info';
-const transactionDraftLocalStorageKey: string = 'ebk_user_draft_transaction';
+const tokenLocalStorageKey: string = 'hbm_user_token';
+const webauthnConfigLocalStorageKey: string = 'hbm_user_webauthn_config';
+const userInfoLocalStorageKey: string = 'hbm_user_info';
+const transactionDraftLocalStorageKey: string = 'hbm_user_draft_transaction';
 
-const tokenSessionStorageKey: string = 'ebk_user_session_token';
-const encryptedTokenSessionStorageKey: string = 'ebk_user_session_encrypted_token';
-const appLockStateSessionStorageKey: string = 'ebk_user_app_lock_state'; // { 'username': '', secret: '' }
+const tokenSessionStorageKey: string = 'hbm_user_session_token';
+const encryptedTokenSessionStorageKey: string = 'hbm_user_session_encrypted_token';
+const appLockStateSessionStorageKey: string = 'hbm_user_app_lock_state'; // { 'username': '', secret: '' }
 
 function getAppLockSecret(pinCode: string): string {
     const hashedPinCode = CryptoJS.SHA256(appLockSecretBaseStringPrefix + pinCode).toString();
@@ -62,7 +62,13 @@ export function getUserAppLockState(): ApplicationLockState | null {
         return null;
     }
 
-    const appLockState = JSON.parse(data);
+    const appLockState = (() => {
+        try {
+            return JSON.parse(data);
+        } catch {
+            return null;
+        }
+    })();
 
     if (!appLockState || !appLockState.username || !appLockState.secret) {
         return null;
@@ -78,7 +84,13 @@ export function unlockTokenByWebAuthn(credentialId: string, userName: string, us
         throw new Error('WebAuthn credential is not set');
     }
 
-    const webauthnConfig = JSON.parse(webauthnConfigData) as WebAuthnConfig;
+    let webauthnConfig: WebAuthnConfig;
+
+    try {
+        webauthnConfig = JSON.parse(webauthnConfigData) as WebAuthnConfig;
+    } catch {
+        throw new Error('WebAuthn credential data is corrupted');
+    }
 
     if (webauthnConfig.credentialId !== credentialId) {
         throw new Error('WebAuthn credential is invalid');
@@ -95,6 +107,10 @@ export function unlockTokenByWebAuthn(credentialId: string, userName: string, us
         secret: userSecret
     };
     const token = getDecryptedToken(encryptedToken, appLockState);
+
+    if (!token) {
+        throw new Error('Failed to decrypt token, invalid credentials');
+    }
 
     sessionStorage.setItem(appLockStateSessionStorageKey, JSON.stringify(appLockState));
     sessionStorage.setItem(encryptedTokenSessionStorageKey, encryptedToken);
@@ -113,6 +129,10 @@ export function unlockTokenByPinCode(userName: string, pinCode: string): void {
         secret: getAppLockSecret(pinCode)
     };
     const token = getDecryptedToken(encryptedToken, appLockState);
+
+    if (!token) {
+        throw new Error('Failed to decrypt token, invalid PIN code');
+    }
 
     sessionStorage.setItem(appLockStateSessionStorageKey, JSON.stringify(appLockState));
     sessionStorage.setItem(encryptedTokenSessionStorageKey, encryptedToken);
@@ -221,9 +241,12 @@ export function getWebAuthnCredentialId(): string | undefined {
         return undefined;
     }
 
-    const webauthnConfig = JSON.parse(webauthnConfigData) as WebAuthnConfig;
-
-    return webauthnConfig.credentialId;
+    try {
+        const webauthnConfig = JSON.parse(webauthnConfigData) as WebAuthnConfig;
+        return webauthnConfig.credentialId;
+    } catch {
+        return undefined;
+    }
 }
 
 export function saveWebAuthnConfig(credentialId: string): void {
@@ -245,7 +268,11 @@ export function getCurrentUserInfo(): UserBasicInfo | null {
         return null;
     }
 
-    return JSON.parse(data) as UserBasicInfo;
+    try {
+        return JSON.parse(data) as UserBasicInfo;
+    } catch {
+        return null;
+    }
 }
 
 export function updateCurrentUserInfo(user: UserBasicInfo): void {
@@ -275,7 +302,11 @@ export function getUserTransactionDraft(): TransactionDraft | null {
         data = getDecryptedToken(data, appLockState);
     }
 
-    return JSON.parse(data) as TransactionDraft;
+    try {
+        return JSON.parse(data) as TransactionDraft;
+    } catch {
+        return null;
+    }
 }
 
 export function updateUserTransactionDraft(transaction?: TransactionDraft | null): void {

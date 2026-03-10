@@ -85,8 +85,6 @@
                                                                     @update:model-value="updateSettingSelected(settingItem, !!$event)">
                                                             <template #label>
                                                                 <span>{{ tt(settingItem.settingName) }}</span>
-                                                                <v-icon class="ms-2 me-0" start size="16" :icon="mdiCellphone" v-if="settingItem.mobile"/>
-                                                                <v-icon class="ms-2 me-0" start size="16" :icon="mdiMonitor" v-if="settingItem.desktop"/>
                                                             </template>
                                                         </v-checkbox>
                                                     </template>
@@ -140,8 +138,6 @@ import {
     mdiSelectAll,
     mdiSelect,
     mdiSelectInverse,
-    mdiCellphone,
-    mdiMonitor,
 } from '@mdi/js';
 
 type SnackBarType = InstanceType<typeof SnackBar>;

@@ -6,8 +6,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 func TestUserCanEditTransactionByTransactionTime_ScopeIsNone(t *testing.T) {
@@ -88,7 +88,8 @@ func TestUserCanEditTransactionByTransactionTime_ScopeIsThisMonthOrLater(t *test
 
 	now := time.Now()
 	timezone := time.FixedZone("Timezone", int(utils.GetServerTimezoneOffsetMinutes())*60)
-	thisMonthFirstDatetime := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.Local)
+	clientNow := now.In(timezone)
+	thisMonthFirstDatetime := time.Date(clientNow.Year(), clientNow.Month(), 1, 0, 0, 0, 0, timezone)
 	lastMonthLastDatetime := thisMonthFirstDatetime.Add(-1 * time.Second)
 	thisMonthLastDatetime := lastMonthLastDatetime.Add(24 * time.Hour)
 
@@ -104,7 +105,8 @@ func TestUserCanEditTransactionByTransactionTime_ScopeIsThisYearOrLater(t *testi
 
 	now := time.Now()
 	timezone := time.FixedZone("Timezone", int(utils.GetServerTimezoneOffsetMinutes())*60)
-	thisYearFirstDatetime := time.Date(now.Year(), 1, 1, 0, 0, 0, 0, time.Local)
+	clientNow := now.In(timezone)
+	thisYearFirstDatetime := time.Date(clientNow.Year(), 1, 1, 0, 0, 0, 0, timezone)
 	lastYearLastDatetime := thisYearFirstDatetime.Add(-1 * time.Second)
 	thisYearLastDatetime := lastYearLastDatetime.Add(24 * time.Hour)
 

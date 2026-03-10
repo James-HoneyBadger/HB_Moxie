@@ -1,67 +1,18 @@
 import fs from 'fs';
 import { resolve } from 'path';
 
-import { type UserConfig, type Plugin, defineConfig } from 'vite'
+import { type UserConfig, defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue';
 import vuetify from 'vite-plugin-vuetify';
-import { VitePWA } from 'vite-plugin-pwa';
 import Checker from 'vite-plugin-checker';
 import git from 'git-rev-sync';
 
 import packageFile from './package.json';
-import contributorsFile from './contributors.json';
 import thirdPartyLicenseFile from './third-party-dependencies.json';
 
 const SRC_DIR = resolve(__dirname, './src');
 const PUBLIC_DIR = resolve(__dirname, './public');
 const BUILD_DIR = resolve(__dirname, './dist',);
-
-function injectFramework7CssFile({ htmlFileName, placeHolders }: { htmlFileName: string, placeHolders: { name: string, srcFileName: string, distFileNamePrefix: string }[] }): Plugin[] {
-    return [
-        {
-            name: 'inject-framework7-css-file:serve',
-            apply: 'serve',
-            enforce: 'post',
-            transformIndexHtml(html: string): string {
-                for (const placeholder of placeHolders) {
-                    html = html.replace(`{{${placeholder.name}}}`, `${placeholder.srcFileName}`);
-                }
-                return html;
-            }
-        },
-        {
-            name: 'inject-framework7-css-file:build',
-            apply: 'build',
-            enforce: 'post',
-            generateBundle(_, bundle): void {
-                const placeholderCssFilePathMap: Record<string, string> = {};
-
-                for (const fileName of Object.keys(bundle)) {
-                    for (const placeholder of placeHolders) {
-                        if (fileName.startsWith(placeholder.distFileNamePrefix)) {
-                            placeholderCssFilePathMap[placeholder.name] = fileName;
-                            break;
-                        }
-                    }
-                }
-
-                const htmlAsset = bundle[htmlFileName];
-
-                if (!htmlAsset || htmlAsset.type !== 'asset') {
-                    return;
-                }
-
-                let html = htmlAsset.source as string;
-
-                for (const [placeholder, filePath] of Object.entries(placeholderCssFilePathMap)) {
-                    html = html.replace(`{{${placeholder}}}`, `./${filePath}`);
-                }
-
-                htmlAsset.source = html;
-            }
-        }
-    ];
-}
 
 export default defineConfig(() => {
     const licenseContent = fs.readFileSync('./LICENSE', { encoding: 'utf-8' });
@@ -72,101 +23,27 @@ export default defineConfig(() => {
         publicDir: PUBLIC_DIR,
         base: './',
         define: {
-            __EZBOOKKEEPING_IS_PRODUCTION__: process.env['NODE_ENV'] === 'production',
-            __EZBOOKKEEPING_VERSION__: JSON.stringify(packageFile.version),
-            __EZBOOKKEEPING_BUILD_UNIX_TIME__: JSON.stringify(buildUnixTime),
-            __EZBOOKKEEPING_BUILD_COMMIT_HASH__: JSON.stringify(git.short()),
-            __EZBOOKKEEPING_CONTRIBUTORS__: JSON.stringify(contributorsFile),
-            __EZBOOKKEEPING_LICENSE__: JSON.stringify(licenseContent),
-            __EZBOOKKEEPING_THIRD_PARTY_LICENSES__: JSON.stringify(thirdPartyLicenseFile)
+            __HBMOXIE_IS_PRODUCTION__: process.env['NODE_ENV'] === 'production',
+            __HBMOXIE_VERSION__: JSON.stringify(packageFile.version),
+            __HBMOXIE_BUILD_UNIX_TIME__: JSON.stringify(buildUnixTime),
+            __HBMOXIE_BUILD_COMMIT_HASH__: JSON.stringify(git.short()),
+            __HBMOXIE_LICENSE__: JSON.stringify(licenseContent),
+            __HBMOXIE_THIRD_PARTY_LICENSES__: JSON.stringify(thirdPartyLicenseFile)
         },
         plugins: [
-            vue({
-                template: {
-                    compilerOptions: {
-                        isCustomElement: tag => tag.includes('swiper-')
-                    }
-                }
-            }),
+            vue(),
             vuetify({
                 styles: {
                     configFile: 'styles/desktop/configured-variables/_vuetify.scss'
                 }
             }),
-            injectFramework7CssFile({
-                htmlFileName: 'mobile.html',
-                placeHolders: [
-                    {
-                        name: 'framework7-ltr-css-filepath',
-                        srcFileName: 'mobile-ltr.scss',
-                        distFileNamePrefix: 'css/vendor-framework7-ltr'
-                    },
-                    {
-                        name: 'framework7-rtl-css-filepath',
-                        srcFileName: 'mobile-rtl.scss',
-                        distFileNamePrefix: 'css/vendor-framework7-rtl'
-                    }
-                ]
-            }),
             Checker({
                 vueTsc: true
-            }),
-            VitePWA({
-                strategies: 'injectManifest',
-                srcDir: './',
-                filename: 'sw.ts',
-                injectRegister: false,
-                manifestFilename: 'manifest.json',
-                manifest: {
-                    name: 'ezBookkeeping',
-                    short_name: 'ezBookkeeping',
-                    description: 'A lightweight, self-hosted personal finance app with a user-friendly interface and powerful bookkeeping features.',
-                    theme_color: '#C67E48',
-                    background_color: '#F6F7F8',
-                    start_url: './',
-                    scope: './',
-                    display: 'standalone',
-                    related_applications: [],
-                    prefer_related_applications: false,
-                    icons: [
-                        {
-                            src: 'img/ezbookkeeping-192.png',
-                            sizes: '192x192',
-                            type: 'image/png'
-                        },
-                        {
-                            src: 'img/ezbookkeeping-512.png',
-                            sizes: '512x512',
-                            type: 'image/png'
-                        }
-                    ]
-                },
-                injectManifest: {
-                    globDirectory: 'dist/',
-                    globPatterns: ['**/*.{js,css,html,ico,png,jpg,jpeg,gif,tiff,bmp,ttf,woff,woff2,svg,eot}'],
-                    globIgnores: [
-                        'index.html',
-                        'mobile.html',
-                        'desktop.html',
-                        'robots.txt',
-                        'img/desktop/*',
-                        'fonts/*.eot',
-                        'fonts/*.ttf',
-                        'fonts/*.svg',
-                        'fonts/*.woff',
-                        'css/*.css',
-                        'js/*.js'
-                    ],
-                    maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB
-                }
             })
         ],
         build: {
             target: [
-                'chrome91',
-                'edge91',
-                'firefox91',
-                'safari15.4'
+                'chrome91'
             ],
             outDir: BUILD_DIR,
             sourcemap: false,
@@ -174,11 +51,7 @@ export default defineConfig(() => {
             emptyOutDir: true,
             rollupOptions: {
                 input: {
-                    index: resolve(SRC_DIR, 'index.html'),
                     desktop: resolve(SRC_DIR, 'desktop.html'),
-                    mobile: resolve(SRC_DIR, 'mobile.html'),
-                    'vendor-framework7-ltr': resolve(SRC_DIR, 'mobile-ltr.scss'),
-                    'vendor-framework7-rtl': resolve(SRC_DIR, 'mobile-rtl.scss')
                 },
                 output: {
                     assetFileNames: assetInfo => {
@@ -205,8 +78,6 @@ export default defineConfig(() => {
                             return 'leaflet';
                         } else if (/[\\/]node_modules[\\/](moment|moment-timezone)[\\/]/i.test(id)) {
                             return 'moment';
-                        } else if (/[\\/]node_modules[\\/](dom7|framework7.*|skeleton-elements|swiper)[\\/]/i.test(id)) {
-                            return 'vendor-mobile';
                         } else if (/[\\/]node_modules[\\/](vuetify|vue-router|vue3-perfect-scrollbar|perfect-scrollbar|vuedraggable|sortablejs|@mdi.*)[\\/]/i.test(id)) {
                             return 'vendor-desktop';
                         } else if (/[\\/]node_modules[\\/](echarts|zrender|tslib|resize-detector|vue-echarts)[\\/]/i.test(id)) {
@@ -232,7 +103,7 @@ export default defineConfig(() => {
                         }
                     }
                 },
-                treeshake: false
+                treeshake: true
             },
         },
         resolve: {
@@ -246,10 +117,6 @@ export default defineConfig(() => {
             strictPort: true,
             proxy: {
                 '/server_settings.js': {
-                    target: 'http://127.0.0.1:8080/',
-                    changeOrigin: true
-                },
-                '/mobile/server_settings.js': {
                     target: 'http://127.0.0.1:8080/',
                     changeOrigin: true
                 },
@@ -274,10 +141,6 @@ export default defineConfig(() => {
                     changeOrigin: true
                 },
                 '/pictures': {
-                    target: 'http://127.0.0.1:8080/',
-                    changeOrigin: true
-                },
-                '/qrcode': {
                     target: 'http://127.0.0.1:8080/',
                     changeOrigin: true
                 },

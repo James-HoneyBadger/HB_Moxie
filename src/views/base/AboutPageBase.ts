@@ -12,10 +12,8 @@ import type { LatestExchangeRateResponse } from '@/models/exchange_rate.ts';
 import { parseDateTimeFromUnixTime } from '@/lib/datetime.ts';
 import { getMapProvider } from '@/lib/server_settings.ts';
 import { getMapWebsite } from '@/lib/map/index.ts';
-import { getContributors } from '@/lib/contributors.ts';
 import { getLicense, getThirdPartyLicenses } from '@/lib/licenses.ts';
 import { formatDisplayVersion, getClientDisplayVersion, getClientBuildTime } from '@/lib/version.ts';
-import { clearAllBrowserCaches } from '@/lib/cache.ts';
 
 export function useAboutPageBase() {
     const { tt, formatDateTimeToLongDateTime } = useI18n();
@@ -26,7 +24,6 @@ export function useAboutPageBase() {
     const clientVersion = `${getClientDisplayVersion()}`;
 
     const serverVersion = ref<VersionInfo | null>(null);
-    const clientVersionMatchServerVersion = ref<boolean>(true);
 
     const serverDisplayVersion = computed<string>(() => {
         if (!serverVersion.value) {
@@ -56,28 +53,18 @@ export function useAboutPageBase() {
     });
     const mapProviderWebsite = computed<string>(() => getMapWebsite());
 
-    const contributors = computed<ContributorInfo>(() => getContributors());
     const licenseLines = computed<string[]>(() => getLicense().replace(/\r/g, '').split('\n'));
     const thirdPartyLicenses = computed<LicenseInfo[]>(() => getThirdPartyLicenses());
 
-    function refreshBrowserCache(): void {
-        clearAllBrowserCaches().then(() => {
-            location.reload();
-        });
-    }
-
     function init(): void {
-        systemsStore.checkIfClientVersionMatchServerVersion().then(({ match, version }) => {
+        systemsStore.checkIfClientVersionMatchServerVersion().then(({ version }) => {
             serverVersion.value = version;
-            clientVersionMatchServerVersion.value = match;
         });
     }
 
     return {
         // constants
         clientVersion,
-        // states
-        clientVersionMatchServerVersion,
         // computed states
         serverDisplayVersion,
         clientBuildTime,
@@ -85,11 +72,9 @@ export function useAboutPageBase() {
         isUserCustomExchangeRates,
         mapProviderName,
         mapProviderWebsite,
-        contributors,
         licenseLines,
         thirdPartyLicenses,
         // functions
-        refreshBrowserCache,
         init
     };
 }

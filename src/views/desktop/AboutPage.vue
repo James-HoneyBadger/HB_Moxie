@@ -3,15 +3,7 @@
         <v-col cols="12">
             <v-card>
                 <template #title>
-                    <div class="d-flex align-center">
-                        <span>{{ tt('global.app.title') }}</span>
-                        <v-btn density="compact" color="default" variant="text" size="24"
-                               class="ms-2" :icon="true" @click="refreshBrowserCache"
-                               v-if="!clientVersionMatchServerVersion">
-                            <v-icon :icon="mdiWebRefresh" size="24" />
-                            <v-tooltip activator="parent">{{ tt('Refresh Browser Cache') }}</v-tooltip>
-                        </v-btn>
-                    </div>
+                    <span>{{ tt('global.app.title') }}</span>
                 </template>
 
                 <v-card-text>
@@ -36,8 +28,8 @@
                             <span class="text-body-1">{{ tt('Official Website') }}</span>
                         </v-col>
                         <v-col cols="12" md="10" class="mb-6">
-                            <a class="text-body-1" href="https://github.com/mayswind/ezbookkeeping" target="_blank">
-                                https://github.com/mayswind/ezbookkeeping
+                            <a class="text-body-1" href="https://github.com/James-HoneyBadger/HB_Moxie" target="_blank">
+                                https://github.com/James-HoneyBadger/HB_Moxie
                             </a>
                         </v-col>
                     </v-row>
@@ -46,8 +38,8 @@
                             <span class="text-body-1">{{ tt('Report Issue') }}</span>
                         </v-col>
                         <v-col cols="12" md="10" class="mb-6">
-                            <a class="text-body-1" href="https://github.com/mayswind/ezbookkeeping/issues" target="_blank">
-                                https://github.com/mayswind/ezbookkeeping/issues
+                            <a class="text-body-1" href="https://github.com/James-HoneyBadger/HB_Moxie/issues" target="_blank">
+                                https://github.com/James-HoneyBadger/HB_Moxie/issues
                             </a>
                         </v-col>
                     </v-row>
@@ -56,8 +48,8 @@
                             <span class="text-body-1">{{ tt('Getting help') }}</span>
                         </v-col>
                         <v-col cols="12" md="10">
-                            <a class="text-body-1" href="https://ezbookkeeping.mayswind.net" target="_blank">
-                                https://ezbookkeeping.mayswind.net
+                            <a class="text-body-1" href="https://github.com/James-HoneyBadger/HB_Moxie" target="_blank">
+                                https://github.com/James-HoneyBadger/HB_Moxie
                             </a>
                         </v-col>
                     </v-row>
@@ -113,63 +105,10 @@
                             <v-divider/>
                             <br/>
                             <p>
-                                <span>ezBookkeeping's codebase and localization translation rely on contributions from the community. The following people have contributed to ezBookkeeping:</span>
+                                <span>Copyright © 2020–2026 Honey Badger Universe</span>
                             </p>
-                            <div>
-                                <strong>Project Maintainer</strong>
-                                <div class="mt-2">
-                                    <a target="_blank" href="https://github.com/mayswind">@mayswind</a>
-                                </div>
-                            </div>
-                            <p class="mt-4">
-                                <strong>Code Contributors</strong>
-                            </p>
-                            <table class="contributors-table">
-                                <thead>
-                                <tr>
-                                    <th>Contributor</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr :key="index" v-for="(contributor, index) in contributors.code">
-                                    <td>
-                                        <a target="_blank" :href="`https://github.com/${contributor}`">
-                                            @{{ contributor }}
-                                        </a>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <p class="mt-4">
-                                <strong>Translation Contributors</strong>
-                            </p>
-                            <table class="contributors-table">
-                                <thead>
-                                <tr>
-                                    <th>Tag</th>
-                                    <th>Language</th>
-                                    <th>Contributors</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr :key="lang.languageTag" v-for="lang in allLanguages">
-                                    <td>{{ lang.languageTag }}</td>
-                                    <td>{{ lang.nativeDisplayName }}</td>
-                                    <td>
-                                        <template :key="contributor"
-                                                  v-for="(contributor, index) in contributors.translators[lang.languageTag] ?? []">
-                                            <span v-if="index > 0">, </span>
-                                            <a target="_blank" :href="`https://github.com/${contributor}`">
-                                                @{{ contributor }}
-                                            </a>
-                                        </template>
-                                        <span v-if="!contributors.translators[lang.languageTag] || !contributors.translators[lang.languageTag]?.length">/</span>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
                             <p class="mt-4 mb-4">
-                                <span>ezBookkeeping also contains additional third party software and illustration.</span><br/>
+                                <span>HB_Moxie also contains additional third party software and illustration.</span><br/>
                                 <span>All the third party software / illustration included or linked is redistributed under the terms and conditions of their original licenses.</span>
                             </p>
                             <p :key="licenseInfo.name" v-for="licenseInfo in thirdPartyLicenses">
@@ -188,57 +127,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-
-import type { LanguageOption } from '@/locales/index.ts';
 import { useI18n } from '@/locales/helpers.ts';
 import { useAboutPageBase } from '@/views/base/AboutPageBase.ts';
 
-import {
-    mdiWebRefresh
-} from '@mdi/js';
-
-const { tt, getAllLanguageOptions } = useI18n();
+const { tt } = useI18n();
 const {
     clientVersion,
-    clientVersionMatchServerVersion,
     clientBuildTime,
     exchangeRatesData,
     isUserCustomExchangeRates,
     mapProviderName,
     mapProviderWebsite,
-    contributors,
     licenseLines,
     thirdPartyLicenses,
-    refreshBrowserCache,
     init
 } = useAboutPageBase();
-
-
-const allLanguages = computed<LanguageOption[]>(() => getAllLanguageOptions(false));
 
 init();
 </script>
 
 <style>
-.contributors-table {
-    border-collapse: collapse;
-
-    > thead > tr {
-        > th:not(:first-child) {
-            padding-inline-start: 10px;
-        }
-
-        > th:not(:last-child) {
-            padding-inline-end: 10px;
-        }
-    }
-
-    > thead > tr > th,
-    > tbody > tr > td {
-        padding: 4px 8px;
-        border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-        text-align: start;
-    }
-}
 </style>

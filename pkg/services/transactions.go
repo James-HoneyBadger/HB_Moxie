@@ -9,13 +9,13 @@ import (
 	"xorm.io/builder"
 	"xorm.io/xorm"
 
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/datastore"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/models"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
-	"github.com/mayswind/ezbookkeeping/pkg/uuid"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/datastore"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/uuid"
 )
 
 const pageCountForLoadTransactionAmounts = 1000
@@ -2584,19 +2584,19 @@ func (s *TransactionService) buildTransactionQueryCondition(uid int64, maxTransa
 				conditionParams = append(conditionParams, value)
 			}
 		} else if len(amountFilterItems) == 3 && amountFilterItems[0] == "bt" {
-			value1, err := utils.StringToInt64(amountFilterItems[1])
-			value2, err := utils.StringToInt64(amountFilterItems[2])
+			value1, err1 := utils.StringToInt64(amountFilterItems[1])
+			value2, err2 := utils.StringToInt64(amountFilterItems[2])
 
-			if err == nil {
+			if err1 == nil && err2 == nil {
 				condition = condition + " AND amount >= ? AND amount <= ?"
 				conditionParams = append(conditionParams, value1)
 				conditionParams = append(conditionParams, value2)
 			}
 		} else if len(amountFilterItems) == 3 && amountFilterItems[0] == "nb" {
-			value1, err := utils.StringToInt64(amountFilterItems[1])
-			value2, err := utils.StringToInt64(amountFilterItems[2])
+			value1, err1 := utils.StringToInt64(amountFilterItems[1])
+			value2, err2 := utils.StringToInt64(amountFilterItems[2])
 
-			if err == nil {
+			if err1 == nil && err2 == nil {
 				condition = condition + " AND (amount < ? OR amount > ?)"
 				conditionParams = append(conditionParams, value1)
 				conditionParams = append(conditionParams, value2)

@@ -1,0 +1,71 @@
+{
+  "name": "hb-moxie-desktop",
+  "version": "1.0.0",
+  "description": "HB Moxie — A Honey Badger approach to personal finance management",
+  "main": "main.js",
+  "author": "Honey Badger Universe",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:linux": "electron-builder --linux",
+    "build:mac": "electron-builder --mac",
+    "build:win": "electron-builder --win"
+  },
+  "dependencies": {
+    "electron-is-dev": "^2.0.0"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "com.hbmoxie.desktop",
+    "productName": "HB Moxie",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "assets/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../hbmoxie",
+        "to": "backend/hbmoxie"
+      },
+      {
+        "from": "../conf",
+        "to": "backend/conf"
+      },
+      {
+        "from": "../templates",
+        "to": "backend/templates"
+      },
+      {
+        "from": "../public",
+        "to": "backend/public"
+      }
+    ],
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "icon": "assets/icon.png",
+      "category": "Finance"
+    },
+    "mac": {
+      "target": ["dmg"],
+      "icon": "assets/icon.icns",
+      "category": "public.app-category.finance"
+    },
+    "win": {
+      "target": ["nsis"],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "assets/icon.ico"
+    }
+  }
+}

@@ -14,16 +14,16 @@ import (
 	"golang.org/x/text/encoding/unicode"
 	"golang.org/x/text/transform"
 
-	"github.com/mayswind/ezbookkeeping/pkg/converters/sgml"
-	"github.com/mayswind/ezbookkeeping/pkg/core"
-	"github.com/mayswind/ezbookkeeping/pkg/errs"
-	"github.com/mayswind/ezbookkeeping/pkg/log"
-	"github.com/mayswind/ezbookkeeping/pkg/utils"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/sgml"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
 )
 
 const ofx1USAsciiEncoding = "usascii"
 const ofx1UnicodeEncoding = "unicode"
-const ofx1UTF8Encoding = "utf-8" // non-standard ofx 1.x encoding, used by some banks (https://github.com/mayswind/ezbookkeeping/issues/48)
+const ofx1UTF8Encoding = "utf-8" // non-standard ofx 1.x encoding, used by some banks (https://github.com/James-HoneyBadger/HB_Moxie/issues/48)
 const ofx1SGMLDataFormat = "OFXSGML"
 
 var ofx2HeaderPattern = regexp.MustCompile("<\\?OFX( +[A-Z]+=\"[^=]*\")* *\\?>")
