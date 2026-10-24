@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -123,6 +124,10 @@ func TestVacuumInto_CreatesConsistentSnapshot(t *testing.T) {
 }
 
 func TestInitializeDatabase_SQLiteUsesPrivatePermissions(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("POSIX file modes are not enforced on Windows")
+	}
+
 	databasePath := filepath.Join(t.TempDir(), "data", "test.db")
 
 	database, err := initializeDatabase(&settings.DatabaseConfig{

@@ -130,7 +130,7 @@ function Build-Backend {
     Write-Host "Building backend binary file ($ReleaseType)..."
 
     $env:CGO_ENABLED = 1
-    go build -a -v -trimpath -tags timetzdata -ldflags "-w -s -linkmode external -extldflags '-static' $backend_build_extra_arguments" -o ratel-ledger.exe main.go
+    go build -a -v -trimpath -tags timetzdata -ldflags "-w -s -linkmode external -extldflags '-static' $backend_build_extra_arguments" -o ratel-ledger.exe .
 
     Remove-Item Env:\CGO_ENABLED -ErrorAction SilentlyContinue
 }

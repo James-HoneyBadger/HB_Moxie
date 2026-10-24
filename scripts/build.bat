@@ -174,7 +174,7 @@ goto :pre_parse_args
 
     echo Building backend binary file (%RELEASE_TYPE%)...
 
-    call go build -a -v -trimpath -tags timetzdata -ldflags "-w -s -linkmode external -extldflags '-static' %backend_build_extra_arguments%" -o ratel-ledger.exe main.go
+    call go build -a -v -trimpath -tags timetzdata -ldflags "-w -s -linkmode external -extldflags '-static' %backend_build_extra_arguments%" -o ratel-ledger.exe .
     endlocal
 
     set "CGO_ENABLED="

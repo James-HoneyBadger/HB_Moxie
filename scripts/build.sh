@@ -160,7 +160,7 @@ build_backend() {
 
     echo "Building backend binary file ($RELEASE_TYPE)..."
 
-    CGO_ENABLED=1 go build -a -v -trimpath -tags timetzdata -ldflags "-w -s -linkmode external -extldflags '-static' $backend_build_extra_arguments" -o ratel-ledger main.go
+    CGO_ENABLED=1 go build -a -v -trimpath -tags timetzdata -ldflags "-w -s -linkmode external -extldflags '-static' $backend_build_extra_arguments" -o ratel-ledger .
     chmod +x ratel-ledger
 }
 

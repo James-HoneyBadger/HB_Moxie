@@ -3,6 +3,7 @@ package storage
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -20,6 +21,10 @@ func (testStorageObject) Close() error {
 }
 
 func TestLocalFileSystemObjectStorage_PrivatePermissions(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("POSIX file modes are not enforced on Windows")
+	}
+
 	rootPath := t.TempDir()
 	objectStorage, err := NewLocalFileSystemObjectStorage(&settings.Config{LocalFileSystemPath: rootPath}, "pictures")
 	assert.NoError(t, err)

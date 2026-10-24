@@ -3,6 +3,7 @@ package settings
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -37,9 +38,11 @@ secret_key =
 	actual := cfgFile.Section("security").Key("secret_key").String()
 	assert.Equal(t, testKey, actual)
 
-	fileInfo, err := os.Stat(cfgPath)
-	assert.NoError(t, err)
-	assert.Equal(t, os.FileMode(0600), fileInfo.Mode().Perm())
+	if runtime.GOOS != "windows" {
+		fileInfo, err := os.Stat(cfgPath)
+		assert.NoError(t, err)
+		assert.Equal(t, os.FileMode(0600), fileInfo.Mode().Perm())
+	}
 }
 
 func TestPersistSecretKey_CreatesSecuritySection(t *testing.T) {

@@ -579,7 +579,7 @@
   "info": {
     "description": "Self-hosted personal finance API exposed by the local Ratel Ledger backend.",
     "title": "Ratel Ledger API",
-    "version": "1.4.0"
+    "version": "1.4.1"
   },
   "openapi": "3.1.0",
   "paths": {
