@@ -63,6 +63,10 @@ export RATELCFP_DATABASE_PASSWD=/run/secrets/db_password
 export RATEL_WORK_DIR=/opt/ratel-ledger
 ```
 
+### Legacy Compatibility
+
+Installs created before the Ratel Ledger rename are still supported: `HBM_{SECTION}_{KEY}`, `HBMCFP_{SECTION}_{KEY}`, and `HBM_WORK_DIR` are checked as fallbacks, and `conf/hbmoxie.ini` is used if `conf/ratel-ledger.ini` does not exist.
+
 Section and key names are **uppercase** in the environment variable. Underscores in key names remain underscores.
 
 ---
@@ -73,12 +77,12 @@ Section and key names are **uppercase** in the environment variable. Underscores
 [global]
 # Application mode: production or development
 # Development mode enables verbose logging and debug features.
-mode = production
+mode = development
 ```
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `mode` | string | `production` | `production` or `development` |
+| `mode` | string | `development` | `production` or `development` |
 
 ---
 
@@ -126,7 +130,7 @@ mcp_allowed_remote_ips =
 [database]
 type = sqlite3
 host = 127.0.0.1:3306
-name = ratel-ledger
+name = ratel_ledger
 user = root
 passwd =
 ssl_mode = disable
@@ -142,7 +146,7 @@ auto_update_database = true
 |-----|------|---------|-------------|
 | `type` | string | `sqlite3` | `sqlite3`, `mysql`, or `postgres` |
 | `host` | string | `127.0.0.1:3306` | Database host and port (MySQL/PostgreSQL) |
-| `name` | string | `ratel-ledger` | Database name (MySQL/PostgreSQL) |
+| `name` | string | `ratel_ledger` | Database name (MySQL/PostgreSQL) |
 | `user` | string | `root` | Database user (MySQL/PostgreSQL) |
 | `passwd` | string | *(empty)* | Database password |
 | `ssl_mode` | string | `disable` | SSL mode for PostgreSQL (`disable`, `require`, `verify-full`) |
@@ -182,24 +186,24 @@ from_address =
 
 ```ini
 [log]
-mode = console
+mode = console file
 level = info
 log_path = log/ratel-ledger.log
 request_log_path =
 query_log_path =
-log_file_rotate = true
+log_file_rotate = false
 log_file_max_size = 104857600
 log_file_max_days = 7
 ```
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `mode` | string | `console` | `console` or `file` |
+| `mode` | string | `console file` | Space-separated log modes: `console`, `file` |
 | `level` | string | `info` | `debug`, `info`, `warn`, or `error` |
 | `log_path` | string | `log/ratel-ledger.log` | Main log file path |
 | `request_log_path` | string | *(empty)* | Separate request log file (empty = use main log) |
 | `query_log_path` | string | *(empty)* | Separate database query log file |
-| `log_file_rotate` | bool | `true` | Enable log file rotation |
+| `log_file_rotate` | bool | `false` | Enable log file rotation |
 | `log_file_max_size` | int | `104857600` | Max log file size in bytes (100 MB) |
 | `log_file_max_days` | int | `7` | Days to retain rotated log files |
 
@@ -210,7 +214,7 @@ log_file_max_days = 7
 ```ini
 [storage]
 type = local_filesystem
-local_filesystem_path = storage
+local_filesystem_path = storage/
 minio_endpoint =
 minio_location =
 minio_access_key_id =
@@ -228,7 +232,7 @@ webdav_passwd =
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | `type` | string | `local_filesystem` | `local_filesystem`, `minio`, or `webdav` |
-| `local_filesystem_path` | string | `storage` | Local storage root directory |
+| `local_filesystem_path` | string | `storage/` | Local storage root directory |
 | `minio_endpoint` | string | *(empty)* | MinIO server endpoint |
 | `minio_location` | string | *(empty)* | MinIO region/location |
 | `minio_access_key_id` | string | *(empty)* | MinIO access key |
@@ -249,13 +253,13 @@ webdav_passwd =
 ```ini
 [llm]
 transaction_from_ai_image_recognition = false
-max_ai_recognition_picture_size = 524288
+max_ai_recognition_picture_size = 10485760
 ```
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | `transaction_from_ai_image_recognition` | bool | `false` | Enable AI receipt image recognition |
-| `max_ai_recognition_picture_size` | int | `524288` | Max image size in bytes (512 KB) |
+| `max_ai_recognition_picture_size` | int | `10485760` | Max image size in bytes (10 MB) |
 
 ---
 
@@ -286,7 +290,7 @@ lm_studio_api_url = http://127.0.0.1:1234/v1/chat/completions
 google_ai_api_key =
 google_ai_api_model_id = gemini-2.0-flash
 google_ai_api_url = https://generativelanguage.googleapis.com/v1beta/models
-request_timeout = 30
+request_timeout = 60000
 proxy =
 skip_tls_verify = false
 ```
@@ -297,7 +301,7 @@ skip_tls_verify = false
 | `*_api_key` | string | *(empty)* | API key for the selected provider |
 | `*_api_model_id` | string | *(varies)* | Model ID. Defaults: `gpt-4o` (OpenAI), `claude-sonnet-4-20250514` (Anthropic), `gemini-2.0-flash` (Google) |
 | `*_api_url` | string | *(varies)* | API endpoint URL |
-| `request_timeout` | int | `30` | Request timeout in seconds |
+| `request_timeout` | int | `60000` | Request timeout in milliseconds (60 seconds) |
 | `proxy` | string | *(empty)* | HTTP proxy URL |
 | `skip_tls_verify` | bool | `false` | Skip TLS certificate verification |
 
@@ -324,14 +328,14 @@ server_id = 0
 [duplicate_checker]
 checker_type = in_memory
 cleanup_interval = 60
-duplicate_submissions_interval = 5
+duplicate_submissions_interval = 300
 ```
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | `checker_type` | string | `in_memory` | Duplicate request detection backend |
 | `cleanup_interval` | int | `60` | Cleanup interval in seconds |
-| `duplicate_submissions_interval` | int | `5` | Window in seconds for duplicate detection |
+| `duplicate_submissions_interval` | int | `300` | Window in seconds for duplicate detection (5 minutes) |
 
 ---
 
@@ -366,9 +370,9 @@ token_min_refresh_interval = 86400
 temporary_token_expired_time = 300
 email_verify_token_expired_time = 3600
 password_reset_token_expired_time = 3600
-enable_api_token = true
+enable_api_token = false
 api_token_allowed_remote_ips =
-max_failures_per_ip_per_minute = 10
+max_failures_per_ip_per_minute = 5
 max_failures_per_user_per_minute = 5
 ```
 
@@ -380,9 +384,9 @@ max_failures_per_user_per_minute = 5
 | `temporary_token_expired_time` | int | `300` | Temporary token lifetime in seconds (5 minutes) |
 | `email_verify_token_expired_time` | int | `3600` | Email verification token lifetime (1 hour) |
 | `password_reset_token_expired_time` | int | `3600` | Password reset token lifetime (1 hour) |
-| `enable_api_token` | bool | `true` | Allow users to generate API access tokens |
+| `enable_api_token` | bool | `false` | Allow users to generate API access tokens |
 | `api_token_allowed_remote_ips` | string | *(empty)* | Restrict API token usage to these IPs (comma-separated) |
-| `max_failures_per_ip_per_minute` | int | `10` | Rate limit: max auth failures per IP per minute |
+| `max_failures_per_ip_per_minute` | int | `5` | Rate limit: max auth failures per IP per minute |
 | `max_failures_per_user_per_minute` | int | `5` | Rate limit: max auth failures per user per minute |
 
 ---
@@ -412,7 +416,7 @@ oauth2_enable_pkce = false
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | `enable_internal_auth` | bool | `true` | Enable username/password login |
-| `enable_desktop_auto_login` | bool | `true` | Skip the login screen when exactly one user exists and that user has not enabled 2FA |
+| `enable_desktop_auto_login` | bool | `true` | Skip the login screen when exactly one user exists, that user has not enabled 2FA, and email verification is disabled or complete |
 | `enable_oauth2_auth` | bool | `false` | Enable OAuth2/OIDC login |
 | `enable_two_factor` | bool | `true` | Allow users to enable TOTP 2FA |
 | `enable_forget_password` | bool | `true` | Enable password reset flow |
@@ -438,7 +442,7 @@ enable_register = true
 enable_email_verify = false
 enable_force_email_verify = false
 enable_transaction_picture = true
-max_transaction_picture_size = 524288
+max_transaction_picture_size = 10485760
 enable_scheduled_transaction = true
 avatar_provider = internal
 max_user_avatar_size = 1048576
@@ -451,7 +455,7 @@ default_feature_restrictions =
 | `enable_email_verify` | bool | `false` | Enable email verification flow |
 | `enable_force_email_verify` | bool | `false` | Block unverified users from most features |
 | `enable_transaction_picture` | bool | `true` | Allow attaching pictures to transactions |
-| `max_transaction_picture_size` | int | `524288` | Max picture upload size in bytes (512 KB) |
+| `max_transaction_picture_size` | int | `10485760` | Max picture upload size in bytes (10 MB) |
 | `enable_scheduled_transaction` | bool | `true` | Enable scheduled/recurring transactions |
 | `avatar_provider` | string | `internal` | `internal` (uploaded) or `gravatar` |
 | `max_user_avatar_size` | int | `1048576` | Max avatar upload size in bytes (1 MB) |
@@ -489,7 +493,7 @@ Restrictions are specified as a comma-separated list of type numbers:
 [data]
 enable_export = true
 enable_import = true
-max_import_file_size = 2097152
+max_import_file_size = 10485760
 enable_backup = true
 ```
 
@@ -497,7 +501,7 @@ enable_backup = true
 |-----|------|---------|-------------|
 | `enable_export` | bool | `true` | Allow transaction data export |
 | `enable_import` | bool | `true` | Allow transaction data import |
-| `max_import_file_size` | int | `2097152` | Max import file size in bytes (2 MB) |
+| `max_import_file_size` | int | `10485760` | Max import file size in bytes (10 MB) |
 | `enable_backup` | bool | `true` | Enable backup creation, download, restore, and deletion |
 
 ---
@@ -578,7 +582,7 @@ proxy =
 ```ini
 [exchange_rates]
 data_source = euro_central_bank
-request_timeout = 10
+request_timeout = 10000
 proxy =
 skip_tls_verify = false
 ```
@@ -586,7 +590,7 @@ skip_tls_verify = false
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | `data_source` | string | `euro_central_bank` | Exchange rate data provider |
-| `request_timeout` | int | `10` | Request timeout in seconds |
+| `request_timeout` | int | `10000` | Request timeout in milliseconds (10 seconds) |
 | `proxy` | string | *(empty)* | HTTP proxy for rate fetching |
 | `skip_tls_verify` | bool | `false` | Skip TLS verification |
 

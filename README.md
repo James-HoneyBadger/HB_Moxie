@@ -13,7 +13,7 @@ Ratel Ledger is a self-contained Electron desktop application for individuals wh
 - **Automatic Backups** — Scheduled SQLite snapshots with configurable retention.
 - **Multiple Databases** — SQLite (default), MySQL, or PostgreSQL.
 - **Dark Mode** — Full dark theme support with automatic system detection.
-- **Multi-Currency** — 170+ currencies with automatic exchange rate updates from 16 data sources.
+- **Multi-Currency** — 150+ currencies with automatic exchange rate updates from 16 data sources.
 - **Multi-Language** — 19 languages including English, German, French, Spanish, Italian, Japanese, Korean, Chinese, and more.
 - **Multi-Timezone** — Per-user timezone configuration with timezone-aware statistics.
 - **Data Import** — Import from CSV, TSV, Excel, OFX, QFX, QIF, IIF, Camt.052/053, MT940, GnuCash, Firefly III, Beancount, and more.
@@ -25,7 +25,7 @@ Ratel Ledger is a self-contained Electron desktop application for individuals wh
 - **Transaction Templates** — Save and reuse common transaction patterns.
 - **Insights Explorer** — Custom data queries with chart and table visualization.
 - **Account Reconciliation** — Reconciliation statement support for account balancing.
-- **Map Integration** — Geotagging with 13 map providers (OpenStreetMap, Google Maps, Baidu, Amap, and others).
+- **Map Integration** — Geotagging with 12 map providers (OpenStreetMap, Google Maps, Baidu, Amap, and others).
 - **Cloud Settings Sync** — Sync application preferences across sessions.
 - **API Tokens** — Generate tokens for programmatic access and automation.
 
@@ -39,12 +39,12 @@ Ratel Ledger is a self-contained Electron desktop application for individuals wh
 
 The script installs missing frontend/Electron dependencies, builds the Go backend, builds the frontend when needed, and launches the Electron app. Use `./run.sh --rebuild` for a forced frontend rebuild, `./run.sh --server` for the backend only, or `./run.sh --help` for all options.
 
-To launch Electron manually instead:
+To launch Electron manually instead, build both halves first:
 
 ```bash
-cd electron
-npm install
-npm start
+go build -o ratel-ledger .
+npm install && npm run build
+cd electron && npm install && npm start
 ```
 
 ### Build from Source

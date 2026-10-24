@@ -517,7 +517,7 @@ Source
           │
           └── tar.gz archive:
               ├── ratel-ledger (binary)
-              ├── dist/ (frontend)
+              ├── public/ (frontend build output)
               ├── conf/ (config template)
               ├── templates/ (email + prompt)
               └── LICENSE
@@ -541,6 +541,7 @@ Source
 | Request deduplication | In-memory duplicate submission checker |
 | Cryptographic | Per-token HMAC-SHA256 secrets, PBKDF2-HMAC-SHA256 password hashing (600,000 iterations), AES-GCM 2FA secrets |
 | Log hygiene | `token`, `code`, `state`, `password` query parameters are redacted |
+| File permissions | Process umask `0077`; config, database (including WAL/SHM), logs, and stored objects are `0600`; data directories are `0750` |
 
 ### Secret Key
 

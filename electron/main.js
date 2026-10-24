@@ -112,22 +112,32 @@ function copyFileIfMissing(sourcePath, destinationPath) {
  * configuration and templates. Application resources are read-only on
  * AppImage, macOS and Windows installations.
  */
-function directoryIsEmpty(directoryPath) {
-    return !fs.existsSync(directoryPath) || fs.readdirSync(directoryPath).length === 0;
-}
-
 function migrateLegacyUserDataDir(userDataDir) {
     const legacyUserDataDir = path.join(path.dirname(userDataDir), 'HB Moxie');
 
-    if (!fs.existsSync(legacyUserDataDir) || !directoryIsEmpty(userDataDir)) {
+    if (!fs.existsSync(legacyUserDataDir)) {
         return;
     }
 
-    if (fs.existsSync(userDataDir)) {
-        fs.rmdirSync(userDataDir);
+    // Already migrated or already using the new directory.
+    if (fs.existsSync(path.join(userDataDir, 'conf', 'ratel-ledger.ini'))) {
+        return;
     }
 
-    fs.renameSync(legacyUserDataDir, userDataDir);
+    try {
+        if (!fs.existsSync(userDataDir)) {
+            fs.renameSync(legacyUserDataDir, userDataDir);
+            return;
+        }
+
+        // Electron may have created cache directories already. Merge the legacy
+        // files without overwriting anything, then remove the old directory only
+        // after a successful copy.
+        fs.cpSync(legacyUserDataDir, userDataDir, { recursive: true, force: false, errorOnExist: false });
+        fs.rmSync(legacyUserDataDir, { recursive: true, force: true });
+    } catch (err) {
+        console.error('[Ratel Ledger] Failed to migrate the legacy user data directory:', err);
+    }
 }
 
 function prepareUserDataDir() {

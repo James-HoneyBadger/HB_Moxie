@@ -2,6 +2,7 @@ package datastore
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -119,4 +120,24 @@ func TestVacuumInto_CreatesConsistentSnapshot(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Len(t, rows, 1)
 	assert.Equal(t, "value", rows[0]["name"])
+}
+
+func TestInitializeDatabase_SQLiteUsesPrivatePermissions(t *testing.T) {
+	databasePath := filepath.Join(t.TempDir(), "data", "test.db")
+
+	database, err := initializeDatabase(&settings.DatabaseConfig{
+		DatabaseType: settings.Sqlite3DbType,
+		DatabasePath: databasePath,
+	})
+	assert.NoError(t, err)
+	assert.NotNil(t, database)
+	defer database.Close()
+
+	fileInfo, err := os.Stat(databasePath)
+	assert.NoError(t, err)
+	assert.Equal(t, os.FileMode(0600), fileInfo.Mode().Perm())
+
+	dirInfo, err := os.Stat(filepath.Dir(databasePath))
+	assert.NoError(t, err)
+	assert.Equal(t, os.FileMode(0750), dirInfo.Mode().Perm())
 }

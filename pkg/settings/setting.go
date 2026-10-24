@@ -19,7 +19,7 @@ import (
 
 const (
 	ratelWorkDirEnvName                   = "RATEL_WORK_DIR"
-	legacyWorkDirEnvName                  = "RATEL_WORK_DIR"
+	legacyWorkDirEnvName                  = "HBM_WORK_DIR"
 	ratelConfigItemValueEnvNamePrefix     = "RATEL"
 	legacyConfigItemValueEnvNamePrefix    = "HBM"
 	ratelConfigItemFilePathEnvNamePrefix  = "RATELCFP"

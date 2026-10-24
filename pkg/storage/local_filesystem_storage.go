@@ -18,11 +18,23 @@ type LocalFileSystemObjectStorage struct {
 
 // NewLocalFileSystemObjectStorage returns a local file system object storage
 func NewLocalFileSystemObjectStorage(config *settings.Config, pathPrefix string) (*LocalFileSystemObjectStorage, error) {
+	if err := os.MkdirAll(config.LocalFileSystemPath, 0750); err != nil {
+		return nil, err
+	}
+
+	if err := os.Chmod(config.LocalFileSystemPath, 0750); err != nil {
+		return nil, err
+	}
+
 	storage := &LocalFileSystemObjectStorage{
 		rootPath: filepath.Join(config.LocalFileSystemPath, pathPrefix),
 	}
 
-	if err := os.MkdirAll(storage.rootPath, os.ModePerm); err != nil {
+	if err := os.MkdirAll(storage.rootPath, 0750); err != nil {
+		return nil, err
+	}
+
+	if err := os.Chmod(storage.rootPath, 0750); err != nil {
 		return nil, err
 	}
 
@@ -43,17 +55,27 @@ func (s *LocalFileSystemObjectStorage) Read(ctx core.Context, path string) (Obje
 func (s *LocalFileSystemObjectStorage) Save(ctx core.Context, path string, object ObjectInStorage) error {
 	finalPath := s.getFinalPath(path)
 
-	if err := os.MkdirAll(filepath.Dir(finalPath), os.ModePerm); err != nil {
+	targetDir := filepath.Dir(finalPath)
+
+	if err := os.MkdirAll(targetDir, 0750); err != nil {
 		return err
 	}
 
-	targetFile, err := os.Create(finalPath)
+	if err := os.Chmod(targetDir, 0750); err != nil {
+		return err
+	}
+
+	targetFile, err := os.OpenFile(finalPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0600)
 
 	if err != nil {
 		return err
 	}
 
 	defer targetFile.Close()
+
+	if err := targetFile.Chmod(0600); err != nil {
+		return err
+	}
 
 	_, err = io.Copy(targetFile, object)
 

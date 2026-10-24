@@ -139,7 +139,7 @@ fabric.properties
 node_modules/
 
 # Node.js Build Target
-dist/
+/dist/
 
 # Visual Studio Code
 .vscode/
@@ -156,13 +156,13 @@ __pycache__/
 ratel-ledger
 ratel-ledger_bin
 admin/ratel-ledger-admin
-package/
+/package/
 
 # Environment variable files
 .env
 **/.env
 
 # Runtime directories
-data/
-storage/
-log/
+/data/
+/storage/
+/log/

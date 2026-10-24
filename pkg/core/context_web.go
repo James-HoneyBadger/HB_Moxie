@@ -2,6 +2,7 @@ package core
 
 import (
 	"net"
+	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -178,11 +179,11 @@ func (c *WebContext) GetTokenStringFromCookie() string {
 }
 
 func (c *WebContext) SetTokenStringToCookie(token string, tokenExpiredTime int, path string, secure bool) {
-	if token != "" {
-		c.SetCookie(tokenCookieParam, token, tokenExpiredTime, path, "", secure, true)
-	} else {
-		c.SetCookie(tokenCookieParam, "", -1, path, "", secure, true)
-	}
+	c.SetSameSite(http.SameSiteLaxMode)
+	c.SetCookie(tokenCookieParam, token, tokenExpiredTime, path, "", secure, true)
+
+	// Clear the pre-rename cookie so it cannot be used after logout.
+	c.SetCookie(legacyTokenCookieParam, "", -1, path, "", secure, true)
 }
 
 // GetClientLocale returns the client locale name

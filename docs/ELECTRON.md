@@ -33,8 +33,8 @@ Users get a self-contained application with no browser or terminal needed.
 
 | Tool | Version |
 |------|---------|
-| Node.js | 24+ |
-| npm | 10+ |
+| Node.js | 20.19+ or 22.12+ |
+| npm | 9+ |
 | Go | 1.25+ (to build the backend binary) |
 | GCC | For SQLite CGO compilation |
 
@@ -231,7 +231,7 @@ The Electron app uses `conf/ratel-ledger.ini` for configuration. On first launch
   storage/
 ```
 
-Subsequent launches reuse the existing files, so generated secrets and user data survive upgrades. The backend binary itself remains in `resources/backend/`.
+Subsequent launches reuse the existing files, so generated secrets and user data survive upgrades. On first launch after the rename, an existing `HB Moxie` user-data directory and a legacy `conf/hbmoxie.ini` are migrated automatically. The backend binary itself remains in `resources/backend/`.
 
 ---
 

@@ -128,14 +128,26 @@ func (w *RotateFileWriter) openFile() error {
 		return nil
 	}
 
-	if err := os.MkdirAll(filepath.Dir(w.filePath), 0750); err != nil {
+	logDir := filepath.Dir(w.filePath)
+
+	if err := os.MkdirAll(logDir, 0750); err != nil {
 		return errs.NewLoggingError(fmt.Sprintf("cannot create log directory for \"%s\", because %s", w.filePath, err.Error()), err)
 	}
 
-	file, err := os.OpenFile(w.filePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	if err := os.Chmod(logDir, 0750); err != nil {
+		return errs.NewLoggingError(fmt.Sprintf("cannot restrict permissions on log directory \"%s\", because %s", logDir, err.Error()), err)
+	}
+
+	file, err := os.OpenFile(w.filePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
 
 	if err != nil {
 		return errs.NewLoggingError(fmt.Sprintf("cannot open log file \"%s\", because %s", w.filePath, err.Error()), err)
+	}
+
+	// Logs can contain account names and error details; keep them private.
+	if err := file.Chmod(0600); err != nil {
+		_ = file.Close()
+		return errs.NewLoggingError(fmt.Sprintf("cannot restrict permissions on log file \"%s\", because %s", w.filePath, err.Error()), err)
 	}
 
 	w.file = file

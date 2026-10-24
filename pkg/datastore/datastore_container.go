@@ -66,18 +66,34 @@ func initializeDatabase(dbConfig *settings.DatabaseConfig) (*Database, error) {
 	var err error
 
 	if dbConfig.DatabaseType == settings.Sqlite3DbType {
-		if err = os.MkdirAll(filepath.Dir(dbConfig.DatabasePath), 0750); err != nil {
+		databaseDir := filepath.Dir(dbConfig.DatabasePath)
+
+		if err = os.MkdirAll(databaseDir, 0750); err != nil {
+			return nil, err
+		}
+
+		if err = os.Chmod(databaseDir, 0750); err != nil {
 			return nil, err
 		}
 
 		if _, err = os.Stat(dbConfig.DatabasePath); err != nil {
-			file, err := os.Create(dbConfig.DatabasePath)
+			file, err := os.OpenFile(dbConfig.DatabasePath, os.O_CREATE|os.O_WRONLY, 0600)
 
 			if err != nil {
 				return nil, err
 			}
 
 			defer file.Close()
+		}
+
+		if err = os.Chmod(dbConfig.DatabasePath, 0600); err != nil {
+			return nil, err
+		}
+
+		// Tighten pre-existing WAL/SHM sidecars as well; new ones inherit the
+		// restrictive process umask.
+		for _, suffix := range []string{"-wal", "-shm"} {
+			_ = os.Chmod(dbConfig.DatabasePath+suffix, 0600)
 		}
 	}
 

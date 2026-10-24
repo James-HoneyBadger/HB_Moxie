@@ -163,7 +163,12 @@ func (a *UsersApi) UserRegisterHandler(c *core.WebContext) (any, *errs.Error) {
 // UserEmailVerifyHandler sets user email address verified
 func (a *UsersApi) UserEmailVerifyHandler(c *core.WebContext) (any, *errs.Error) {
 	var userVerifyEmailReq models.UserVerifyEmailRequest
-	_ = c.ShouldBindJSON(&userVerifyEmailReq)
+	err := c.ShouldBindJSON(&userVerifyEmailReq)
+
+	if err != nil {
+		log.Warnf(c, "[users.UserEmailVerifyHandler] parse request failed, because %s", err.Error())
+		return nil, errs.NewIncompleteOrIncorrectSubmissionError(err)
+	}
 
 	uid := c.GetCurrentUid()
 	user, err := a.users.GetUserById(c, uid)

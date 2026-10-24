@@ -28,8 +28,8 @@ Instructions for setting up a development environment, building, testing, and de
 | Tool | Version | Purpose |
 |------|---------|---------|
 | Go | 1.25+ | Backend compilation |
-| Node.js | 24+ | Frontend build |
-| npm | 10+ | Package management |
+| Node.js | 20.19+ or 22.12+ | Frontend build |
+| npm | 9+ | Package management |
 | GCC | Any recent | SQLite CGO compilation |
 | Git | Any recent | Version control |
 
@@ -488,6 +488,13 @@ Database schema updates are handled automatically by xorm on startup when `auto_
 
 6. **Add frontend API call** in `src/lib/services.ts` if needed.
 
+7. **Regenerate the API contract** if the endpoint uses shared request/response models:
+   ```bash
+   go run ./cmd/openapi
+   ```
+
+8. **Update the docs** in `docs/API_REFERENCE.md`.
+
 ---
 
 ## Adding a New Frontend Page
@@ -510,7 +517,7 @@ Database schema updates are handled automatically by xorm on startup when `auto_
    {
        path: '/my-page',
        component: () => import('@/views/desktop/MyPage.vue'),
-       meta: { requireAuth: true }
+       beforeEnter: checkLogin
    }
    ```
 

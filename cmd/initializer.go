@@ -158,10 +158,12 @@ func initializeSystem(c *core.CliContext) (*settings.Config, error) {
 		return nil, err
 	}
 
-	cfgJson, _ := json.Marshal(getConfigWithoutSensitiveData(config))
-
 	if !isDisableBootLog {
-		log.BootInfof(c, "[initializer.initializeSystem] has loaded configuration %s", cfgJson)
+		if sanitizedConfig := getConfigWithoutSensitiveData(config); sanitizedConfig != nil {
+			if cfgJson, marshalErr := json.Marshal(sanitizedConfig); marshalErr == nil {
+				log.BootInfof(c, "[initializer.initializeSystem] has loaded configuration %s", cfgJson)
+			}
+		}
 	}
 
 	// The default-user lookup below queries the database, so the schema must
@@ -237,11 +239,16 @@ func ensureDefaultUser(c *core.CliContext, isDisableBootLog bool) error {
 }
 
 func getConfigWithoutSensitiveData(config *settings.Config) *settings.Config {
+	if config == nil {
+		return nil
+	}
+
 	clonedConfig := &settings.Config{}
 	err := utils.Clone(config, clonedConfig)
 
+	// Never fall back to the original configuration: it contains credentials.
 	if err != nil {
-		return config
+		return nil
 	}
 
 	if clonedConfig.DatabaseConfig.DatabasePassword != "" {
@@ -262,6 +269,26 @@ func getConfigWithoutSensitiveData(config *settings.Config) *settings.Config {
 
 	if clonedConfig.AmapApplicationSecret != "" {
 		clonedConfig.AmapApplicationSecret = "****"
+	}
+
+	if clonedConfig.AmapApplicationKey != "" {
+		clonedConfig.AmapApplicationKey = "****"
+	}
+
+	if clonedConfig.TomTomMapAPIKey != "" {
+		clonedConfig.TomTomMapAPIKey = "****"
+	}
+
+	if clonedConfig.TianDiTuAPIKey != "" {
+		clonedConfig.TianDiTuAPIKey = "****"
+	}
+
+	if clonedConfig.GoogleMapAPIKey != "" {
+		clonedConfig.GoogleMapAPIKey = "****"
+	}
+
+	if clonedConfig.BaiduMapAK != "" {
+		clonedConfig.BaiduMapAK = "****"
 	}
 
 	if clonedConfig.WebDAVConfig != nil && clonedConfig.WebDAVConfig.Password != "" {

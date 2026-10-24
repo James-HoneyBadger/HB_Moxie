@@ -82,6 +82,13 @@ jobs:
           npm ci
           npm run build
 
+      - name: Sync Electron version
+        shell: bash
+        working-directory: electron
+        run: |
+          APP_VERSION="$(node -p "require('../package.json').version")"
+          npm version "$APP_VERSION" --no-git-tag-version --allow-same-version
+
       - name: Build Electron packages
         shell: bash
         working-directory: electron
@@ -135,6 +142,13 @@ jobs:
           npm ci
           npm run build
 
+      - name: Sync Electron version
+        shell: bash
+        working-directory: electron
+        run: |
+          APP_VERSION="$(node -p "require('../package.json').version")"
+          npm version "$APP_VERSION" --no-git-tag-version --allow-same-version
+
       - name: Build Electron packages
         shell: bash
         working-directory: electron
@@ -181,6 +195,13 @@ jobs:
         run: |
           npm ci
           npm run build
+
+      - name: Sync Electron version
+        shell: pwsh
+        working-directory: electron
+        run: |
+          $AppVersion = node -p "require('../package.json').version"
+          npm version $AppVersion --no-git-tag-version --allow-same-version
 
       - name: Build Electron packages
         shell: pwsh

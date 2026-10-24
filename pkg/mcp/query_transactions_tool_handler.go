@@ -14,6 +14,11 @@ import (
 	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
+const (
+	defaultMCPQueryTransactionsCount int32 = 100
+	maxMCPQueryTransactionsCount     int32 = 1000
+)
+
 // MCPQueryTransactionsRequest represents all parameters of the query transactions request
 type MCPQueryTransactionsRequest struct {
 	StartTime             string `json:"start_time" jsonschema:"format=date-time" jsonschema_description:"Start time for the query in RFC 3339 format (e.g. 2023-01-01T12:00:00Z)"`
@@ -102,7 +107,9 @@ func (h *mcpQueryTransactionsToolHandler) Handle(c *core.WebContext, callToolReq
 	minTransactionTime := utils.GetMinTransactionTimeFromUnixTime(minTime.Unix())
 
 	if queryTransactionsRequest.Count <= 0 {
-		queryTransactionsRequest.Count = 100
+		queryTransactionsRequest.Count = defaultMCPQueryTransactionsCount
+	} else if queryTransactionsRequest.Count > maxMCPQueryTransactionsCount {
+		queryTransactionsRequest.Count = maxMCPQueryTransactionsCount
 	}
 
 	if queryTransactionsRequest.Page <= 0 {

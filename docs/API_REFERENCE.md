@@ -2,9 +2,9 @@
 
 Complete REST API documentation for Ratel Ledger.
 
-All API endpoints return JSON. Authenticated endpoints require a `Bearer` token in the `Authorization` header or a valid session cookie.
+Most API endpoints return JSON. Export and download endpoints return CSV, TSV, or ZIP files instead. Authenticated endpoints require a `Bearer` token in the `Authorization` header or a valid session cookie.
 
-The machine-readable OpenAPI document is generated at [`openapi.json`](./openapi.json). Frontend request/response types are generated into [`src/models/generated/api.ts`](../src/models/generated/api.ts). Regenerate both with `npm run openapi:generate`; CI verifies them with `npm run openapi:check`.
+The machine-readable OpenAPI document is generated at [`openapi.json`](./openapi.json). Frontend request/response types are generated into [`src/models/generated/api.ts`](../src/models/generated/api.ts). Regenerate both with `npm run openapi:generate`; CI verifies them with `npm run openapi:check`. The generated document currently covers the authentication, backup, and token endpoints (plus shared statistics models); this page remains the full endpoint reference.
 
 ---
 
@@ -115,6 +115,7 @@ Errors are returned with appropriate HTTP status codes and a numeric `errorCode`
 | 401 | Unauthorized — missing or invalid token |
 | 403 | Forbidden — insufficient permissions |
 | 404 | Not Found |
+| 429 | Too Many Requests — rate limit exceeded |
 | 500 | Internal Server Error |
 
 ---
@@ -162,7 +163,15 @@ POST /api/authorize.json
 | `loginName` | string | Yes | Username or email |
 | `password` | string | Yes | Password |
 
-**Response:** Token object with `token`, `expiresAt`, and user info. If 2FA is enabled, returns a `need2FA: true` flag and a temporary `token` to use for the 2FA step.
+**Response:** Token object with `token`, `need2FA`, `user`, and optional `applicationCloudSettings` / `notificationContent`. If 2FA is enabled, returns a `need2FA: true` flag and a temporary `token` to use for the 2FA step.
+
+### Desktop Auto-Login
+
+```
+POST /api/auto_login.json
+```
+
+No request body. Succeeds only when `enable_desktop_auto_login = true`, exactly one non-deleted user exists, that user has not enabled 2FA, and email verification is either disabled or already complete. Returns the same response shape as `POST /api/authorize.json`. The request must originate from a loopback address; this endpoint is intended for the local Electron shell.
 
 ### Two-Factor Login
 
@@ -231,9 +240,12 @@ Returns all active session and API tokens for the current user.
 POST /api/v1/tokens/generate/api.json
 ```
 
+Requires `enable_api_token = true` in configuration.
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `name` | string | Yes | Token display name |
+| `password` | string | Yes | Account password |
+| `expiresInSeconds` | int | No | Token lifetime in seconds; `0` uses the server default |
 
 ### Generate MCP Token
 
@@ -241,9 +253,12 @@ POST /api/v1/tokens/generate/api.json
 POST /api/v1/tokens/generate/mcp.json
 ```
 
+Requires `enable_mcp = true` in configuration.
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `name` | string | Yes | Token display name |
+| `password` | string | Yes | Account password |
+| `expiresInSeconds` | int | No | Token lifetime in seconds; `0` uses the server default |
 
 ### Revoke Token
 
@@ -253,7 +268,7 @@ POST /api/v1/tokens/revoke.json
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `tokenId` | int | Yes | Token ID to revoke |
+| `tokenId` | string | Yes | Token ID to revoke |
 
 ### Revoke All Tokens
 
@@ -290,7 +305,7 @@ POST /api/v1/users/profile/update.json
 | `email` | string | No | New email address |
 | `nickname` | string | No | New display name |
 | `password` | string | No | New password |
-| `oldPassword` | string | Conditional | Current password (required when changing password or email) |
+| `oldPassword` | string | Conditional | Current password (required when changing the password) |
 | `defaultCurrency` | string | No | Default currency code |
 | `language` | string | No | Interface language |
 | `defaultAccountId` | int | No | Default account for transactions |
@@ -332,19 +347,19 @@ POST /api/v1/users/external_auth/unlink.json
 ### Get Cloud Settings
 
 ```
-GET /api/v1/users/app_cloud_settings/get.json
+GET /api/v1/users/settings/cloud/get.json
 ```
 
 ### Update Cloud Settings
 
 ```
-POST /api/v1/users/app_cloud_settings/update.json
+POST /api/v1/users/settings/cloud/update.json
 ```
 
 ### Disable Cloud Sync
 
 ```
-POST /api/v1/users/app_cloud_settings/disable.json
+POST /api/v1/users/settings/cloud/disable.json
 ```
 
 ---
@@ -426,10 +441,13 @@ POST /api/v1/accounts/add.json
 | `type` | int | Yes | Account sub-type |
 | `currency` | string | Yes | Currency code |
 | `balance` | int | No | Initial balance (in minor units) |
+| `balanceTime` | int | No | Balance timestamp |
 | `comment` | string | No | Description |
-| `icon` | int | No | Icon identifier |
-| `color` | string | No | Hex color code |
-| `parentId` | int | No | Parent account ID (for sub-accounts) |
+| `icon` | int | Yes | Icon identifier |
+| `color` | string | Yes | Hex color code |
+| `creditCardStatementDate` | int | No | Credit card statement day (0–28) |
+| `subAccounts` | array | No | Nested sub-accounts |
+| `clientSessionId` | string | No | Client-side deduplication ID |
 
 ### Modify Account
 
@@ -477,7 +495,7 @@ GET /api/v1/transactions/count.json
 GET /api/v1/transactions/list.json
 ```
 
-Query parameters: `page`, `count`, `accountId`, `categoryId`, `tagId`, `type`, `amountFilter`, `keyword`, `maxTime`, `minTime`, `sortField`, `sortOrder`.
+Query parameters: `page`, `count` (1–50), `account_ids`, `category_ids`, `tag_filter`, `amount_filter`, `type`, `keyword`, `max_time`, `min_time`, `with_count`, `with_pictures`, `trim_account`, `trim_category`, `trim_tag`.
 
 ### List by Month
 
@@ -536,16 +554,19 @@ POST /api/v1/transactions/add.json
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `type` | int | Yes | 1=Expense, 2=Income, 3=Transfer |
-| `categoryId` | int | Yes | Category ID |
+| `categoryId` | int | Conditional | Category ID (not used for balance modification) |
 | `time` | int | Yes | Unix timestamp |
+| `utcOffset` | int | No | Client UTC offset in minutes (−720 to 840) |
 | `sourceAccountId` | int | Yes | Source account ID |
 | `destinationAccountId` | int | Conditional | Destination account (transfers only) |
 | `sourceAmount` | int | Yes | Amount in minor currency units |
 | `destinationAmount` | int | Conditional | Destination amount (for cross-currency transfers) |
-| `tagIds` | string | No | Comma-separated tag IDs |
+| `hideAmount` | bool | No | Hide the amount in the UI |
+| `tagIds` | array<string> | No | Tag IDs |
+| `pictureIds` | array<string> | No | Transaction picture IDs |
 | `comment` | string | No | Description |
-| `geoLongitude` | float | No | Longitude |
-| `geoLatitude` | float | No | Latitude |
+| `geoLocation` | object | No | `{ latitude, longitude }` |
+| `clientSessionId` | string | No | Client-side deduplication ID |
 
 ### Modify Transaction
 
@@ -984,7 +1005,7 @@ POST /api/v1/backups/delete.json
 ### Recognize Receipt Image
 
 ```
-POST /api/v1/llm/recognize_receipt_image.json
+POST /api/v1/llm/transactions/recognize_receipt_image.json
 ```
 
 Multipart form upload with a receipt image. Returns extracted transaction data (amount, date, description, category suggestion).
@@ -1025,7 +1046,7 @@ The MCP endpoint enables AI agent access to financial data via JSON-RPC 2.0.
 POST /mcp
 ```
 
-Requires a valid MCP token in the `Authorization` header.
+Requires `enable_mcp = true` and a valid MCP token in the `Authorization` header.
 
 ### Supported Methods
 
@@ -1037,6 +1058,8 @@ Requires a valid MCP token in the `Authorization` header.
 | `tools/list` | List available tools |
 | `tools/call` | Execute a tool |
 | `ping` | Health check |
+
+The `query_transactions` tool defaults to 100 records per page and caps `count` at 1000.
 
 ### Authentication
 
@@ -1109,7 +1132,7 @@ Proxies Amap (Gaode) API requests with server-side authentication.
 
 Authentication failures are rate-limited:
 
-- **Per IP:** 10 failures per minute (default, configurable)
+- **Per IP:** 5 failures per minute (default, configurable)
 - **Per User:** 5 failures per minute (default, configurable)
 
 Exceeding the limit returns `429 Too Many Requests`.

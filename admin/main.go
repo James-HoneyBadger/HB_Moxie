@@ -49,12 +49,26 @@ type TableInfo struct {
 	RowCount int64
 }
 
+func resolveConfigPath(workDir string) string {
+	candidates := []string{
+		filepath.Join(workDir, "conf", "ratel-ledger.ini"),
+		filepath.Join(workDir, "..", "conf", "ratel-ledger.ini"),
+		filepath.Join(workDir, "conf", "hbmoxie.ini"),
+		filepath.Join(workDir, "..", "conf", "hbmoxie.ini"),
+	}
+
+	for _, candidate := range candidates {
+		if _, err := os.Stat(candidate); err == nil {
+			return candidate
+		}
+	}
+
+	return candidates[0]
+}
+
 func main() {
 	workDir, _ := os.Getwd()
-	configPath := filepath.Join(workDir, "conf", "ratel-ledger.ini")
-	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		configPath = filepath.Join(workDir, "..", "conf", "ratel-ledger.ini")
-	}
+	configPath := resolveConfigPath(workDir)
 
 	cfg, err := ini.LoadSources(ini.LoadOptions{IgnoreInlineComment: true}, configPath)
 	if err != nil {

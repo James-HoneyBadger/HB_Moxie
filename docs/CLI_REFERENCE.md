@@ -47,7 +47,7 @@ The backend binds to the address and port specified in the configuration file (`
 ### Behavior
 
 1. Loads configuration from INI file (with environment variable overrides).
-2. Validates the secret key (required for production mode).
+2. Loads the secret key; if unset, generates one and persists it with `0600` permissions.
 3. Initializes all subsystems (database, storage, mail, etc.).
 4. Creates the default admin user if no users exist.
 5. Starts the HTTP listener.

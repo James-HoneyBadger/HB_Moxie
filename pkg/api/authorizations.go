@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"net"
 
 	"github.com/pquerna/otp/totp"
 
@@ -546,6 +547,14 @@ func (a *AuthorizationsApi) DesktopAutoLoginHandler(c *core.WebContext) (any, *e
 		return nil, errs.ErrCannotLoginByPassword
 	}
 
+	// Auto-login bypasses the password, so restrict it to the local machine
+	// even if the backend is placed behind a local reverse proxy.
+	clientIP := net.ParseIP(c.ClientIP())
+	if clientIP == nil || !clientIP.IsLoopback() {
+		log.Warnf(c, "[authorizations.DesktopAutoLoginHandler] rejecting auto-login from non-loopback address \"%s\"", c.ClientIP())
+		return nil, errs.ErrIPForbidden
+	}
+
 	userCount, err := a.users.GetTotalUndeletedUserCount(c)
 
 	if err != nil {
@@ -573,6 +582,11 @@ func (a *AuthorizationsApi) DesktopAutoLoginHandler(c *core.WebContext) (any, *e
 	if user.Disabled {
 		log.Warnf(c, "[authorizations.DesktopAutoLoginHandler] auto-login failed, user \"%s\" is disabled", user.Username)
 		return nil, errs.ErrUserIsDisabled
+	}
+
+	if config.EnableUserForceVerifyEmail && !user.EmailVerified {
+		log.Warnf(c, "[authorizations.DesktopAutoLoginHandler] auto-login failed, user \"uid:%d\" has not verified the email address", user.Uid)
+		return nil, errs.ErrEmailIsNotVerified
 	}
 
 	if config.EnableTwoFactor {

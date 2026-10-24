@@ -17,7 +17,7 @@ var imageFileExtensionContentTypeMap = map[string]string{
 
 // GetImageContentType returns the content type of specified image file extension or returns empty when the file extension is not image or not supported
 func GetImageContentType(fileExtension string) string {
-	contentType, exists := imageFileExtensionContentTypeMap[fileExtension]
+	contentType, exists := imageFileExtensionContentTypeMap[strings.ToLower(fileExtension)]
 
 	if !exists {
 		return ""

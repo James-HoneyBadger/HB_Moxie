@@ -26,6 +26,8 @@ var (
 )
 
 func main() {
+	setRestrictiveUmask()
+
 	core.Version = Version
 	core.CommitHash = CommitHash
 	core.BuildTime = BuildUnixTime

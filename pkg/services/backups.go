@@ -46,6 +46,10 @@ func (s *BackupService) GetBackupDir() (string, error) {
 		return "", err
 	}
 
+	if err := os.Chmod(backupDir, 0750); err != nil {
+		return "", err
+	}
+
 	return backupDir, nil
 }
 

@@ -89,6 +89,13 @@ func startWebServer(c *core.CliContext) error {
 	}
 
 	router := gin.New()
+
+	// The backend only serves loopback traffic. Do not trust forwarding headers,
+	// otherwise clients could spoof ClientIP() and bypass per-IP rate limits.
+	if err := router.SetTrustedProxies(nil); err != nil {
+		return err
+	}
+
 	router.Use(bindMiddleware(middlewares.Recovery))
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {

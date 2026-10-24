@@ -138,9 +138,10 @@ chore: update Go dependencies to latest patch versions
 
 2. **Run tests**:
    ```bash
-   go test ./...
+   go test -short ./...   # skips live third-party API tests
    npm test
    ```
+   Run `go test ./...` when you need the full suite; some exchange-rate tests call external APIs and require network access.
 
 3. **Run linters**:
    ```bash
@@ -182,7 +183,7 @@ Before merging, all of the following must pass:
 
 - `go build .` — Backend compiles
 - `go vet ./...` — No lint issues
-- `go test ./...` — All backend tests pass
+- `go test -short ./...` — Backend unit tests pass (use the full suite for external API tests)
 - `npx vue-tsc --noEmit` — TypeScript type checking passes
 - `npm run build` — Frontend builds successfully
 

@@ -99,3 +99,39 @@ token_expired_time = 3600
 	assert.Equal(t, "3600", cfgFile.Section("security").Key("token_expired_time").String())
 	assert.Equal(t, "production", cfgFile.Section("global").Key("mode").String())
 }
+
+func TestGetWorkingPath_LegacyEnvFallback(t *testing.T) {
+	legacyPath := t.TempDir()
+	t.Setenv(ratelWorkDirEnvName, "")
+	t.Setenv(legacyWorkDirEnvName, legacyPath)
+
+	actual, err := getWorkingPath()
+	assert.NoError(t, err)
+	assert.Equal(t, legacyPath, actual)
+}
+
+func TestGetWorkingPath_PrefersCurrentEnv(t *testing.T) {
+	currentPath := t.TempDir()
+	legacyPath := t.TempDir()
+	t.Setenv(ratelWorkDirEnvName, currentPath)
+	t.Setenv(legacyWorkDirEnvName, legacyPath)
+
+	actual, err := getWorkingPath()
+	assert.NoError(t, err)
+	assert.Equal(t, currentPath, actual)
+}
+
+func TestLoadSecurityConfiguration_EnvironmentSecretIsNotPersisted(t *testing.T) {
+	t.Setenv("RATEL_SECURITY_SECRET_KEY", "environment-secret")
+
+	cfgFile, err := ini.LoadSources(ini.LoadOptions{IgnoreInlineComment: true}, []byte(`[security]
+secret_key =
+`))
+	assert.NoError(t, err)
+
+	config := &Config{}
+	err = loadSecurityConfiguration(config, cfgFile, "security")
+	assert.NoError(t, err)
+	assert.False(t, config.SecretKeyNoSet)
+	assert.Equal(t, "environment-secret", config.SecretKey)
+}
