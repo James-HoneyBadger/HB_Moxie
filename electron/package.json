@@ -1,6 +1,6 @@
 {
   "name": "ratel-ledger-desktop",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Ratel Ledger — private, local-first personal finance management",
   "homepage": "https://github.com/James-HoneyBadger/ratel-ledger",
   "main": "main.js",
