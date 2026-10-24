@@ -2,8 +2,12 @@
   "name": "ratel-ledger-desktop",
   "version": "1.4.2",
   "description": "Ratel Ledger — private, local-first personal finance management",
+  "homepage": "https://github.com/James-HoneyBadger/ratel-ledger",
   "main": "main.js",
-  "author": "Honey Badger Universe",
+  "author": {
+    "name": "Honey Badger Universe",
+    "email": "James-HoneyBadger@users.noreply.github.com"
+  },
   "license": "MIT",
   "scripts": {
     "start": "electron .",
@@ -22,6 +26,7 @@
   "build": {
     "appId": "com.honeybadger.ratelledger",
     "productName": "Ratel Ledger",
+    "artifactName": "ratel-ledger-${version}-${arch}.${ext}",
     "directories": {
       "output": "dist"
     },

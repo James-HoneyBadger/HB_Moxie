@@ -166,3 +166,6 @@ admin/ratel-ledger-admin
 /data/
 /storage/
 /log/
+
+# Electron Builder output
+/electron/dist/
