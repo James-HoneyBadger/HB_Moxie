@@ -19,7 +19,7 @@ export const KNOWN_COLUMN_NAME_MAPPING: Record<string, ImportTransactionColumnTy
 
     return result;
 })([
-    // Columns of hbmoxie Data Export File
+    // Columns of Ratel Ledger Data Export File
     {
         ['Time']: ImportTransactionColumnType.TransactionTime,
         ['Timezone']: ImportTransactionColumnType.TransactionTimezone,
@@ -155,7 +155,7 @@ export const KNOWN_TRANSACTION_TYPE_NAME_MAPPING: Record<string, TransactionType
 
     return result;
 })([
-    // Transaction types of hbmoxie Data Export File
+    // Transaction types of Ratel Ledger Data Export File
     {
         ['Balance Modification']: TransactionType.ModifyBalance,
         ['Income']: TransactionType.Income,

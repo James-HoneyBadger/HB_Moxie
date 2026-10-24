@@ -5,6 +5,8 @@ const fsPromises = fs.promises;
 const { spawn } = require('child_process');
 const net = require('net');
 
+app.setName('Ratel Ledger');
+
 let mainWindow = null;
 let backendProcess = null;
 let backendPort = 0;
@@ -13,7 +15,7 @@ let tray = null;
 let isQuitting = false;
 
 const CUSTOM_SCHEME = 'app';
-const CUSTOM_HOST = 'hbmoxie';
+const CUSTOM_HOST = 'ratel-ledger';
 
 // API paths that should be proxied to the Go backend
 const PROXY_PATH_PREFIXES = [
@@ -50,19 +52,119 @@ const MIME_TYPES = {
 };
 
 function getBackendBinaryName() {
-    return process.platform === 'win32' ? 'hbmoxie.exe' : 'hbmoxie';
+    return process.platform === 'win32' ? 'ratel-ledger.exe' : 'ratel-ledger';
 }
 
 function getBackendPath() {
     if (app.isPackaged) {
-        return path.join(process.resourcesPath, 'backend', getBackendBinaryName());
+        const packagedRoot = path.join(process.resourcesPath, 'backend');
+        const packagedCandidates = [
+            path.join(packagedRoot, getBackendBinaryName()),
+            path.join(packagedRoot, 'ratel-ledger'),
+            path.join(packagedRoot, 'ratel-ledger.exe'),
+            path.join(packagedRoot, 'hbmoxie'),
+            path.join(packagedRoot, 'hbmoxie.exe')
+        ];
+
+        for (const candidate of packagedCandidates) {
+            if (fs.existsSync(candidate)) {
+                return candidate;
+            }
+        }
+
+        return packagedCandidates[0];
     }
-    return path.join(__dirname, '..', getBackendBinaryName());
+
+    const developmentRoot = path.join(__dirname, '..');
+    const developmentCandidates = [
+        path.join(developmentRoot, getBackendBinaryName()),
+        path.join(developmentRoot, 'ratel-ledger_bin'),
+        path.join(developmentRoot, 'ratel-ledger'),
+        path.join(developmentRoot, 'ratel-ledger_bin.exe'),
+        path.join(developmentRoot, 'hbmoxie_bin'),
+        path.join(developmentRoot, 'hbmoxie')
+    ];
+
+    for (const candidate of developmentCandidates) {
+        if (fs.existsSync(candidate)) {
+            return candidate;
+        }
+    }
+
+    return developmentCandidates[0];
+}
+
+function ensureDirectory(directoryPath) {
+    fs.mkdirSync(directoryPath, { recursive: true });
+}
+
+function copyFileIfMissing(sourcePath, destinationPath) {
+    if (fs.existsSync(destinationPath)) {
+        return;
+    }
+
+    ensureDirectory(path.dirname(destinationPath));
+    fs.copyFileSync(sourcePath, destinationPath);
+}
+
+/**
+ * Create a writable per-user data directory and seed it with the packaged
+ * configuration and templates. Application resources are read-only on
+ * AppImage, macOS and Windows installations.
+ */
+function directoryIsEmpty(directoryPath) {
+    return !fs.existsSync(directoryPath) || fs.readdirSync(directoryPath).length === 0;
+}
+
+function migrateLegacyUserDataDir(userDataDir) {
+    const legacyUserDataDir = path.join(path.dirname(userDataDir), 'HB Moxie');
+
+    if (!fs.existsSync(legacyUserDataDir) || !directoryIsEmpty(userDataDir)) {
+        return;
+    }
+
+    if (fs.existsSync(userDataDir)) {
+        fs.rmdirSync(userDataDir);
+    }
+
+    fs.renameSync(legacyUserDataDir, userDataDir);
+}
+
+function prepareUserDataDir() {
+    const userDataDir = app.getPath('userData');
+    const resourceRoot = path.join(process.resourcesPath, 'backend');
+
+    migrateLegacyUserDataDir(userDataDir);
+
+    for (const directoryName of ['data', 'log', 'storage', 'conf', 'templates']) {
+        ensureDirectory(path.join(userDataDir, directoryName));
+    }
+
+    const configPath = path.join(userDataDir, 'conf', 'ratel-ledger.ini');
+    const legacyConfigPath = path.join(userDataDir, 'conf', 'hbmoxie.ini');
+
+    if (!fs.existsSync(configPath) && fs.existsSync(legacyConfigPath)) {
+        fs.renameSync(legacyConfigPath, configPath);
+    }
+
+    const sourceConfigPath = path.join(resourceRoot, 'conf', 'ratel-ledger.ini');
+    if (fs.existsSync(sourceConfigPath)) {
+        copyFileIfMissing(sourceConfigPath, configPath);
+    }
+
+    const sourceTemplatesPath = path.join(resourceRoot, 'templates');
+    const destinationTemplatesPath = path.join(userDataDir, 'templates');
+
+    if (fs.existsSync(sourceTemplatesPath)) {
+        fs.cpSync(sourceTemplatesPath, destinationTemplatesPath, { recursive: true, force: false });
+    }
+
+    return userDataDir;
 }
 
 function getBackendWorkingDir() {
     if (app.isPackaged) {
-        return path.join(process.resourcesPath, 'backend');
+        return prepareUserDataDir();
     }
     return path.join(__dirname, '..');
 }
@@ -92,35 +194,36 @@ function startBackend(port) {
     const backendPath = getBackendPath();
     const workingDir = getBackendWorkingDir();
 
-    console.log(`[HB Moxie] Starting backend: ${backendPath}`);
-    console.log(`[HB Moxie] Working directory: ${workingDir}`);
-    console.log(`[HB Moxie] Backend port: ${port}`);
+    console.log(`[Ratel Ledger] Starting backend: ${backendPath}`);
+    console.log(`[Ratel Ledger] Working directory: ${workingDir}`);
+    console.log(`[Ratel Ledger] Backend port: ${port}`);
 
     backendProcess = spawn(backendPath, ['server', 'run'], {
         cwd: workingDir,
         env: {
             ...process.env,
-            HBM_SERVER_HTTP_ADDR: '127.0.0.1',
-            HBM_SERVER_HTTP_PORT: String(port)
+            RATEL_WORK_DIR: workingDir,
+            RATEL_SERVER_HTTP_ADDR: '127.0.0.1',
+            RATEL_SERVER_HTTP_PORT: String(port)
         },
         stdio: ['ignore', 'pipe', 'pipe']
     });
 
     backendProcess.stdout.on('data', (data) => {
-        console.log(`[HB Moxie Backend] ${data.toString().trim()}`);
+        console.log(`[Ratel Ledger Backend] ${data.toString().trim()}`);
     });
 
     backendProcess.stderr.on('data', (data) => {
-        console.error(`[HB Moxie Backend Error] ${data.toString().trim()}`);
+        console.error(`[Ratel Ledger Backend Error] ${data.toString().trim()}`);
     });
 
     backendProcess.on('close', (code) => {
-        console.log(`[HB Moxie] Backend process exited with code ${code}`);
+        console.log(`[Ratel Ledger] Backend process exited with code ${code}`);
         backendProcess = null;
     });
 
     backendProcess.on('error', (err) => {
-        console.error(`[HB Moxie] Failed to start backend:`, err);
+        console.error(`[Ratel Ledger] Failed to start backend:`, err);
     });
 }
 
@@ -189,7 +292,7 @@ function registerProtocol() {
                 });
                 return response;
             } catch (err) {
-                console.error(`[HB Moxie] Proxy error for ${urlPath}:`, err);
+                console.error(`[Ratel Ledger] Proxy error for ${urlPath}:`, err);
                 return new Response(JSON.stringify({ error: 'Backend unavailable' }), {
                     status: 502,
                     headers: { 'Content-Type': 'application/json' }
@@ -208,8 +311,9 @@ function registerProtocol() {
         // Resolve file path
         const filePath = path.join(staticRoot, urlPath);
 
-        // Security: prevent path traversal
-        if (!filePath.startsWith(staticRoot)) {
+        // Security: prevent path traversal and sibling-directory prefix bypasses
+        const relativeFilePath = path.relative(staticRoot, filePath);
+        if (relativeFilePath.startsWith('..') || path.isAbsolute(relativeFilePath)) {
             return new Response('Forbidden', { status: 403 });
         }
 
@@ -250,16 +354,16 @@ function createTray() {
         // Resize for tray (16x16 on most platforms, 22x22 on Linux)
         trayIcon = trayIcon.resize({ width: 22, height: 22 });
     } catch (err) {
-        console.error('[HB Moxie] Failed to load tray icon:', err);
+        console.error('[Ratel Ledger] Failed to load tray icon:', err);
         return;
     }
 
     tray = new Tray(trayIcon);
-    tray.setToolTip('HB Moxie');
+    tray.setToolTip('Ratel Ledger');
 
     const contextMenu = Menu.buildFromTemplate([
         {
-            label: 'Show HB Moxie',
+            label: 'Show Ratel Ledger',
             click: () => {
                 if (mainWindow) {
                     mainWindow.show();
@@ -302,7 +406,7 @@ function createTray() {
 }
 
 function registerGlobalShortcuts() {
-    // Ctrl+Shift+M (or Cmd+Shift+M on macOS) — Show/hide HB Moxie
+    // Ctrl+Shift+M (or Cmd+Shift+M on macOS) — Show/hide Ratel Ledger
     globalShortcut.register('CommandOrControl+Shift+M', () => {
         if (mainWindow) {
             if (mainWindow.isVisible() && mainWindow.isFocused()) {
@@ -348,12 +452,12 @@ function createMainWindow() {
             responseHeaders: {
                 ...details.responseHeaders,
                 'Content-Security-Policy': [
-                    "default-src 'self' app://hbmoxie; " +
-                    "script-src 'self' app://hbmoxie; " +
-                    "style-src 'self' 'unsafe-inline' app://hbmoxie; " +
-                    "img-src 'self' app://hbmoxie data: blob:; " +
-                    "font-src 'self' app://hbmoxie; " +
-                    "connect-src 'self' app://hbmoxie; " +
+                    "default-src 'self' app://ratel-ledger; " +
+                    "script-src 'self' app://ratel-ledger; " +
+                    "style-src 'self' 'unsafe-inline' app://ratel-ledger; " +
+                    "img-src 'self' app://ratel-ledger data: blob:; " +
+                    "font-src 'self' app://ratel-ledger; " +
+                    "connect-src 'self' app://ratel-ledger; " +
                     "object-src 'none'; " +
                     "base-uri 'self'"
                 ]
@@ -371,7 +475,7 @@ function createMainWindow() {
         height: 900,
         minWidth: 800,
         minHeight: 600,
-        title: 'HB Moxie',
+        title: 'Ratel Ledger',
         icon: path.join(__dirname, 'assets', 'icon.png'),
         show: false,
         webPreferences: {
@@ -385,7 +489,7 @@ function createMainWindow() {
     mainWindow.loadURL(`${CUSTOM_SCHEME}://${CUSTOM_HOST}/desktop`);
 
     mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
-        console.error(`[HB Moxie] Failed to load: ${validatedURL} - ${errorDescription} (${errorCode})`);
+        console.error(`[Ratel Ledger] Failed to load: ${validatedURL} - ${errorDescription} (${errorCode})`);
     });
 
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
@@ -426,7 +530,7 @@ function createMainWindow() {
 
 function stopBackend() {
     if (backendProcess) {
-        console.log('[HB Moxie] Stopping backend...');
+        console.log('[Ratel Ledger] Stopping backend...');
         backendProcess.kill('SIGTERM');
         setTimeout(() => {
             if (backendProcess) {
@@ -438,10 +542,10 @@ function stopBackend() {
 
 // Handle uncaught errors gracefully
 process.on('uncaughtException', (error) => {
-    console.error('[HB Moxie] Uncaught exception:', error);
+    console.error('[Ratel Ledger] Uncaught exception:', error);
 });
 process.on('unhandledRejection', (reason) => {
-    console.error('[HB Moxie] Unhandled rejection:', reason);
+    console.error('[Ratel Ledger] Unhandled rejection:', reason);
 });
 
 // Register the custom scheme as privileged (must happen before app ready)
@@ -458,12 +562,33 @@ protocol.registerSchemesAsPrivileged([
     }
 ]);
 
+const hasSingleInstanceLock = app.requestSingleInstanceLock();
+
+if (!hasSingleInstanceLock) {
+    app.quit();
+} else {
+    app.on('second-instance', () => {
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) {
+                mainWindow.restore();
+            }
+
+            mainWindow.show();
+            mainWindow.focus();
+        }
+    });
+}
+
 app.whenReady().then(async () => {
+    if (!hasSingleInstanceLock) {
+        return;
+    }
+
     // Find a free port and start the backend
     backendPort = await findFreePort();
     backendUrl = `http://127.0.0.1:${backendPort}`;
 
-    console.log(`[HB Moxie] Using port ${backendPort}`);
+    console.log(`[Ratel Ledger] Using port ${backendPort}`);
 
     // Register the custom protocol handler
     registerProtocol();
@@ -473,7 +598,7 @@ app.whenReady().then(async () => {
 
     try {
         await waitForBackend(backendPort);
-        console.log('[HB Moxie] Backend is ready');
+        console.log('[Ratel Ledger] Backend is ready');
 
         // Create the system tray
         createTray();
@@ -488,7 +613,7 @@ app.whenReady().then(async () => {
 
         createMainWindow();
     } catch (err) {
-        console.error('[HB Moxie] Backend failed to start:', err);
+        console.error('[Ratel Ledger] Backend failed to start:', err);
         app.quit();
     }
 });

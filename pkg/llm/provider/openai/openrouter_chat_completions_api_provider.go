@@ -3,9 +3,9 @@ package openai
 import (
 	"net/http"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/provider"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/provider"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
 )
 
 // OpenRouterChatCompletionsAPIProvider defines the structure of OpenRouter chat completions API provider
@@ -26,7 +26,7 @@ func (p *OpenRouterChatCompletionsAPIProvider) BuildChatCompletionsHttpRequest(c
 	}
 
 	req.Header.Set("Authorization", "Bearer "+p.OpenRouterAPIKey)
-	req.Header.Set("HTTP-Referer", "https://github.com/James-HoneyBadger/HB_Moxie/")
+	req.Header.Set("HTTP-Referer", "https://github.com/James-HoneyBadger/ratel-ledger/")
 	req.Header.Set("X-Title", core.ApplicationName)
 
 	return req, nil

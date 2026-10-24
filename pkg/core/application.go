@@ -3,7 +3,7 @@ package core
 import "fmt"
 
 // ApplicationName represents the application name
-const ApplicationName = "HB Moxie"
+const ApplicationName = "Ratel Ledger"
 
 // Version, CommitHash and BuildTime are set at build
 var (

@@ -1,4 +1,4 @@
-module github.com/James-HoneyBadger/HB_Moxie
+module github.com/James-HoneyBadger/ratel-ledger
 
 go 1.25
 

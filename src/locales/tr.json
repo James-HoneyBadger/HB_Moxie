@@ -1,7 +1,7 @@
 {
     "global": {
         "app": {
-            "title": "HB_Moxie"
+            "title": "Ratel Ledger"
         }
     },
     "language": {
@@ -137,20 +137,20 @@
             "clearTransactionsInAccountTip": "Bu işlem GERİ ALINAMAZ. Bu, {account} hesabındaki işlem verilerinizi silecektir. Onaylamak için lütfen mevcut şifrenizi girin.",
             "accountActivationAndResendValidationEmailTip": "Hesap aktivasyon bağlantısı e-posta adresinize ({email}) gönderildi. Eğer e-postayı almadıysanız, lütfen şifrenizi tekrar girin ve doğrulama postasını yeniden göndermek için aşağıdaki butona tıklayın.",
             "resendValidationEmailTip": "Eğer e-postayı almadıysanız, lütfen şifrenizi tekrar girin ve doğrulama postasını şu adrese yeniden göndermek için aşağıdaki butona tıklayın: {email}",
-            "oauth2bindTip": "{providerName} kullanarak {userName} hesabına giriş yapıyorsunuz. Doğrulamak için lütfen HB_Moxie şifrenizi girin."
+            "oauth2bindTip": "{providerName} kullanarak {userName} hesabına giriş yapıyorsunuz. Doğrulamak için lütfen Ratel Ledger şifrenizi girin."
         }
     },
     "dataExport": {
-        "defaultExportFilename": "HB_Moxie_disa_aktarim_verisi",
-        "exportFilename": "HB_Moxie_{nickname}_disa_aktarim_verisi",
-        "defaultExportStatisticsFileName": "HB_Moxie_istatistik_verisi",
-        "exportStatisticsFileName": "HB_Moxie_{nickname}_istatistik_verisi",
-        "defaultExportReconciliationStatementsFileName": "HB_Moxie_mutabakat_ekstreleri",
-        "exportReconciliationStatementsFileName": "HB_Moxie_{nickname}_mutabakat_ekstreleri",
-        "defaultImportDataMappingFileName": "HB_Moxie_ice_aktarim_eslemesi",
-        "defaultImportHandlingScript": "HB_Moxie_isleme_betigi",
-        "defaultImportReplaceRuleFileName": "HB_Moxie_ice_aktarim_degistirme_kurali",
-        "defaultImportCheckResultFileName": "HB_Moxie_import_check_result"
+        "defaultExportFilename": "ratel-ledger_disa_aktarim_verisi",
+        "exportFilename": "ratel-ledger_{nickname}_disa_aktarim_verisi",
+        "defaultExportStatisticsFileName": "ratel-ledger_istatistik_verisi",
+        "exportStatisticsFileName": "ratel-ledger_{nickname}_istatistik_verisi",
+        "defaultExportReconciliationStatementsFileName": "ratel-ledger_mutabakat_ekstreleri",
+        "exportReconciliationStatementsFileName": "ratel-ledger_{nickname}_mutabakat_ekstreleri",
+        "defaultImportDataMappingFileName": "ratel-ledger_ice_aktarim_eslemesi",
+        "defaultImportHandlingScript": "ratel-ledger_isleme_betigi",
+        "defaultImportReplaceRuleFileName": "ratel-ledger_ice_aktarim_degistirme_kurali",
+        "defaultImportCheckResultFileName": "ratel-ledger_import_check_result"
     },
     "calendar": {
         "Gregorian": "Miladi",
@@ -1620,8 +1620,8 @@
     "Change Language": "Dili Değiştir",
     "Date is too early": "Tarih çok erken",
     "User Canceled": "Kullanıcı İptal Etti",
-    "Welcome to HB_Moxie": "HB_Moxie'e Hoş Geldiniz",
-    "Please log in with your HB_Moxie account": "Lütfen HB_Moxie hesabınızla giriş yapın",
+    "Welcome to Ratel Ledger": "Ratel Ledger'e Hoş Geldiniz",
+    "Please log in with your Ratel Ledger account": "Lütfen Ratel Ledger hesabınızla giriş yapın",
     "Unlock Application": "Uygulamanın Kilidini Aç",
     "Please enter your PIN code or use WebAuthn to unlock application": "Uygulamanın kilidini açmak için PIN kodunuzu girin veya WebAuthn kullanın",
     "Please enter your PIN code to unlock application": "Uygulamanın kilidini açmak için PIN kodunuzu girin",
@@ -1977,13 +1977,13 @@
     "Filter Description": "Açıklamayı Filtrele",
     "How to import this file?": "Bu dosya nasıl içe aktarılır?",
     "How to export this file?": "Bu dosya nasıl dışa aktarılır?",
-    "HB_Moxie File Format": "HB_Moxie Dosya Formatı",
+    "Ratel Ledger File Format": "Ratel Ledger Dosya Formatı",
     "Custom File Format": "Özel Dosya Formatı",
     "General Data Exchange Format": "Genel Veri Değişim Formatı",
     "General Bank Statement Format": "Genel Banka Ekstresi Formatı",
     "Other Bank/Payment App Statement File": "Diğer Banka/Ödeme Uygulaması Ekstre Dosyası",
     "Other Finance App File Format": "Diğer Finans Uygulaması Dosya Formatı",
-    "HB_Moxie Data Export File": "HB_Moxie Veri Dışa Aktarım Dosyası",
+    "Ratel Ledger Data Export File": "Ratel Ledger Veri Dışa Aktarım Dosyası",
     "Excel Workbook File": "Excel Çalışma Kitabı Dosyası",
     "Excel Workbook File (.xlsx)": "Excel Workbook File (.xlsx)",
     "Excel 97-2003 Workbook File (.xls)": "Excel 97-2003 Workbook File (.xls)",

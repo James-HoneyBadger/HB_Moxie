@@ -3,10 +3,10 @@ package feidee
 import (
 	"strings"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/datatable"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/datatable"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
 var FEIDEE_MYMONEY_ELECLOUD_TRANSACTION_TYPE_MODIFY_BALANCE_NAME = "余额变更"

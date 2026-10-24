@@ -183,7 +183,7 @@ const apiExample = computed<string>(() => {
 const mcpServerConfiguration = computed<string>(() => {
     return '{\n' +
         '    "mcpServers": {\n' +
-        '        "hbmoxie-mcp": {\n' +
+        '        "ratel-ledger-mcp": {\n' +
         '            "type": "streamable-http",\n' +
         '            "url": "' + serverUrl.value + '",\n' +
         '            "headers": {\n' +

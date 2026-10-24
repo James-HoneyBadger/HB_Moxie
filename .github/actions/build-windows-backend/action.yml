@@ -32,6 +32,10 @@ inputs:
   backend-artifact-name-prefix:
     description: Prefix for the backend artifact name
     required: true
+  upload-artifact:
+    description: Whether to upload the backend binary as an artifact
+    required: false
+    default: "true"
 
 runs:
   using: "composite"
@@ -73,8 +77,9 @@ runs:
         .\scripts\build.ps1 backend
 
     - name: Upload windows backend artifact
+      if: ${{ inputs.upload-artifact == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.backend-artifact-name-prefix }}-windows-x64
-        path: hbmoxie.exe
+        path: ratel-ledger.exe
         if-no-files-found: error

@@ -1,6 +1,6 @@
 # Installation Guide
 
-Complete instructions for installing and running HB Moxie as a desktop application.
+Complete instructions for installing and running Ratel Ledger as a desktop application.
 
 ---
 
@@ -30,7 +30,7 @@ Complete instructions for installing and running HB Moxie as a desktop applicati
 
 ### Pre-built Package
 
-Download the latest desktop installer for your platform from the [Releases](https://github.com/James-HoneyBadger/HB_Moxie/releases) page:
+Download the latest desktop installer for your platform from the [Releases](https://github.com/James-HoneyBadger/ratel-ledger/releases) page:
 
 | Platform | Format |
 |----------|--------|
@@ -38,17 +38,17 @@ Download the latest desktop installer for your platform from the [Releases](http
 | macOS | `.dmg` |
 | Linux | `.AppImage`, `.deb` |
 
-Run the installer and launch HB Moxie from your applications menu.
+Run the installer and launch Ratel Ledger from your applications menu.
 
 ### Run from Source (Development)
 
 ```bash
 # Clone the repository
-git clone https://github.com/James-HoneyBadger/HB_Moxie.git
-cd HB_Moxie
+git clone https://github.com/James-HoneyBadger/ratel-ledger.git
+cd ratel-ledger
 
 # Build the Go backend
-go build -o hbmoxie_bin -tags timetzdata .
+go build -o ratel-ledger -tags timetzdata .
 
 # Build the frontend
 npm install
@@ -76,8 +76,8 @@ See [ELECTRON.md](ELECTRON.md) for full Electron build and packaging details.
 ### Full Build (Backend + Frontend)
 
 ```bash
-git clone https://github.com/James-HoneyBadger/HB_Moxie.git
-cd HB_Moxie
+git clone https://github.com/James-HoneyBadger/ratel-ledger.git
+cd ratel-ledger
 ./scripts/build.sh package
 ```
 
@@ -89,7 +89,7 @@ This produces a `.tar.gz` archive containing the binary, frontend assets, config
 ./scripts/build.sh backend
 ```
 
-Produces the `hbmoxie` binary in the project root.
+Produces the `ratel-ledger` binary in the project root.
 
 ### Frontend Only
 
@@ -115,7 +115,7 @@ If you prefer not to use `scripts/build.sh`:
 ```bash
 # Backend
 go get .
-go build -o hbmoxie_bin \
+go build -o ratel-ledger \
   -tags timetzdata \
   -ldflags "-X main.Version=dev -X main.CommitHash=$(git rev-parse HEAD)" \
   .
@@ -123,7 +123,6 @@ go build -o hbmoxie_bin \
 # Frontend
 npm install
 npm run build
-cp dist/desktop.html dist/index.html
 ```
 
 ### Package the Electron App
@@ -148,16 +147,16 @@ npm run build    # or: npx electron-builder --linux --mac --win
 
 ### Windows
 
-Use **Settings → Apps & features** or **Control Panel → Programs** to uninstall HB Moxie.
+Use **Settings → Apps & features** or **Control Panel → Programs** to uninstall Ratel Ledger.
 
 ### macOS
 
-Drag HB Moxie from `/Applications` to the Trash.
+Drag Ratel Ledger from `/Applications` to the Trash.
 
 ### Linux
 
 - **AppImage:** Delete the `.AppImage` file.
-- **Deb package:** `sudo apt remove hbmoxie`
+- **Deb package:** `sudo apt remove ratel-ledger`
 - **Manual:** Remove the application directory.
 
 ### Data Cleanup
@@ -166,6 +165,6 @@ After uninstalling, optionally remove application data:
 
 | Platform | Data Location |
 |----------|---------------|
-| Windows | `%APPDATA%/hbmoxie/` |
-| macOS | `~/Library/Application Support/hbmoxie/` |
-| Linux | `~/.config/hbmoxie/` |
+| Windows | `%APPDATA%/Ratel Ledger/` |
+| macOS | `~/Library/Application Support/Ratel Ledger/` |
+| Linux | `~/.config/Ratel Ledger/` |

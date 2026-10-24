@@ -6,18 +6,18 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	clis "github.com/James-HoneyBadger/HB_Moxie/pkg/cli"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	clis "github.com/James-HoneyBadger/ratel-ledger/pkg/cli"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
 // UserData represents the data command
 var UserData = &cli.Command{
 	Name:  "userdata",
-	Usage: "HB Moxie user data maintenance",
+	Usage: "Ratel Ledger user data maintenance",
 	Commands: []*cli.Command{
 		{
 			Name:   "user-add",
@@ -360,7 +360,7 @@ var UserData = &cli.Command{
 					Name:     "type",
 					Aliases:  []string{"t"},
 					Required: true,
-					Usage:    "Import file type (supports \"hbmoxie_csv\", \"hbmoxie_tsv\")",
+					Usage:    "Import file type (supports \"ratel_ledger_csv\", \"ratel_ledger_tsv\"; legacy names \"hbmoxie_csv\", \"hbmoxie_tsv\" are accepted)",
 				},
 			},
 		},
@@ -929,7 +929,13 @@ func importUserTransaction(c *core.CliContext) error {
 		return os.ErrNotExist
 	}
 
-	if filetype != "hbmoxie_csv" && filetype != "hbmoxie_tsv" {
+	if filetype == "hbmoxie_csv" {
+		filetype = "ratel_ledger_csv"
+	} else if filetype == "hbmoxie_tsv" {
+		filetype = "ratel_ledger_tsv"
+	}
+
+	if filetype != "ratel_ledger_csv" && filetype != "ratel_ledger_tsv" {
 		log.CliErrorf(c, "[user_data.importUserTransaction] unknown file type \"%s\"", filetype)
 		return errs.ErrImportFileTypeNotSupported
 	}

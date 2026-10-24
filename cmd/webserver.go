@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"fmt"
+	"net"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-contrib/cache"
@@ -12,28 +14,28 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/urfave/cli/v3"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/api"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/auth/oauth2"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/cron"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/mcp"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/middlewares"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/requestid"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/validators"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/api"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/auth/oauth2"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/cron"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/mcp"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/middlewares"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/requestid"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/validators"
 )
 
 // WebServer represents the server command
 var WebServer = &cli.Command{
 	Name:  "server",
-	Usage: "HB Moxie web server operation",
+	Usage: "Ratel Ledger web server operation",
 	Commands: []*cli.Command{
 		{
 			Name:   "run",
-			Usage:  "Run HB Moxie web server",
+			Usage:  "Run Ratel Ledger web server",
 			Action: bindAction(startWebServer),
 		},
 	},
@@ -44,15 +46,6 @@ func startWebServer(c *core.CliContext) error {
 
 	if err != nil {
 		return err
-	}
-
-	if config.AutoUpdateDatabase {
-		err = updateAllDatabaseTablesStructure(c)
-
-		if err != nil {
-			log.BootErrorf(c, "[webserver.startWebServer] update database table structure failed, because %s", err.Error())
-			return err
-		}
 	}
 
 	err = requestid.InitializeRequestIdGenerator(c, config)
@@ -304,8 +297,8 @@ func startWebServer(c *core.CliContext) error {
 			apiV1Route.POST("/data/clear/transactions/by_account.json", bindApi(api.DataManagements.ClearAllTransactionsByAccountHandler))
 
 			if config.EnableDataExport {
-				apiV1Route.GET("/data/export.csv", bindCsv(api.DataManagements.ExportDataToHBMoxieCSVHandler))
-				apiV1Route.GET("/data/export.tsv", bindTsv(api.DataManagements.ExportDataToHBMoxieTSVHandler))
+				apiV1Route.GET("/data/export.csv", bindCsv(api.DataManagements.ExportDataToRatelLedgerCSVHandler))
+				apiV1Route.GET("/data/export.tsv", bindTsv(api.DataManagements.ExportDataToRatelLedgerTSVHandler))
 			}
 
 			// Backups & Archives
@@ -417,7 +410,18 @@ func startWebServer(c *core.CliContext) error {
 		}
 	}
 
-	listenAddr := fmt.Sprintf("127.0.0.1:%d", config.HttpPort)
+	httpAddr := config.HttpAddr
+
+	if httpAddr == "" {
+		httpAddr = "127.0.0.1"
+	} else if httpAddr != "localhost" {
+		if parsedIP := net.ParseIP(httpAddr); parsedIP == nil || !parsedIP.IsLoopback() {
+			log.BootWarnf(c, "[webserver.startWebServer] http_addr \"%s\" is not a loopback address, forcing 127.0.0.1 for desktop safety", httpAddr)
+			httpAddr = "127.0.0.1"
+		}
+	}
+
+	listenAddr := net.JoinHostPort(httpAddr, strconv.Itoa(int(config.HttpPort)))
 
 	log.BootInfof(c, "[webserver.startWebServer] will run at http://%s", listenAddr)
 	err = router.Run(listenAddr)

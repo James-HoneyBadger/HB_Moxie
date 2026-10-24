@@ -12,18 +12,22 @@ import (
 
 	"gopkg.in/ini.v1"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/locales"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/locales"
 )
 
 const (
-	hbmWorkDirEnvName                  = "HBM_WORK_DIR"
-	hbmConfigItemValueEnvNamePrefix    = "HBM"
-	hbmConfigItemFilePathEnvNamePrefix = "HBMCFP"
-	defaultConfigPath                  = "/conf/hbmoxie.ini"
-	defaultRootUrl                     = "%(protocol)s://%(domain)s:%(http_port)s/"
-	defaultStaticRootPath              = "public"
+	ratelWorkDirEnvName                   = "RATEL_WORK_DIR"
+	legacyWorkDirEnvName                  = "RATEL_WORK_DIR"
+	ratelConfigItemValueEnvNamePrefix     = "RATEL"
+	legacyConfigItemValueEnvNamePrefix    = "HBM"
+	ratelConfigItemFilePathEnvNamePrefix  = "RATELCFP"
+	legacyConfigItemFilePathEnvNamePrefix = "HBMCFP"
+	defaultConfigPath                     = "/conf/ratel-ledger.ini"
+	legacyConfigPath                      = "/conf/hbmoxie.ini"
+	defaultRootUrl                        = "%(protocol)s://%(domain)s:%(http_port)s/"
+	defaultStaticRootPath                 = "public"
 )
 
 // SystemMode represents running mode of system
@@ -152,7 +156,7 @@ const (
 	defaultDomain   string = "localhost"
 
 	defaultDatabaseHost            string = "127.0.0.1:3306"
-	defaultDatabaseName            string = "hbmoxie"
+	defaultDatabaseName            string = "ratel_ledger"
 	defaultDatabaseMaxIdleConn     uint16 = 2
 	defaultDatabaseMaxOpenConn     uint16 = 0
 	defaultDatabaseConnMaxLifetime uint32 = 14400
@@ -170,7 +174,7 @@ const (
 	defaultInMemoryDuplicateCheckerCleanupInterval uint32 = 60  // 1 minutes
 	defaultDuplicateSubmissionsInterval            uint32 = 300 // 5 minutes
 
-	defaultSecretKey                     string = "" // empty = auto-generate
+	defaultSecretKey                     string = ""      // empty = auto-generate
 	defaultTokenExpiredTime              uint32 = 2592000 // 30 days
 	defaultTokenMinRefreshInterval       uint32 = 86400   // 1 day
 	defaultTemporaryTokenExpiredTime     uint32 = 300     // 5 minutes
@@ -605,6 +609,10 @@ func PersistSecretKey(configFilePath string, secretKey string) error {
 		return fmt.Errorf("failed to save config with secret key: %w", err)
 	}
 
+	if err := os.Chmod(configFilePath, 0600); err != nil {
+		return fmt.Errorf("failed to tighten config file permissions: %w", err)
+	}
+
 	return nil
 }
 
@@ -620,6 +628,11 @@ func GetDefaultConfigFilePath() (string, error) {
 	_, err = os.Stat(cfgFilePath)
 
 	if err != nil {
+		legacyConfigFilePath := filepath.Join(workingPath, legacyConfigPath)
+		if _, legacyErr := os.Stat(legacyConfigFilePath); legacyErr == nil {
+			return legacyConfigFilePath, nil
+		}
+
 		return "", err
 	}
 
@@ -655,12 +668,8 @@ func loadServerConfiguration(config *Config, configFile *ini.File, sectionName s
 	}
 
 	staticRootPath := getConfigItemStringValue(configFile, sectionName, "static_root_path", defaultStaticRootPath)
-	finalStaticRootPath, err := getFinalPath(config.WorkingPath, staticRootPath)
-
-	if err != nil {
-		return err
-	}
-
+	// The Electron shell serves the frontend itself; a missing static root is not fatal.
+	finalStaticRootPath, _ := getFinalPath(config.WorkingPath, staticRootPath)
 	config.StaticRootPath = finalStaticRootPath
 
 	config.EnableRequestLog = getConfigItemBoolValue(configFile, sectionName, "log_request", false)
@@ -986,7 +995,7 @@ func loadSecurityConfiguration(config *Config, configFile *ini.File, sectionName
 	config.SecretKey = getConfigItemStringValue(configFile, sectionName, "secret_key", defaultSecretKey)
 
 	// Generate a random secret key if none was configured
-	if config.SecretKey == "" || config.SecretKey == "hbmoxie" {
+	if config.SecretKey == "" || config.SecretKey == "ratel_ledger" || config.SecretKey == "hbmoxie" {
 		randomBytes := make([]byte, 32)
 		if _, err := rand.Read(randomBytes); err != nil {
 			return fmt.Errorf("failed to generate random secret key: %w", err)
@@ -1254,7 +1263,10 @@ func loadExchangeRatesConfiguration(config *Config, configFile *ini.File, sectio
 }
 
 func getWorkingPath() (string, error) {
-	workingPath := os.Getenv(hbmWorkDirEnvName)
+	workingPath := os.Getenv(ratelWorkDirEnvName)
+	if workingPath == "" {
+		workingPath = os.Getenv(legacyWorkDirEnvName)
+	}
 
 	if workingPath != "" {
 		return workingPath, nil
@@ -1451,8 +1463,10 @@ func getConfigItemBoolValue(configFile *ini.File, sectionName string, itemName s
 }
 
 func getConfigItemValueFromEnvironment(sectionName string, itemName string) string {
-	itemFilePathEnvironmentKey := getConfigItemFilePathEnvironmentKey(sectionName, itemName)
-	itemFilePath := os.Getenv(itemFilePathEnvironmentKey)
+	itemFilePath := os.Getenv(getConfigItemFilePathEnvironmentKey(sectionName, itemName))
+	if itemFilePath == "" {
+		itemFilePath = os.Getenv(getLegacyConfigItemFilePathEnvironmentKey(sectionName, itemName))
+	}
 
 	if itemFilePath != "" {
 		content, err := os.ReadFile(itemFilePath)
@@ -1462,18 +1476,28 @@ func getConfigItemValueFromEnvironment(sectionName string, itemName string) stri
 		}
 	}
 
-	itemValueEnvironmentKey := getConfigItemValueEnvironmentKey(sectionName, itemName)
-	itemValueEnvironmentValue := os.Getenv(itemValueEnvironmentKey)
+	itemValueEnvironmentValue := os.Getenv(getConfigItemValueEnvironmentKey(sectionName, itemName))
+	if itemValueEnvironmentValue == "" {
+		itemValueEnvironmentValue = os.Getenv(getLegacyConfigItemValueEnvironmentKey(sectionName, itemName))
+	}
 
 	return itemValueEnvironmentValue
 }
 
 func getConfigItemFilePathEnvironmentKey(sectionName string, itemName string) string {
-	return fmt.Sprintf("%s_%s_%s", hbmConfigItemFilePathEnvNamePrefix, strings.ToUpper(sectionName), strings.ToUpper(itemName))
+	return fmt.Sprintf("%s_%s_%s", ratelConfigItemFilePathEnvNamePrefix, strings.ToUpper(sectionName), strings.ToUpper(itemName))
 }
 
 func getConfigItemValueEnvironmentKey(sectionName string, itemName string) string {
-	return fmt.Sprintf("%s_%s_%s", hbmConfigItemValueEnvNamePrefix, strings.ToUpper(sectionName), strings.ToUpper(itemName))
+	return fmt.Sprintf("%s_%s_%s", ratelConfigItemValueEnvNamePrefix, strings.ToUpper(sectionName), strings.ToUpper(itemName))
+}
+
+func getLegacyConfigItemFilePathEnvironmentKey(sectionName string, itemName string) string {
+	return fmt.Sprintf("%s_%s_%s", legacyConfigItemFilePathEnvNamePrefix, strings.ToUpper(sectionName), strings.ToUpper(itemName))
+}
+
+func getLegacyConfigItemValueEnvironmentKey(sectionName string, itemName string) string {
+	return fmt.Sprintf("%s_%s_%s", legacyConfigItemValueEnvNamePrefix, strings.ToUpper(sectionName), strings.ToUpper(itemName))
 }
 
 func getLogLevel(logLevelStr string) (Level, error) {

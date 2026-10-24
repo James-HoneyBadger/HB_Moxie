@@ -24,7 +24,7 @@ func (a *AdminApp) makeDashboard() fyne.CanvasObject {
 		dbSize = formatBytes(info.Size())
 	}
 
-	title := widget.NewLabel("HB Moxie System Administration")
+	title := widget.NewLabel("Ratel Ledger System Administration")
 	title.TextStyle = fyne.TextStyle{Bold: true}
 	title.Alignment = fyne.TextAlignCenter
 

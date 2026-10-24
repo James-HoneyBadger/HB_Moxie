@@ -1,6 +1,6 @@
 # Architecture Overview
 
-System design, project structure, and technology decisions for HB Moxie.
+System design, project structure, and technology decisions for Ratel Ledger.
 
 ---
 
@@ -23,7 +23,7 @@ System design, project structure, and technology decisions for HB Moxie.
 
 ## System Overview
 
-HB Moxie is a desktop personal finance application built with Electron:
+Ratel Ledger is a desktop personal finance application built with Electron:
 
 The Go backend runs as a child process of Electron, which hosts the frontend via a custom `app://` protocol.
 
@@ -87,7 +87,7 @@ Gin Router ──► Middleware Chain ──► API Handler ──► Service �
 
 ### Entry Point
 
-`hbmoxie.go` registers CLI commands via `urfave/cli/v3`:
+`main.go` registers CLI commands via `urfave/cli/v3`:
 
 | Command | File | Description |
 |---------|------|-------------|
@@ -139,12 +139,11 @@ Route binding in `cmd/webserver.go` wraps handlers:
 | Wrapper | Purpose |
 |---------|---------|
 | `bindApi()` | Standard JSON API — returns `{success, result}` or `{success, errorCode, errorMessage}` |
-| `bindApiWithTokenUpdate()` | Same as above but checks for token refresh |
+| `bindApiWithTokenUpdate()` | Standard JSON API plus Amap proxy auth-cookie handling |
 | `bindJSONRPCApi()` | JSON-RPC 2.0 wrapper (used for MCP) |
-| `bindEventStreamApi()` | Server-Sent Events wrapper (used for import progress) |
 | `bindCachedJs()` | Cached JavaScript response (server_settings.js) |
 | `bindCsv() / bindTsv() / bindZip()` | File download responses |
-| `bindImage() / bindCachedImage()` | Image serving |
+| `bindImage()` | Image serving |
 | `bindProxy()` | Reverse proxy passthrough |
 
 ### Middleware Stack
@@ -181,7 +180,7 @@ Applied in order per request:
 | `datatable` | Internal tabular data type |
 | `custom` | User-defined column mappings |
 | `converter` | Converter registry and factory |
-| `default` | Default HB Moxie CSV/TSV format |
+| `default` | Default Ratel Ledger CSV/TSV format |
 
 ---
 
@@ -262,8 +261,8 @@ Pinia Stores
 ### Routing
 
 `src/router/desktop.ts` defines all routes with:
-- **Navigation guards** for authentication enforcement
-- **Lazy loading** via dynamic imports
+- **Navigation guards** for authentication and app-lock enforcement
+- **Static page imports** (Vite splits shared dependencies into vendor chunks)
 - **Hash mode** routing (`/#/path`)
 
 ### API Client
@@ -274,6 +273,8 @@ Pinia Stores
 - Token refresh logic (when token nears expiration)
 - Error response handling
 - File upload support
+
+The machine-readable API contract lives in `docs/openapi.json` and the shared TypeScript types are generated into `src/models/generated/api.ts`. Regenerate both with `npm run openapi:generate`; `npm run openapi:check` is enforced in CI.
 
 ### Chunk Splitting Strategy
 
@@ -306,15 +307,17 @@ Electron Main Process (electron/main.js)
 
 ### Protocol Scheme
 
-Electron registers a custom `app://hbmoxie` protocol to serve frontend assets without a local HTTP server for the UI layer. API calls are intercepted and proxied to the Go backend.
+Electron registers a custom `app://ratel-ledger` protocol to serve frontend assets without a local HTTP server for the UI layer. API calls are intercepted and proxied to the Go backend.
 
 ### Backend Lifecycle
 
-1. On app startup, find a free TCP port
-2. Spawn Go binary with `HBM_SERVER_HTTP_ADDR=127.0.0.1` and `HBM_SERVER_HTTP_PORT=<port>`
-3. Wait for health check response (`/healthz.json`)
-4. Load the frontend in a BrowserWindow
-5. On app quit, send SIGTERM to the Go process (SIGKILL after 3s timeout)
+1. Acquire a single-instance lock (a second launch focuses the existing window)
+2. Find a free TCP port
+3. Seed `conf/ratel-ledger.ini` and `templates/` into Electron's per-user data directory on first launch
+4. Spawn the Go binary with `RATEL_WORK_DIR=<userData>`, `RATEL_SERVER_HTTP_ADDR=127.0.0.1`, and `RATEL_SERVER_HTTP_PORT=<port>`
+5. Wait for the backend TCP port to accept connections
+6. Load the frontend in a BrowserWindow
+7. On app quit, send SIGTERM to the Go process (SIGKILL after 3s timeout)
 
 ### Security Sandbox
 
@@ -379,7 +382,7 @@ User reviews, adjusts mapping, batch replaces
 POST /api/v1/transactions/import.json
     │
     ▼
-SSE stream (GET /api/v1/transactions/import/process.json) → progress updates
+JSON polling (GET /api/v1/transactions/import/process.json) → progress updates
     │
     ▼
 Transactions inserted → import complete
@@ -434,7 +437,7 @@ User ─────┬──── Account ──── Transaction
 
 ### JWT Claims
 
-Tokens are JWTs signed with the configured `secret_key`. Claims include user ID, token ID, token type, and issuance time.
+Each token is a JWT signed with a random per-token secret stored in the `token_record` table. Claims include user ID, token ID, token type, and issuance time. Validation checks the database record, so revoking a token takes effect immediately.
 
 ### OAuth2 Flow
 
@@ -513,7 +516,7 @@ Source
   └── ./scripts/build.sh package
           │
           └── tar.gz archive:
-              ├── hbmoxie (binary)
+              ├── ratel-ledger (binary)
               ├── dist/ (frontend)
               ├── conf/ (config template)
               ├── templates/ (email + prompt)
@@ -528,20 +531,21 @@ Source
 
 | Layer | Mechanism |
 |-------|-----------|
-| Transport | HTTPS / Unix socket support |
+| Transport | Loopback HTTP only (`127.0.0.1` or `localhost`) |
 | Authentication | JWT tokens, OAuth2/OIDC, 2FA (TOTP) |
 | Authorization | Per-user feature restriction bitmask |
 | Rate limiting | Per-IP and per-user failure throttling |
 | Input validation | Gin binding validators + custom validators |
-| Secret management | Env var + file-based secret injection |
+| Secret management | Env var + file-based secret injection, `0600` config on first write |
 | Electron sandbox | contextIsolation, no nodeIntegration, CSP |
 | Request deduplication | In-memory duplicate submission checker |
-| Cryptographic | Configurable JWT signing key, bcrypt password hashing |
+| Cryptographic | Per-token HMAC-SHA256 secrets, PBKDF2-HMAC-SHA256 password hashing (600,000 iterations), AES-GCM 2FA secrets |
+| Log hygiene | `token`, `code`, `state`, `password` query parameters are redacted |
 
 ### Secret Key
 
-The `secret_key` in `[security]` is critical:
-- Signs all JWT tokens
-- **Must** be set for production mode (server refuses to start without it)
-- Generate with: `./hbmoxie security gen-secret-key`
-- Changing it invalidates all existing sessions
+The `secret_key` in `[security]` is used to encrypt two-factor secrets and derive server/instance identifiers:
+- It is **not** the JWT signing key; each token has its own random secret in the database
+- If empty, a random key is generated on first start and written back to the config file with `0600` permissions
+- Generate a value explicitly with: `./ratel-ledger security gen-secret-key`
+- Changing it makes existing two-factor secrets unreadable (users must re-enroll 2FA)

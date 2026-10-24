@@ -12,11 +12,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/datastore"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
 )
 
 const backupDirName = "backups"
@@ -66,7 +66,7 @@ func (s *BackupService) ListBackups(c core.Context) ([]*models.BackupListRespons
 	var backups []*models.BackupListResponse
 
 	for _, entry := range entries {
-		if entry.IsDir() || !strings.HasSuffix(entry.Name(), backupFileExtension) {
+		if entry.IsDir() || !isValidBackupFileName(entry.Name()) {
 			continue
 		}
 
@@ -94,60 +94,68 @@ func (s *BackupService) ListBackups(c core.Context) ([]*models.BackupListRespons
 // CreateBackup creates a new backup archive containing the database and storage files
 func (s *BackupService) CreateBackup(c core.Context) (*models.BackupListResponse, error) {
 	config := s.CurrentConfig()
+
+	if config.DatabaseConfig == nil || config.DatabaseConfig.DatabaseType != settings.Sqlite3DbType || config.DatabaseConfig.DatabasePath == "" {
+		return nil, errs.ErrBackupDatabaseTypeNotSupported
+	}
+
 	backupDir, err := s.GetBackupDir()
 
 	if err != nil {
 		return nil, err
 	}
 
-	timestamp := time.Now().Format(backupFileNameTimeFormat)
-	fileName := fmt.Sprintf("backup_%s%s", timestamp, backupFileExtension)
-	backupPath := filepath.Join(backupDir, fileName)
-
-	zipFile, err := os.Create(backupPath)
+	fileName, backupPath, zipFile, err := createBackupFile(backupDir)
 
 	if err != nil {
 		return nil, err
 	}
 
-	defer zipFile.Close()
-
 	zipWriter := zip.NewWriter(zipFile)
-	defer zipWriter.Close()
+	completed := false
 
-	// Backup SQLite database if applicable
-	if config.DatabaseConfig != nil && config.DatabaseConfig.DatabaseType == settings.Sqlite3DbType && config.DatabaseConfig.DatabasePath != "" {
-		dbPath := config.DatabaseConfig.DatabasePath
+	defer func() {
+		if !completed {
+			_ = zipWriter.Close()
+			_ = zipFile.Close()
+			_ = os.Remove(backupPath)
+		}
+	}()
 
-		if err := addFileToZip(zipWriter, dbPath, "database/"+filepath.Base(dbPath)); err != nil {
-			os.Remove(backupPath)
-			return nil, fmt.Errorf("failed to backup database: %w", err)
+	// Use SQLite's online backup mechanism instead of copying a live database file.
+	snapshotPath, err := s.createDatabaseSnapshot(c, backupDir)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to snapshot database: %w", err)
+	}
+
+	defer os.Remove(snapshotPath)
+
+	if err := addFileToZip(zipWriter, snapshotPath, "database/"+filepath.Base(config.DatabaseConfig.DatabasePath)); err != nil {
+		return nil, fmt.Errorf("failed to backup database: %w", err)
+	}
+
+	if config.LocalFileSystemPath != "" {
+		info, statErr := os.Stat(config.LocalFileSystemPath)
+
+		if statErr == nil && info.IsDir() {
+			if err := addDirectoryToZip(zipWriter, config.LocalFileSystemPath, "storage"); err != nil {
+				return nil, fmt.Errorf("failed to backup storage: %w", err)
+			}
+		} else if statErr != nil && !os.IsNotExist(statErr) {
+			return nil, fmt.Errorf("failed to access storage directory: %w", statErr)
 		}
 	}
 
-	// Backup storage directory
-	storagePath := config.LocalFileSystemPath
-
-	if storagePath != "" {
-		if err := addDirectoryToZip(zipWriter, storagePath, "storage"); err != nil {
-			os.Remove(backupPath)
-			return nil, fmt.Errorf("failed to backup storage: %w", err)
-		}
+	if err := zipWriter.Close(); err != nil {
+		return nil, err
 	}
 
-	// Backup configuration
-	confPath := filepath.Join(config.WorkingPath, "conf", "hbmoxie.ini")
-
-	if _, statErr := os.Stat(confPath); statErr == nil {
-		if err := addFileToZip(zipWriter, confPath, "conf/hbmoxie.ini"); err != nil {
-			os.Remove(backupPath)
-			return nil, fmt.Errorf("failed to backup config: %w", err)
-		}
+	if err := zipFile.Close(); err != nil {
+		return nil, err
 	}
 
-	// Close the zip writer to flush
-	zipWriter.Close()
-	zipFile.Close()
+	completed = true
 
 	info, err := os.Stat(backupPath)
 
@@ -162,6 +170,39 @@ func (s *BackupService) CreateBackup(c core.Context) (*models.BackupListResponse
 	}, nil
 }
 
+func (s *BackupService) createDatabaseSnapshot(c core.Context, backupDir string) (string, error) {
+	snapshotPath := filepath.Join(backupDir, fmt.Sprintf(".snapshot-%d.db", time.Now().UnixNano()))
+
+	if err := os.Remove(snapshotPath); err != nil && !os.IsNotExist(err) {
+		return "", err
+	}
+
+	if err := datastore.Container.UserDataStore.Choose(0).VacuumInto(c, snapshotPath); err != nil {
+		return "", err
+	}
+
+	return snapshotPath, nil
+}
+
+func createBackupFile(backupDir string) (string, string, *os.File, error) {
+	for attempt := 0; attempt < 5; attempt++ {
+		timestamp := time.Now().Add(time.Duration(attempt) * time.Second).Format(backupFileNameTimeFormat)
+		fileName := fmt.Sprintf("backup_%s%s", timestamp, backupFileExtension)
+		backupPath := filepath.Join(backupDir, fileName)
+		file, err := os.OpenFile(backupPath, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
+
+		if err == nil {
+			return fileName, backupPath, file, nil
+		}
+
+		if !os.IsExist(err) {
+			return "", "", nil, err
+		}
+	}
+
+	return "", "", nil, fmt.Errorf("failed to allocate a unique backup file name")
+}
+
 // GetBackupFileContent reads and returns the backup file content
 func (s *BackupService) GetBackupFileContent(c core.Context, fileName string) ([]byte, error) {
 	if !isValidBackupFileName(fileName) {
@@ -174,14 +215,10 @@ func (s *BackupService) GetBackupFileContent(c core.Context, fileName string) ([
 		return nil, err
 	}
 
-	backupPath := filepath.Join(backupDir, fileName)
+	backupPath, err := resolveBackupPath(backupDir, fileName)
 
-	// Security: prevent path traversal
-	absBackupDir, _ := filepath.Abs(backupDir)
-	absBackupPath, _ := filepath.Abs(backupPath)
-
-	if !strings.HasPrefix(absBackupPath, absBackupDir) {
-		return nil, errs.ErrBackupInvalidFileName
+	if err != nil {
+		return nil, err
 	}
 
 	if _, err := os.Stat(backupPath); os.IsNotExist(err) {
@@ -192,26 +229,23 @@ func (s *BackupService) GetBackupFileContent(c core.Context, fileName string) ([
 }
 
 // RestoreBackup restores from a backup archive
-func (s *BackupService) RestoreBackup(c core.Context, fileName string) error {
-	if !isValidBackupFileName(fileName) {
-		return errs.ErrBackupInvalidFileName
+func (s *BackupService) RestoreBackup(c core.Context, fileName string) (err error) {
+	config := s.CurrentConfig()
+
+	if config.DatabaseConfig == nil || config.DatabaseConfig.DatabaseType != settings.Sqlite3DbType || config.DatabaseConfig.DatabasePath == "" {
+		return errs.ErrBackupDatabaseTypeNotSupported
 	}
 
-	config := s.CurrentConfig()
 	backupDir, err := s.GetBackupDir()
 
 	if err != nil {
 		return err
 	}
 
-	backupPath := filepath.Join(backupDir, fileName)
+	backupPath, err := resolveBackupPath(backupDir, fileName)
 
-	// Security: prevent path traversal
-	absBackupDir, _ := filepath.Abs(backupDir)
-	absBackupPath, _ := filepath.Abs(backupPath)
-
-	if !strings.HasPrefix(absBackupPath, absBackupDir) {
-		return errs.ErrBackupInvalidFileName
+	if err != nil {
+		return err
 	}
 
 	if _, err := os.Stat(backupPath); os.IsNotExist(err) {
@@ -230,39 +264,53 @@ func (s *BackupService) RestoreBackup(c core.Context, fileName string) error {
 		return fmt.Errorf("failed to read backup archive: %w", err)
 	}
 
-	// Restore database
-	if config.DatabaseConfig != nil && config.DatabaseConfig.DatabaseType == settings.Sqlite3DbType && config.DatabaseConfig.DatabasePath != "" {
-		dbBaseName := filepath.Base(config.DatabaseConfig.DatabasePath)
+	dbBaseName := filepath.Base(config.DatabaseConfig.DatabasePath)
+	var databaseFile *zip.File
 
-		for _, f := range reader.File {
-			if f.Name == "database/"+dbBaseName {
-				if err := restoreFileFromZip(f, config.DatabaseConfig.DatabasePath); err != nil {
-					return fmt.Errorf("failed to restore database: %w", err)
-				}
-
-				break
-			}
+	for _, f := range reader.File {
+		if f.Name == "database/"+dbBaseName {
+			databaseFile = f
+			break
 		}
 	}
 
-	// Restore storage files
+	if databaseFile == nil {
+		return fmt.Errorf("backup archive does not contain the database")
+	}
+
+	// The SQLite file cannot be replaced while the connection pool is open.
+	// Reopen it as soon as the restore finishes, including on failure paths.
+	closeErr := datastore.Container.Close()
+
+	defer func() {
+		if reopenErr := datastore.InitializeDataStore(config); reopenErr != nil && err == nil {
+			err = fmt.Errorf("failed to reopen database after restore: %w", reopenErr)
+		}
+	}()
+
+	if closeErr != nil {
+		return fmt.Errorf("failed to close database before restore: %w", closeErr)
+	}
+
+	if err := restoreFileFromZip(databaseFile, config.DatabaseConfig.DatabasePath); err != nil {
+		return fmt.Errorf("failed to restore database: %w", err)
+	}
+
 	if config.LocalFileSystemPath != "" {
 		for _, f := range reader.File {
-			if strings.HasPrefix(f.Name, "storage/") && !f.FileInfo().IsDir() {
-				relativePath := strings.TrimPrefix(f.Name, "storage/")
-				destPath := filepath.Join(config.LocalFileSystemPath, relativePath)
+			if !strings.HasPrefix(f.Name, "storage/") || f.FileInfo().IsDir() {
+				continue
+			}
 
-				// Security: ensure destination is within storage path
-				absStorage, _ := filepath.Abs(config.LocalFileSystemPath)
-				absDest, _ := filepath.Abs(destPath)
+			relativePath := strings.TrimPrefix(f.Name, "storage/")
+			destPath := filepath.Join(config.LocalFileSystemPath, relativePath)
 
-				if !strings.HasPrefix(absDest, absStorage) {
-					continue
-				}
+			if !isPathWithinDirectory(config.LocalFileSystemPath, destPath) {
+				continue
+			}
 
-				if err := restoreFileFromZip(f, destPath); err != nil {
-					return fmt.Errorf("failed to restore storage file %s: %w", relativePath, err)
-				}
+			if err := restoreFileFromZip(f, destPath); err != nil {
+				return fmt.Errorf("failed to restore storage file %s: %w", relativePath, err)
 			}
 		}
 	}
@@ -282,14 +330,10 @@ func (s *BackupService) DeleteBackup(c core.Context, fileName string) error {
 		return err
 	}
 
-	backupPath := filepath.Join(backupDir, fileName)
+	backupPath, err := resolveBackupPath(backupDir, fileName)
 
-	// Security: prevent path traversal
-	absBackupDir, _ := filepath.Abs(backupDir)
-	absBackupPath, _ := filepath.Abs(backupPath)
-
-	if !strings.HasPrefix(absBackupPath, absBackupDir) {
-		return errs.ErrBackupInvalidFileName
+	if err != nil {
+		return err
 	}
 
 	if _, err := os.Stat(backupPath); os.IsNotExist(err) {
@@ -297,6 +341,42 @@ func (s *BackupService) DeleteBackup(c core.Context, fileName string) error {
 	}
 
 	return os.Remove(backupPath)
+}
+
+func resolveBackupPath(backupDir string, fileName string) (string, error) {
+	if !isValidBackupFileName(fileName) {
+		return "", errs.ErrBackupInvalidFileName
+	}
+
+	backupPath := filepath.Join(backupDir, fileName)
+
+	if !isPathWithinDirectory(backupDir, backupPath) {
+		return "", errs.ErrBackupInvalidFileName
+	}
+
+	return backupPath, nil
+}
+
+func isPathWithinDirectory(baseDir string, targetPath string) bool {
+	absBaseDir, err := filepath.Abs(baseDir)
+
+	if err != nil {
+		return false
+	}
+
+	absTargetPath, err := filepath.Abs(targetPath)
+
+	if err != nil {
+		return false
+	}
+
+	relativePath, err := filepath.Rel(absBaseDir, absTargetPath)
+
+	if err != nil || relativePath == "." || relativePath == ".." {
+		return false
+	}
+
+	return !strings.HasPrefix(relativePath, ".."+string(os.PathSeparator)) && !filepath.IsAbs(relativePath)
 }
 
 func isValidBackupFileName(fileName string) bool {
@@ -375,7 +455,7 @@ func restoreFileFromZip(f *zip.File, destPath string) error {
 
 	defer rc.Close()
 
-	destFile, err := os.Create(destPath)
+	destFile, err := os.OpenFile(destPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0600)
 
 	if err != nil {
 		return err
@@ -386,6 +466,3 @@ func restoreFileFromZip(f *zip.File, destPath string) error {
 	_, err = io.Copy(destFile, rc)
 	return err
 }
-
-// Unused import guard
-var _ = utils.Int64ToString

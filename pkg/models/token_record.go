@@ -1,6 +1,6 @@
 package models
 
-import "github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+import "github.com/James-HoneyBadger/ratel-ledger/pkg/core"
 
 // TokenMaxUserAgentLength represents the maximum size of user agent stored in database
 const TokenMaxUserAgentLength = 255
@@ -10,7 +10,7 @@ type TokenRecord struct {
 	Uid              int64          `xorm:"PK INDEX(IDX_token_record_uid_type_expired_time) INDEX(IDX_token_record_expired_time)"`
 	UserTokenId      int64          `xorm:"PK"`
 	TokenType        core.TokenType `xorm:"INDEX(IDX_token_record_uid_type_expired_time) TINYINT NOT NULL"`
-	Secret           string         `xorm:"VARCHAR(10) NOT NULL"`
+	Secret           string         `xorm:"VARCHAR(64) NOT NULL"`
 	UserAgent        string         `xorm:"VARCHAR(255)"`
 	Context          string         `xorm:"BLOB"`
 	CreatedUnixTime  int64          `xorm:"PK"`

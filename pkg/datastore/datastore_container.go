@@ -5,6 +5,7 @@ import (
 	"net"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -13,8 +14,8 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"xorm.io/xorm"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
 )
 
 // DataStoreContainer contains all data storages
@@ -65,6 +66,10 @@ func initializeDatabase(dbConfig *settings.DatabaseConfig) (*Database, error) {
 	var err error
 
 	if dbConfig.DatabaseType == settings.Sqlite3DbType {
+		if err = os.MkdirAll(filepath.Dir(dbConfig.DatabasePath), 0750); err != nil {
+			return nil, err
+		}
+
 		if _, err = os.Stat(dbConfig.DatabasePath); err != nil {
 			file, err := os.Create(dbConfig.DatabasePath)
 
@@ -99,8 +104,21 @@ func initializeDatabase(dbConfig *settings.DatabaseConfig) (*Database, error) {
 		return nil, err
 	}
 
-	engineGroup.SetMaxIdleConns(int(dbConfig.MaxIdleConnection))
-	engineGroup.SetMaxOpenConns(int(dbConfig.MaxOpenConnection))
+	maxIdleConns := int(dbConfig.MaxIdleConnection)
+	maxOpenConns := int(dbConfig.MaxOpenConnection)
+
+	if dbConfig.DatabaseType == settings.Sqlite3DbType && maxOpenConns == 0 {
+		// SQLite serializes writers. An unbounded pool turns concurrent writes
+		// into avoidable SQLITE_BUSY errors, so keep a single connection.
+		maxOpenConns = 1
+	}
+
+	if maxOpenConns > 0 && maxIdleConns > maxOpenConns {
+		maxIdleConns = maxOpenConns
+	}
+
+	engineGroup.SetMaxIdleConns(maxIdleConns)
+	engineGroup.SetMaxOpenConns(maxOpenConns)
 	engineGroup.SetConnMaxLifetime(time.Duration(dbConfig.ConnectionMaxLifeTime) * time.Second)
 
 	return &Database{
@@ -144,5 +162,32 @@ func getPostgresConnectionString(dbConfig *settings.DatabaseConfig) (string, err
 }
 
 func getSqlite3ConnectionString(dbConfig *settings.DatabaseConfig) (string, error) {
-	return fmt.Sprintf("file:%s?cache=shared&mode=rwc", dbConfig.DatabasePath), nil
+	return fmt.Sprintf("file:%s?_journal_mode=WAL&_busy_timeout=5000&_synchronous=NORMAL&cache=shared&mode=rwc", dbConfig.DatabasePath), nil
+}
+
+// Close closes all database connections held by the container
+func (c *DataStoreContainer) Close() error {
+	seen := make(map[*Database]bool)
+
+	for _, store := range []*DataStore{c.UserStore, c.TokenStore, c.UserDataStore} {
+		if store == nil {
+			continue
+		}
+
+		for i := 0; i < store.Count(); i++ {
+			database := store.Get(i)
+
+			if database == nil || seen[database] {
+				continue
+			}
+
+			seen[database] = true
+
+			if err := database.Close(); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }

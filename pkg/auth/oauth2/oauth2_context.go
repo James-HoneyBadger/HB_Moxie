@@ -5,7 +5,7 @@ import (
 
 	"golang.org/x/oauth2"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
 )
 
 // OAuth2Context represents the context for OAuth 2.0 operations

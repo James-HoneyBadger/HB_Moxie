@@ -7,9 +7,9 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
 )
 
 const amapCustomMapStylesUrl = "https://webapi.amap.com/v4/map/styles"
@@ -54,7 +54,7 @@ func (p *AmapApiProxy) AmapApiProxyHandler(c *core.WebContext) (*httputil.Revers
 		req.Header.Del("Cookie")
 
 		for i := 0; i < len(oldCookies); i++ {
-			if strings.HasPrefix(oldCookies[i].Name, "hbm_") {
+			if strings.HasPrefix(oldCookies[i].Name, "ratel_") {
 				continue
 			}
 

@@ -6,7 +6,7 @@ import (
 
 	"xorm.io/xorm/log"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
 )
 
 // XOrmContextAdapter represents the context adapter for xorm

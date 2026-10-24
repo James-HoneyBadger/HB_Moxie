@@ -410,8 +410,8 @@ onBeforeUnmount(() => {
     }
 });
 
-const fileType = ref<string>('hbmoxie');
-const fileSubType = ref<string>('hbmoxie_csv');
+const fileType = ref<string>('ratel_ledger');
+const fileSubType = ref<string>('ratel_ledger_csv');
 const fileEncoding = ref<string>('auto');
 const detectingFileEncoding = ref<boolean>(false);
 const autoDetectedFileEncoding = ref<string | undefined>(undefined);
@@ -564,7 +564,7 @@ const exportFileGuideDocumentUrl = computed<string | undefined>(() => {
 
     const language = document.language ? document.language + '/' : '';
     const anchor = document.anchor ? '#' + document.anchor : '';
-    return `https://github.com/James-HoneyBadger/HB_Moxie/${language}export_and_import${anchor}`;
+    return `https://github.com/James-HoneyBadger/ratel-ledger/${language}export_and_import${anchor}`;
 });
 
 const exportFileGuideDocumentLanguageName = computed<string | undefined>(() => allSupportedImportFileTypesMap.value[fileType.value]?.document?.displayLanguageName);
@@ -614,8 +614,8 @@ function loadInitFileTypeFromSettings(): void {
 }
 
 function open(): Promise<void> {
-    fileType.value = 'hbmoxie';
-    fileSubType.value = 'hbmoxie_csv';
+    fileType.value = 'ratel_ledger';
+    fileSubType.value = 'ratel_ledger_csv';
 
     if (settingsStore.appSettings.rememberLastSelectedFileTypeInImportTransactionDialog && settingsStore.appSettings.lastSelectedFileTypeInImportTransactionDialog) {
         loadInitFileTypeFromSettings();
@@ -863,7 +863,7 @@ function parseData(): void {
                 return;
             }
 
-            type = 'hbmoxie_json';
+            type = 'ratel_ledger_json';
             encoding = undefined;
             uploadFile = KnownFileType.JSON.createFile(executeCustomScriptResult, 'import');
         }

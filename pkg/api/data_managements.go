@@ -6,14 +6,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/services"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/services"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
 const pageCountForClearTransactions = 1000
@@ -55,13 +55,13 @@ var (
 	}
 )
 
-// ExportDataToHBMoxieCSVHandler returns exported data in csv format
-func (a *DataManagementsApi) ExportDataToHBMoxieCSVHandler(c *core.WebContext) ([]byte, string, *errs.Error) {
+// ExportDataToRatelLedgerCSVHandler returns exported data in csv format
+func (a *DataManagementsApi) ExportDataToRatelLedgerCSVHandler(c *core.WebContext) ([]byte, string, *errs.Error) {
 	return a.getExportedFileContent(c, "csv")
 }
 
-// ExportDataToHBMoxieTSVHandler returns exported data in tsv format
-func (a *DataManagementsApi) ExportDataToHBMoxieTSVHandler(c *core.WebContext) ([]byte, string, *errs.Error) {
+// ExportDataToRatelLedgerTSVHandler returns exported data in tsv format
+func (a *DataManagementsApi) ExportDataToRatelLedgerTSVHandler(c *core.WebContext) ([]byte, string, *errs.Error) {
 	return a.getExportedFileContent(c, "tsv")
 }
 

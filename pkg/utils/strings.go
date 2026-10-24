@@ -9,12 +9,14 @@ import (
 	"crypto/subtle"
 	"encoding/base64"
 	"encoding/hex"
+	"fmt"
+	"strconv"
 	"strings"
 	"unicode"
 
 	"golang.org/x/crypto/pbkdf2"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
 )
 
 const (
@@ -24,6 +26,13 @@ const (
 	availableCharactersLength                = len(availableCharacters)
 	availableNumberAndLettersLength          = len(availableNumberAndLetters)
 	availableNumberAndLowercaseLettersLength = len(availableNumberAndLowercaseLetters)
+
+	passwordHashAlgorithm     = "pbkdf2-sha256"
+	passwordHashSeparator     = "$"
+	passwordHashIterations    = 600000
+	passwordHashKeyLength     = 48
+	legacyPasswordIterations  = 10000
+	maxPasswordHashIterations = 10000000
 )
 
 // SubString returns part of the source string according to start index and length
@@ -237,9 +246,45 @@ func AESGCMDecrypt(key []byte, ciphertext []byte) ([]byte, error) {
 	return plainText, nil
 }
 
-// EncodePassword returns a encoded password
+// EncodePassword returns a versioned PBKDF2-HMAC-SHA256 hash of the password
 func EncodePassword(password string, salt string) string {
-	encodedPassword := pbkdf2.Key([]byte(password), []byte(salt), 10000, 48, sha256.New) // 256^48 = 64^64
+	return encodePasswordWithIterations(password, salt, passwordHashIterations)
+}
+
+// EncodeRecoveryCode returns a legacy-compatible hash for two-factor recovery codes
+func EncodeRecoveryCode(recoveryCode string, salt string) string {
+	return encodeLegacyPassword(recoveryCode, salt)
+}
+
+// VerifyPassword returns whether the password matches and whether the stored hash
+// uses an older iteration count that should be upgraded after a successful login.
+func VerifyPassword(password string, salt string, encodedPassword string) (bool, bool) {
+	parts := strings.Split(encodedPassword, passwordHashSeparator)
+
+	if len(parts) != 3 || parts[0] != passwordHashAlgorithm {
+		expected := encodeLegacyPassword(password, salt)
+		return SecureCompare(expected, encodedPassword), true
+	}
+
+	iterations, err := strconv.Atoi(parts[1])
+
+	if err != nil || iterations < 1 || iterations > maxPasswordHashIterations {
+		return false, false
+	}
+
+	expected := encodePasswordWithIterations(password, salt, iterations)
+	matched := SecureCompare(expected, encodedPassword)
+
+	return matched, matched && iterations < passwordHashIterations
+}
+
+func encodePasswordWithIterations(password string, salt string, iterations int) string {
+	encodedPassword := pbkdf2.Key([]byte(password), []byte(salt), iterations, passwordHashKeyLength, sha256.New)
+	return fmt.Sprintf("%s%s%d%s%s", passwordHashAlgorithm, passwordHashSeparator, iterations, passwordHashSeparator, base64.RawStdEncoding.EncodeToString(encodedPassword))
+}
+
+func encodeLegacyPassword(password string, salt string) string {
+	encodedPassword := pbkdf2.Key([]byte(password), []byte(salt), legacyPasswordIterations, passwordHashKeyLength, sha256.New)
 	return strings.TrimRight(base64.StdEncoding.EncodeToString(encodedPassword), "=")
 }
 

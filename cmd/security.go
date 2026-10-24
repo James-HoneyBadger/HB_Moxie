@@ -5,14 +5,14 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
 // SecurityUtils represents the security command
 var SecurityUtils = &cli.Command{
 	Name:  "security",
-	Usage: "HB Moxie security utilities",
+	Usage: "Ratel Ledger security utilities",
 	Commands: []*cli.Command{
 		{
 			Name:   "gen-secret-key",

@@ -3,10 +3,10 @@ package cron
 import (
 	"time"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/services"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/services"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
 )
 
 // RemoveExpiredTokensJob represents the cron job which periodically remove expired user tokens from the database

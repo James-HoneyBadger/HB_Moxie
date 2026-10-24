@@ -14,8 +14,8 @@ import {
     DEFAULT_LOCALE_SETTINGS
 } from '@/core/setting.ts';
 
-const settingsLocalStorageKey: string = 'hbm_app_settings';
-const currentLanguageSessionStorageKey: string = 'hbm_current_language';
+const settingsLocalStorageKey: string = 'ratel_app_settings';
+const currentLanguageSessionStorageKey: string = 'ratel_current_language';
 
 function getStoredApplicationSettings(): BaseApplicationSetting {
     try {

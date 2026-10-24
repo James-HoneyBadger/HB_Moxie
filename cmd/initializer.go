@@ -4,20 +4,20 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/avatars"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/datastore"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/duplicatechecker"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/exchangerates"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/mail"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/services"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/storage"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/uuid"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/avatars"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/datastore"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/duplicatechecker"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/exchangerates"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/mail"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/services"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/storage"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/uuid"
 )
 
 func initializeSystem(c *core.CliContext) (*settings.Config, error) {
@@ -164,6 +164,19 @@ func initializeSystem(c *core.CliContext) (*settings.Config, error) {
 		log.BootInfof(c, "[initializer.initializeSystem] has loaded configuration %s", cfgJson)
 	}
 
+	// The default-user lookup below queries the database, so the schema must
+	// exist before single-user bootstrap runs on a fresh installation.
+	if config.AutoUpdateDatabase {
+		err = updateAllDatabaseTablesStructure(c)
+
+		if err != nil {
+			if !isDisableBootLog {
+				log.BootErrorf(c, "[initializer.initializeSystem] update database table structure failed, because %s", err.Error())
+			}
+			return nil, err
+		}
+	}
+
 	// Ensure a default user exists for single-user mode
 	err = ensureDefaultUser(c, isDisableBootLog)
 
@@ -200,8 +213,8 @@ func ensureDefaultUser(c *core.CliContext, isDisableBootLog bool) error {
 
 	defaultUser := &models.User{
 		Username:             "admin",
-		Email:                "admin@hbmoxie.local",
-		Nickname:             "HB Moxie User",
+		Email:                "admin@ratel.local",
+		Nickname:             "Ratel Ledger User",
 		Password:             generatedPassword,
 		DefaultCurrency:      "USD",
 		FirstDayOfWeek:       core.WEEKDAY_SUNDAY,

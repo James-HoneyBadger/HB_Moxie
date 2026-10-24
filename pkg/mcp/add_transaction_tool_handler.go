@@ -5,12 +5,12 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
 const transactionTypeIncome = "income"
@@ -50,7 +50,7 @@ func (h *mcpAddTransactionToolHandler) Name() string {
 
 // Description returns the description of the MCP tool
 func (h *mcpAddTransactionToolHandler) Description() string {
-	return "Add a new transaction in HB Moxie."
+	return "Add a new transaction in Ratel Ledger."
 }
 
 // InputType returns the input type for the MCP tool request

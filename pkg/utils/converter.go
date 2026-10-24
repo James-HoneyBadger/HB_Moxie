@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
 )
 
 // IntToString returns the textual representation of this number

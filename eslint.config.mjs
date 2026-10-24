@@ -15,6 +15,7 @@ export default [
     {
         ignores: [
             'dist/**',
+            'src/models/generated/**',
             '**/*.{js,jsx,cjs,mjs}'
         ]
     },

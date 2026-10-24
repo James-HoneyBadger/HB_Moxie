@@ -28,7 +28,7 @@ check_dependency() {
 
 show_help() {
     cat <<-EOF
-HB Moxie build script
+Ratel Ledger build script
 
 Usage:
     build.sh type [options]
@@ -160,8 +160,8 @@ build_backend() {
 
     echo "Building backend binary file ($RELEASE_TYPE)..."
 
-    CGO_ENABLED=1 go build -a -v -trimpath -tags timetzdata -ldflags "-w -s -linkmode external -extldflags '-static' $backend_build_extra_arguments" -o hbmoxie hbmoxie.go
-    chmod +x hbmoxie
+    CGO_ENABLED=1 go build -a -v -trimpath -tags timetzdata -ldflags "-w -s -linkmode external -extldflags '-static' $backend_build_extra_arguments" -o ratel-ledger main.go
+    chmod +x ratel-ledger
 }
 
 build_frontend() {
@@ -205,7 +205,7 @@ build_package() {
         package_file_name="$package_file_name-$BUILD_DATE"
     fi
 
-    package_file_name="hbmoxie-$package_file_name-$(arch).tar.gz"
+    package_file_name="ratel-ledger-$package_file_name-$(arch).tar.gz"
 
     if [ -n "$PACKAGE_FILENAME" ]; then
         package_file_name="$PACKAGE_FILENAME"
@@ -221,7 +221,7 @@ build_package() {
     mkdir package/data
     mkdir package/storage
     mkdir package/log
-    cp hbmoxie package/
+    cp ratel-ledger package/
     cp -R dist package/public
     cp -R conf package/conf
     cp -R templates package/templates

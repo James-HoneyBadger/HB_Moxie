@@ -1,8 +1,10 @@
 # API Reference
 
-Complete REST API documentation for HB Moxie.
+Complete REST API documentation for Ratel Ledger.
 
 All API endpoints return JSON. Authenticated endpoints require a `Bearer` token in the `Authorization` header or a valid session cookie.
+
+The machine-readable OpenAPI document is generated at [`openapi.json`](./openapi.json). Frontend request/response types are generated into [`src/models/generated/api.ts`](../src/models/generated/api.ts). Regenerate both with `npm run openapi:generate`; CI verifies them with `npm run openapi:check`.
 
 ---
 
@@ -593,7 +595,7 @@ POST /api/v1/transactions/import.json
 GET /api/v1/transactions/import/process.json
 ```
 
-Server-Sent Events (SSE) stream for import progress monitoring.
+Returns the current import progress as a JSON number from `0` to `100` (or `null` when no task is running). The client polls this endpoint while an import is in progress.
 
 ---
 
@@ -926,6 +928,8 @@ GET /api/v1/data/export.tsv
 
 ## Backups
 
+Backups are supported for SQLite databases. The archive contains a consistent SQLite snapshot under `database/` and the local storage files under `storage/`. Configuration files are not included. Backup files are created with `0600` permissions.
+
 ### List Backups
 
 ```
@@ -950,7 +954,7 @@ POST /api/v1/backups/create.json
 GET /api/v1/backups/download.zip?file_name=<filename>
 ```
 
-Returns the backup file as a ZIP download.
+Returns the backup file as a ZIP download. Backups are SQLite-only.
 
 ### Restore Backup
 

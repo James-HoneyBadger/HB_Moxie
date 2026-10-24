@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"net"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
 )
 
 // GetLocalIPAddressesString returns all local ip address, every ip split by comma

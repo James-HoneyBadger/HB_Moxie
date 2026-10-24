@@ -22,7 +22,7 @@ import { getExchangedAmountByRate } from '@/lib/numeral.ts';
 import logger from '@/lib/logger.ts';
 import services from '@/lib/services.ts';
 
-const exchangeRatesLocalStorageKey = 'hbm_app_exchange_rates';
+const exchangeRatesLocalStorageKey = 'ratel_app_exchange_rates';
 const userDataSourceType = 'user_custom';
 
 interface LatestExchangeRates {

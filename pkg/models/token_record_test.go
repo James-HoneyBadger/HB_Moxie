@@ -1,11 +1,24 @@
 package models
 
 import (
+	"reflect"
 	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
+
+func TestTokenRecordSecretColumnFitsGeneratedTokenSecret(t *testing.T) {
+	secret, err := utils.GetRandomString(32)
+	assert.NoError(t, err)
+
+	field, exists := reflect.TypeOf(TokenRecord{}).FieldByName("Secret")
+	assert.True(t, exists)
+	assert.Contains(t, field.Tag.Get("xorm"), "VARCHAR(64)")
+	assert.LessOrEqual(t, len(secret), 64)
+}
 
 func TestTokenInfoResponseSliceLess(t *testing.T) {
 	var tokenInfoRespSlice TokenInfoResponseSlice

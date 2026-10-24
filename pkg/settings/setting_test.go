@@ -36,6 +36,10 @@ secret_key =
 
 	actual := cfgFile.Section("security").Key("secret_key").String()
 	assert.Equal(t, testKey, actual)
+
+	fileInfo, err := os.Stat(cfgPath)
+	assert.NoError(t, err)
+	assert.Equal(t, os.FileMode(0600), fileInfo.Mode().Perm())
 }
 
 func TestPersistSecretKey_CreatesSecuritySection(t *testing.T) {

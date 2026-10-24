@@ -6,13 +6,13 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/data"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/provider"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/provider/common"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/data"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/provider"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/provider/common"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
 )
 
 const lmStudioChatPath = "api/v1/chat"

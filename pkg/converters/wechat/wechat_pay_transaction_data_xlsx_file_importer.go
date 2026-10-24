@@ -3,13 +3,13 @@ package wechat
 import (
 	"time"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/converter"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/datatable"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/excel"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/converter"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/datatable"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/excel"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
 )
 
 // wechatPayTransactionDataXlsxFileImporter defines the structure of wechatPay xlsx importer for transaction data

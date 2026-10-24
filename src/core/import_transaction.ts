@@ -38,7 +38,8 @@ export class ImportTransactionColumnType implements TypeAndName {
 }
 
 export class ImportTransactionDataMapping {
-    private static readonly JSON_ROOT_FIELD = 'hbmoxieImportTransactionDataMapping';
+    private static readonly JSON_ROOT_FIELD = 'ratelLedgerImportTransactionDataMapping';
+    private static readonly LEGACY_JSON_ROOT_FIELD = 'hbmoxieImportTransactionDataMapping';
     private static readonly DEFAULT_INCLUDE_HEADER = true;
     private static readonly DEFAULT_TIME_FORMAT = '';
     private static readonly DEFAULT_TIMEZONE_FORMAT = '';
@@ -321,7 +322,7 @@ export class ImportTransactionDataMapping {
     public static parseFromJson(json: string): ImportTransactionDataMapping | null {
         try {
             const parsed = JSON.parse(json);
-            const root = parsed[ImportTransactionDataMapping.JSON_ROOT_FIELD];
+            const root = parsed[ImportTransactionDataMapping.JSON_ROOT_FIELD] ?? parsed[ImportTransactionDataMapping.LEGACY_JSON_ROOT_FIELD];
 
             if (!root) {
                 return null;
@@ -385,7 +386,8 @@ export class ImportTransactionReplaceRule {
 }
 
 export class ImportTransactionReplaceRules {
-    private static readonly JSON_ROOT_FIELD = 'hbmoxieImportTransactionReplaceRules';
+    private static readonly JSON_ROOT_FIELD = 'ratelLedgerImportTransactionReplaceRules';
+    private static readonly LEGACY_JSON_ROOT_FIELD = 'hbmoxieImportTransactionReplaceRules';
 
     private readonly rules: ImportTransactionReplaceRule[];
 
@@ -416,7 +418,7 @@ export class ImportTransactionReplaceRules {
     public static parseFromJson(json: string): ImportTransactionReplaceRules | null {
         try {
             const parsed = JSON.parse(json);
-            const root = parsed[ImportTransactionReplaceRules.JSON_ROOT_FIELD];
+            const root = parsed[ImportTransactionReplaceRules.JSON_ROOT_FIELD] ?? parsed[ImportTransactionReplaceRules.LEGACY_JSON_ROOT_FIELD];
 
             if (!root || !('length' in root)) {
                 return null;

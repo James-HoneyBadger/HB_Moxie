@@ -1,8 +1,8 @@
 # Configuration Reference
 
-Complete reference for all HB Moxie configuration options.
+Complete reference for all Ratel Ledger configuration options.
 
-Configuration is read from `conf/hbmoxie.ini` (INI format). Every setting can be overridden via environment variables.
+Configuration is read from `conf/ratel-ledger.ini` (INI format). Every setting can be overridden via environment variables.
 
 ---
 
@@ -34,33 +34,33 @@ Configuration is read from `conf/hbmoxie.ini` (INI format). Every setting can be
 
 ## Environment Variable Overrides
 
-Every configuration key in `hbmoxie.ini` can be overridden by an environment variable without modifying the file.
+Every configuration key in `ratel-ledger.ini` can be overridden by an environment variable without modifying the file.
 
 ### Direct Value Override
 
-Pattern: `HBM_{SECTION}_{KEY}`
+Pattern: `RATEL_{SECTION}_{KEY}`
 
 ```bash
 # Override [server] http_port
-export HBM_SERVER_HTTP_PORT=9090
+export RATEL_SERVER_HTTP_PORT=9090
 
 # Override [database] type
-export HBM_DATABASE_TYPE=mysql
+export RATEL_DATABASE_TYPE=mysql
 ```
 
 ### File-Based Override
 
-Pattern: `HBMCFP_{SECTION}_{KEY}` — the value is read from the file path specified.
+Pattern: `RATELCFP_{SECTION}_{KEY}` — the value is read from the file path specified.
 
 ```bash
 # Read database password from a file
-export HBMCFP_DATABASE_PASSWD=/run/secrets/db_password
+export RATELCFP_DATABASE_PASSWD=/run/secrets/db_password
 ```
 
 ### Working Directory Override
 
 ```bash
-export HBM_WORK_DIR=/opt/hbmoxie
+export RATEL_WORK_DIR=/opt/ratel-ledger
 ```
 
 Section and key names are **uppercase** in the environment variable. Underscores in key names remain underscores.
@@ -86,6 +86,7 @@ mode = production
 
 ```ini
 [server]
+http_addr = 127.0.0.1
 http_port = 8080
 domain = localhost
 root_url = %(protocol)s://%(domain)s:%(http_port)s/
@@ -95,10 +96,11 @@ request_id_header = true
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| `http_addr` | string | `127.0.0.1` | Listen address. Non-loopback values are coerced to `127.0.0.1` |
 | `http_port` | int | `8080` | HTTP listen port (Electron assigns a random port at runtime) |
 | `domain` | string | `localhost` | Domain name |
 | `root_url` | string | *(derived)* | Full URL. Supports `%(protocol)s`, `%(domain)s`, `%(http_port)s` interpolation. |
-| `log_request` | bool | `true` | Log HTTP requests |
+| `log_request` | bool | `true` | Log HTTP requests. `token`, `code`, `state`, and `password` query values are redacted |
 | `request_id_header` | bool | `true` | Add X-Request-Id header to responses |
 
 ---
@@ -124,11 +126,11 @@ mcp_allowed_remote_ips =
 [database]
 type = sqlite3
 host = 127.0.0.1:3306
-name = hbmoxie
+name = ratel-ledger
 user = root
 passwd =
 ssl_mode = disable
-db_path = data/hbmoxie.db
+db_path = data/ratel-ledger.db
 max_idle_conn = 2
 max_open_conn = 0
 conn_max_lifetime = 14400
@@ -140,13 +142,13 @@ auto_update_database = true
 |-----|------|---------|-------------|
 | `type` | string | `sqlite3` | `sqlite3`, `mysql`, or `postgres` |
 | `host` | string | `127.0.0.1:3306` | Database host and port (MySQL/PostgreSQL) |
-| `name` | string | `hbmoxie` | Database name (MySQL/PostgreSQL) |
+| `name` | string | `ratel-ledger` | Database name (MySQL/PostgreSQL) |
 | `user` | string | `root` | Database user (MySQL/PostgreSQL) |
 | `passwd` | string | *(empty)* | Database password |
 | `ssl_mode` | string | `disable` | SSL mode for PostgreSQL (`disable`, `require`, `verify-full`) |
-| `db_path` | string | `data/hbmoxie.db` | SQLite database file path |
+| `db_path` | string | `data/ratel-ledger.db` | SQLite database file path |
 | `max_idle_conn` | int | `2` | Maximum idle database connections |
-| `max_open_conn` | int | `0` | Maximum open connections (0 = unlimited) |
+| `max_open_conn` | int | `0` | Maximum open connections. `0` means unlimited for MySQL/PostgreSQL, but is treated as `1` for SQLite |
 | `conn_max_lifetime` | int | `14400` | Connection max lifetime in seconds |
 | `log_query` | bool | `false` | Log all database queries (development only) |
 | `auto_update_database` | bool | `true` | Automatically sync schema on startup |
@@ -182,7 +184,7 @@ from_address =
 [log]
 mode = console
 level = info
-log_path = log/hbmoxie.log
+log_path = log/ratel-ledger.log
 request_log_path =
 query_log_path =
 log_file_rotate = true
@@ -194,7 +196,7 @@ log_file_max_days = 7
 |-----|------|---------|-------------|
 | `mode` | string | `console` | `console` or `file` |
 | `level` | string | `info` | `debug`, `info`, `warn`, or `error` |
-| `log_path` | string | `log/hbmoxie.log` | Main log file path |
+| `log_path` | string | `log/ratel-ledger.log` | Main log file path |
 | `request_log_path` | string | *(empty)* | Separate request log file (empty = use main log) |
 | `query_log_path` | string | *(empty)* | Separate database query log file |
 | `log_file_rotate` | bool | `true` | Enable log file rotation |
@@ -339,12 +341,18 @@ duplicate_submissions_interval = 5
 [cron]
 enable_remove_expired_tokens = true
 enable_create_scheduled_transaction = true
+enable_auto_backup = true
+auto_backup_interval_hours = 24
+auto_backup_max_count = 10
 ```
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | `enable_remove_expired_tokens` | bool | `true` | Periodically remove expired session tokens |
 | `enable_create_scheduled_transaction` | bool | `true` | Automatically create scheduled (recurring) transactions |
+| `enable_auto_backup` | bool | `true` | Periodically create backups (SQLite databases only) |
+| `auto_backup_interval_hours` | int | `24` | Hours between automatic backups |
+| `auto_backup_max_count` | int | `10` | Number of backups to retain |
 
 ---
 
@@ -366,7 +374,7 @@ max_failures_per_user_per_minute = 5
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `secret_key` | string | *(empty)* | **Required for production.** JWT signing key. Generate with `./hbmoxie security gen-secret-key`. |
+| `secret_key` | string | *(empty)* | Encrypts 2FA secrets and derives server identifiers. When empty, a random key is generated on first start and persisted with `0600` permissions. Generate manually with `./ratel-ledger security gen-secret-key`. |
 | `token_expired_time` | int | `2592000` | Session token lifetime in seconds (30 days) |
 | `token_min_refresh_interval` | int | `86400` | Minimum interval between token refreshes (24 hours) |
 | `temporary_token_expired_time` | int | `300` | Temporary token lifetime in seconds (5 minutes) |
@@ -384,6 +392,7 @@ max_failures_per_user_per_minute = 5
 ```ini
 [auth]
 enable_internal_auth = true
+enable_desktop_auto_login = true
 enable_oauth2_auth = false
 enable_two_factor = true
 enable_forget_password = true
@@ -403,6 +412,7 @@ oauth2_enable_pkce = false
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | `enable_internal_auth` | bool | `true` | Enable username/password login |
+| `enable_desktop_auto_login` | bool | `true` | Skip the login screen when exactly one user exists and that user has not enabled 2FA |
 | `enable_oauth2_auth` | bool | `false` | Enable OAuth2/OIDC login |
 | `enable_two_factor` | bool | `true` | Allow users to enable TOTP 2FA |
 | `enable_forget_password` | bool | `true` | Enable password reset flow |

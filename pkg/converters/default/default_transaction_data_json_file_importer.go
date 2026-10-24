@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/converter"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/datatable"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/converter"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/datatable"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
 var allJsonDataSupportedColumns = []datatable.TransactionDataTableColumn{
@@ -26,10 +26,10 @@ var allJsonDataSupportedColumns = []datatable.TransactionDataTableColumn{
 	datatable.TRANSACTION_DATA_TABLE_DESCRIPTION,
 }
 
-// defaultTransactionDataJsonImporter defines the structure of hbmoxie default json importer for transaction data
+// defaultTransactionDataJsonImporter defines the structure of Ratel Ledger default json importer for transaction data
 type defaultTransactionDataJsonImporter struct{}
 
-// Initialize an hbmoxie default transaction data json file importer singleton instance
+// Initialize a Ratel Ledger default transaction data json file importer singleton instance
 var (
 	DefaultTransactionDataJsonFileImporter = &defaultTransactionDataJsonImporter{}
 )
@@ -49,10 +49,10 @@ func (c *defaultTransactionDataJsonImporter) ParseImportedData(ctx core.Context,
 	}
 
 	dataTableImporter := converter.CreateNewImporterWithTypeNameMapping(
-		hbmoxieTransactionTypeNameMapping,
-		hbmoxieGeoLocationSeparator,
-		hbmoxieGeoLocationOrder,
-		hbmoxieTagSeparator,
+		ratelLedgerTransactionTypeNameMapping,
+		ratelLedgerGeoLocationSeparator,
+		ratelLedgerGeoLocationOrder,
+		ratelLedgerTagSeparator,
 	)
 
 	return dataTableImporter.ParseImportedData(ctx, user, transactionDataTable, defaultTimezone, additionalOptions, accountMap, expenseCategoryMap, incomeCategoryMap, transferCategoryMap, tagMap)

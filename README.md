@@ -1,8 +1,8 @@
-# HB Moxie
+# Ratel Ledger
 
 A standalone desktop personal finance management application.
 
-HB Moxie is a self-contained Electron desktop application for individuals who want full control over their financial data. All data is stored locally on your machine — no cloud, no browser, no external services required.
+Ratel Ledger is a self-contained Electron desktop application for individuals who want full control over their financial data. All data is stored locally on your machine — no cloud, no browser, no external services required.
 
 ## Features
 
@@ -10,7 +10,7 @@ HB Moxie is a self-contained Electron desktop application for individuals who wa
 - **Self-Contained** — Go backend runs as a child process inside the Electron app.
 - **System Tray** — Minimize to tray, global keyboard shortcuts, desktop notifications.
 - **Auto-Login** — Single-user mode skips the login screen automatically.
-- **Automatic Backups** — Scheduled backups with configurable retention.
+- **Automatic Backups** — Scheduled SQLite snapshots with configurable retention.
 - **Multiple Databases** — SQLite (default), MySQL, or PostgreSQL.
 - **Dark Mode** — Full dark theme support with automatic system detection.
 - **Multi-Currency** — 170+ currencies with automatic exchange rate updates from 16 data sources.
@@ -18,7 +18,7 @@ HB Moxie is a self-contained Electron desktop application for individuals who wa
 - **Multi-Timezone** — Per-user timezone configuration with timezone-aware statistics.
 - **Data Import** — Import from CSV, TSV, Excel, OFX, QFX, QIF, IIF, Camt.052/053, MT940, GnuCash, Firefly III, Beancount, and more.
 - **Data Export** — Export transactions to CSV, TSV, or ZIP archives.
-- **Backups** — Create, download, restore, and manage full database backups.
+- **Backups** — Create, download, restore, and manage consistent SQLite database snapshots.
 - **AI Receipt Recognition** — Extract transaction data from receipt images using LLM providers (OpenAI, Anthropic, Google AI, Ollama, LM Studio, and others).
 - **MCP Support** — Model Context Protocol integration for AI agent access to your financial data.
 - **Scheduled Transactions** — Recurring transaction automation via built-in cron jobs.
@@ -34,6 +34,14 @@ HB Moxie is a self-contained Electron desktop application for individuals who wa
 ### Run the Desktop App
 
 ```bash
+./run.sh
+```
+
+The script installs missing frontend/Electron dependencies, builds the Go backend, builds the frontend when needed, and launches the Electron app. Use `./run.sh --rebuild` for a forced frontend rebuild, `./run.sh --server` for the backend only, or `./run.sh --help` for all options.
+
+To launch Electron manually instead:
+
+```bash
 cd electron
 npm install
 npm start
@@ -45,11 +53,11 @@ npm start
 ./scripts/build.sh package
 ```
 
-Then extract the archive and run the binary. See [docs/INSTALLATION.md](docs/INSTALLATION.md) for complete instructions.
+Then extract the archive and run the binary. See [docs/INSTALLATION.md](docs/INSTALLATION.md) for complete instructions. Release tags also build native Electron installers (AppImage/.deb, .dmg, NSIS) through the GitHub Actions workflow.
 
 ## Default Credentials
 
-On first launch with no existing database, HB Moxie creates a default administrator account with a random password displayed in the startup log. If auto-login is enabled (default), the login screen is skipped entirely.
+On first launch with no existing database, Ratel Ledger creates a default administrator account with a random password displayed in the startup log. If auto-login is enabled (default), the login screen is skipped entirely.
 
 ## Keyboard Shortcuts
 

@@ -1,7 +1,7 @@
 package locales
 
 import (
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
 )
 
 // LocaleTextItems represents all text items need to be translated

@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"reflect"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
 )
 
 // MCPQueryAllTransactionCategoriesResponse represents the response structure for querying transaction categories
@@ -28,7 +28,7 @@ func (h *mcpQueryAllTransactionCategoriesToolHandler) Name() string {
 
 // Description returns the description of the MCP tool
 func (h *mcpQueryAllTransactionCategoriesToolHandler) Description() string {
-	return "Query all transaction categories for the current user in HB Moxie."
+	return "Query all transaction categories for the current user in Ratel Ledger."
 }
 
 // InputType returns the input type for the MCP tool request

@@ -28,8 +28,8 @@
                             <span class="text-body-1">{{ tt('Official Website') }}</span>
                         </v-col>
                         <v-col cols="12" md="10" class="mb-6">
-                            <a class="text-body-1" href="https://github.com/James-HoneyBadger/HB_Moxie" target="_blank">
-                                https://github.com/James-HoneyBadger/HB_Moxie
+                            <a class="text-body-1" href="https://github.com/James-HoneyBadger/ratel-ledger" target="_blank">
+                                https://github.com/James-HoneyBadger/ratel-ledger
                             </a>
                         </v-col>
                     </v-row>
@@ -38,8 +38,8 @@
                             <span class="text-body-1">{{ tt('Report Issue') }}</span>
                         </v-col>
                         <v-col cols="12" md="10" class="mb-6">
-                            <a class="text-body-1" href="https://github.com/James-HoneyBadger/HB_Moxie/issues" target="_blank">
-                                https://github.com/James-HoneyBadger/HB_Moxie/issues
+                            <a class="text-body-1" href="https://github.com/James-HoneyBadger/ratel-ledger/issues" target="_blank">
+                                https://github.com/James-HoneyBadger/ratel-ledger/issues
                             </a>
                         </v-col>
                     </v-row>
@@ -48,8 +48,8 @@
                             <span class="text-body-1">{{ tt('Getting help') }}</span>
                         </v-col>
                         <v-col cols="12" md="10">
-                            <a class="text-body-1" href="https://github.com/James-HoneyBadger/HB_Moxie" target="_blank">
-                                https://github.com/James-HoneyBadger/HB_Moxie
+                            <a class="text-body-1" href="https://github.com/James-HoneyBadger/ratel-ledger" target="_blank">
+                                https://github.com/James-HoneyBadger/ratel-ledger
                             </a>
                         </v-col>
                     </v-row>
@@ -108,7 +108,7 @@
                                 <span>Copyright © 2020–2026 Honey Badger Universe</span>
                             </p>
                             <p class="mt-4 mb-4">
-                                <span>HB_Moxie also contains additional third party software and illustration.</span><br/>
+                                <span>Ratel Ledger also contains additional third party software and illustration.</span><br/>
                                 <span>All the third party software / illustration included or linked is redistributed under the terms and conditions of their original licenses.</span>
                             </p>
                             <p :key="licenseInfo.name" v-for="licenseInfo in thirdPartyLicenses">

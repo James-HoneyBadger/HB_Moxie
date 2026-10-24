@@ -1,7 +1,7 @@
 {
     "global": {
         "app": {
-            "title": "HB_Moxie"
+            "title": "Ratel Ledger"
         }
     },
     "language": {
@@ -119,20 +119,20 @@
             "clearTransactionsInAccountTip": "You CANNOT undo this action. This will clear your transactions data in {account}. Please enter your current password to confirm.",
             "accountActivationAndResendValidationEmailTip": "Account activation link has been sent to your email address: {email}, If you don't receive the mail, please fill password again and click the button below to resend the validation mail.",
             "resendValidationEmailTip": "If you don't receive the mail, please fill password again and click the button below to resend the validation mail to: {email}",
-            "oauth2bindTip": "You're signing in to the {userName} user using {providerName}. Please enter your HB_Moxie password to verify."
+            "oauth2bindTip": "You're signing in to the {userName} user using {providerName}. Please enter your Ratel Ledger password to verify."
         }
     },
     "dataExport": {
-        "defaultExportFilename": "HB_Moxie_export_data",
-        "exportFilename": "HB_Moxie_{nickname}_export_data",
-        "defaultExportStatisticsFileName": "HB_Moxie_statistics_data",
-        "exportStatisticsFileName": "HB_Moxie_{nickname}_statistics_data",
-        "defaultExportReconciliationStatementsFileName": "HB_Moxie_reconciliation_statements",
-        "exportReconciliationStatementsFileName": "HB_Moxie_{nickname}_reconciliation_statements",
-        "defaultImportDataMappingFileName": "HB_Moxie_import_data_mapping",
-        "defaultImportHandlingScript": "HB_Moxie_handling_script",
-        "defaultImportReplaceRuleFileName": "HB_Moxie_import_replace_rule",
-        "defaultImportCheckResultFileName": "HB_Moxie_import_check_result"
+        "defaultExportFilename": "ratel-ledger_export_data",
+        "exportFilename": "ratel-ledger_{nickname}_export_data",
+        "defaultExportStatisticsFileName": "ratel-ledger_statistics_data",
+        "exportStatisticsFileName": "ratel-ledger_{nickname}_statistics_data",
+        "defaultExportReconciliationStatementsFileName": "ratel-ledger_reconciliation_statements",
+        "exportReconciliationStatementsFileName": "ratel-ledger_{nickname}_reconciliation_statements",
+        "defaultImportDataMappingFileName": "ratel-ledger_import_data_mapping",
+        "defaultImportHandlingScript": "ratel-ledger_handling_script",
+        "defaultImportReplaceRuleFileName": "ratel-ledger_import_replace_rule",
+        "defaultImportCheckResultFileName": "ratel-ledger_import_check_result"
     },
     "calendar": {
         "Gregorian": "Gregorian",
@@ -1067,6 +1067,9 @@
         "login name or password is invalid": "Login name or password is invalid",
         "login name or password is wrong": "Login name or password is wrong",
         "user is disabled": "User is disabled",
+        "auto-login requires exactly one user": "Auto-login is only available when exactly one user exists",
+        "auto-login is not available when two-factor authentication is enabled": "Auto-login is not available when two-factor authentication is enabled",
+        "backup is only supported for SQLite databases": "Backups are only supported for SQLite databases",
         "email is invalid": "Email is invalid",
         "email is empty or invalid": "Email is empty or invalid",
         "new password equals old password": "New password equals old password",
@@ -1601,8 +1604,8 @@
     "Change Language": "Change Language",
     "Date is too early": "Date is too early",
     "User Canceled": "User Canceled",
-    "Welcome to HB_Moxie": "Welcome to HB_Moxie",
-    "Please log in with your HB_Moxie account": "Please log in with your HB_Moxie account",
+    "Welcome to Ratel Ledger": "Welcome to Ratel Ledger",
+    "Please log in with your Ratel Ledger account": "Please log in with your Ratel Ledger account",
     "Unlock Application": "Unlock Application",
     "Please enter your PIN code or use WebAuthn to unlock application": "Please enter your PIN code or use WebAuthn to unlock application",
     "Please enter your PIN code to unlock application": "Please enter your PIN code to unlock application",
@@ -1958,13 +1961,13 @@
     "Filter Description": "Filter Description",
     "How to import this file?": "How to import this file?",
     "How to export this file?": "How to export this file?",
-    "HB_Moxie File Format": "HB_Moxie File Format",
+    "Ratel Ledger File Format": "Ratel Ledger File Format",
     "Custom File Format": "Custom File Format",
     "General Data Exchange Format": "General Data Exchange Format",
     "General Bank Statement Format": "General Bank Statement Format",
     "Other Bank/Payment App Statement File": "Other Bank/Payment App Statement File",
     "Other Finance App File Format": "Other Finance App File Format",
-    "HB_Moxie Data Export File": "HB_Moxie Data Export File",
+    "Ratel Ledger Data Export File": "Ratel Ledger Data Export File",
     "Excel Workbook File": "Excel Workbook File",
     "Excel Workbook File (.xlsx)": "Excel Workbook File (.xlsx)",
     "Excel 97-2003 Workbook File (.xls)": "Excel 97-2003 Workbook File (.xls)",

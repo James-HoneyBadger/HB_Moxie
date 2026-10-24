@@ -36,19 +36,19 @@ runs:
     - name: Package windows-x64 package
       shell: pwsh
       run: |
-        New-Item -ItemType Directory -Path "hbmoxie"
-        New-Item -ItemType Directory -Path "hbmoxie\data"
-        New-Item -ItemType Directory -Path "hbmoxie\storage"
-        New-Item -ItemType Directory -Path "hbmoxie\log"
-        Copy-Item ${{ runner.temp }}\backend\hbmoxie.exe -Destination hbmoxie\
-        Copy-Item -Recurse -Force package\public -Destination hbmoxie\public
-        Copy-Item -Recurse -Force conf -Destination hbmoxie\conf
-        Copy-Item -Recurse -Force templates -Destination hbmoxie\templates
-        Copy-Item .\LICENSE -Destination hbmoxie\
-        Push-Location hbmoxie
+        New-Item -ItemType Directory -Path "ratel-ledger"
+        New-Item -ItemType Directory -Path "ratel-ledger\data"
+        New-Item -ItemType Directory -Path "ratel-ledger\storage"
+        New-Item -ItemType Directory -Path "ratel-ledger\log"
+        Copy-Item ${{ runner.temp }}\backend\ratel-ledger.exe -Destination ratel-ledger\
+        Copy-Item -Recurse -Force package\public -Destination ratel-ledger\public
+        Copy-Item -Recurse -Force conf -Destination ratel-ledger\conf
+        Copy-Item -Recurse -Force templates -Destination ratel-ledger\templates
+        Copy-Item .\LICENSE -Destination ratel-ledger\
+        Push-Location ratel-ledger
         7z a -r -tzip -mx9 ..\${{ inputs.package-file-name-prefix }}-windows-x64.zip *
         Pop-Location
-        Remove-Item -Recurse -Force hbmoxie
+        Remove-Item -Recurse -Force ratel-ledger
 
     - name: Upload windows artifact
       uses: actions/upload-artifact@v4

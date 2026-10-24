@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
 const MaximumTagsCountOfTransaction = 10
@@ -280,33 +280,33 @@ type TransactionReconciliationStatementRequest struct {
 
 // TransactionStatisticRequest represents all parameters of transaction statistic request
 type TransactionStatisticRequest struct {
-	StartTime              int64  `form:"start_time" binding:"min=0"`
-	EndTime                int64  `form:"end_time" binding:"min=0"`
-	TagFilter              string `form:"tag_filter" binding:"validTagFilter"`
-	Keyword                string `form:"keyword"`
-	UseTransactionTimezone bool   `form:"use_transaction_timezone"`
+	StartTime              int64  `form:"start_time" json:"startTime" binding:"min=0"`
+	EndTime                int64  `form:"end_time" json:"endTime" binding:"min=0"`
+	TagFilter              string `form:"tag_filter" json:"tagFilter" binding:"validTagFilter"`
+	Keyword                string `form:"keyword" json:"keyword"`
+	UseTransactionTimezone bool   `form:"use_transaction_timezone" json:"useTransactionTimezone"`
 }
 
 // TransactionStatisticTrendsRequest represents all parameters of transaction statistic trends request
 type TransactionStatisticTrendsRequest struct {
 	YearMonthRangeRequest
-	TagFilter              string `form:"tag_filter" binding:"validTagFilter"`
-	Keyword                string `form:"keyword"`
-	UseTransactionTimezone bool   `form:"use_transaction_timezone"`
+	TagFilter              string `form:"tag_filter" json:"tagFilter" binding:"validTagFilter"`
+	Keyword                string `form:"keyword" json:"keyword"`
+	UseTransactionTimezone bool   `form:"use_transaction_timezone" json:"useTransactionTimezone"`
 }
 
 // TransactionStatisticAssetTrendsRequest represents all parameters of transaction statistic asset trends request
 type TransactionStatisticAssetTrendsRequest struct {
-	StartTime int64 `form:"start_time"`
-	EndTime   int64 `form:"end_time"`
+	StartTime int64 `form:"start_time" json:"startTime"`
+	EndTime   int64 `form:"end_time" json:"endTime"`
 }
 
 // TransactionAmountsRequest represents all parameters of transaction amounts request
 type TransactionAmountsRequest struct {
-	Query                  string `form:"query"`
-	ExcludeAccountIds      string `form:"exclude_account_ids"`
-	ExcludeCategoryIds     string `form:"exclude_category_ids"`
-	UseTransactionTimezone bool   `form:"use_transaction_timezone"`
+	Query                  string `form:"query" json:"query"`
+	ExcludeAccountIds      string `form:"exclude_account_ids" json:"excludeAccountIds"`
+	ExcludeCategoryIds     string `form:"exclude_category_ids" json:"excludeCategoryIds"`
+	UseTransactionTimezone bool   `form:"use_transaction_timezone" json:"useTransactionTimezone"`
 }
 
 // TransactionAmountsRequestItem represents an item of transaction amounts request
@@ -338,8 +338,8 @@ type TransactionDeleteRequest struct {
 
 // YearMonthRangeRequest represents all parameters of a request with year and month range
 type YearMonthRangeRequest struct {
-	StartYearMonth string `form:"start_year_month"`
-	EndYearMonth   string `form:"end_year_month"`
+	StartYearMonth string `form:"start_year_month" json:"startYearMonth"`
+	EndYearMonth   string `form:"end_year_month" json:"endYearMonth"`
 }
 
 // TransactionGeoLocationResponse represents a view-object of transaction geographic location info

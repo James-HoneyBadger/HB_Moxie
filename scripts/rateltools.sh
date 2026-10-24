@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-# HB Moxie API Tools
-# A command-line tool for calling HB Moxie APIs
+# Ratel Ledger API Tools
+# A command-line tool for calling Ratel Ledger APIs
 
 # API Configuration Structure
 API_CONFIGS='[
@@ -514,7 +514,7 @@ API_CONFIGS='[
   },
   {
     "Name": "server-version",
-    "Description": "Retrieve HB Moxie server version information",
+    "Description": "Retrieve Ratel Ledger server version information",
     "Method": "GET",
     "Path": "systems/version.json",
     "RequiresTimezone": false,
@@ -531,8 +531,8 @@ API_CONFIGS='[
   }
 ]'
 
-HBMTOOL_SERVER_BASEURL="${HBMTOOL_SERVER_BASEURL}"
-HBMTOOL_TOKEN="${HBMTOOL_TOKEN}"
+RATELTOOL_SERVER_BASEURL="${RATELTOOL_SERVER_BASEURL}"
+RATELTOOL_TOKEN="${RATELTOOL_TOKEN}"
 TIMEZONE_NAME=""
 TIMEZONE_OFFSET=""
 RAW_RESPONSE="false"
@@ -578,7 +578,7 @@ load_env_file() {
         value="$(echo "$value" | sed -e 's/^["'"'"']//' -e 's/["'"'"']$//')"
 
         case "$key" in
-            HBMTOOL_SERVER_BASEURL|HBMTOOL_TOKEN)
+            RATELTOOL_SERVER_BASEURL|RATELTOOL_TOKEN)
                 eval "$key=\"\$value\""
                 ;;
         esac
@@ -588,7 +588,7 @@ load_env_file() {
 }
 
 load_env_from_paths() {
-    if [ -n "$HBMTOOL_SERVER_BASEURL" ] && [ -n "$HBMTOOL_TOKEN" ]; then
+    if [ -n "$RATELTOOL_SERVER_BASEURL" ] && [ -n "$RATELTOOL_TOKEN" ]; then
         return 0
     fi
 
@@ -596,25 +596,25 @@ load_env_from_paths() {
     parent_dir="$(dirname "$current_dir")"
     home_dir="$HOME"
 
-    if [ -z "$HBMTOOL_SERVER_BASEURL" ] || [ -z "$HBMTOOL_TOKEN" ]; then
+    if [ -z "$RATELTOOL_SERVER_BASEURL" ] || [ -z "$RATELTOOL_TOKEN" ]; then
         if load_env_file "$current_dir/.env"; then
-            if [ -n "$HBMTOOL_SERVER_BASEURL" ] && [ -n "$HBMTOOL_TOKEN" ]; then
+            if [ -n "$RATELTOOL_SERVER_BASEURL" ] && [ -n "$RATELTOOL_TOKEN" ]; then
                 return 0
             fi
         fi
     fi
 
-    if [ -z "$HBMTOOL_SERVER_BASEURL" ] || [ -z "$HBMTOOL_TOKEN" ]; then
+    if [ -z "$RATELTOOL_SERVER_BASEURL" ] || [ -z "$RATELTOOL_TOKEN" ]; then
         if load_env_file "$parent_dir/.env"; then
-            if [ -n "$HBMTOOL_SERVER_BASEURL" ] && [ -n "$HBMTOOL_TOKEN" ]; then
+            if [ -n "$RATELTOOL_SERVER_BASEURL" ] && [ -n "$RATELTOOL_TOKEN" ]; then
                 return 0
             fi
         fi
     fi
 
-    if [ -z "$HBMTOOL_SERVER_BASEURL" ] || [ -z "$HBMTOOL_TOKEN" ]; then
+    if [ -z "$RATELTOOL_SERVER_BASEURL" ] || [ -z "$RATELTOOL_TOKEN" ]; then
         if load_env_file "$home_dir/.env"; then
-            if [ -n "$HBMTOOL_SERVER_BASEURL" ] && [ -n "$HBMTOOL_TOKEN" ]; then
+            if [ -n "$RATELTOOL_SERVER_BASEURL" ] && [ -n "$RATELTOOL_TOKEN" ]; then
                 return 0
             fi
         fi
@@ -806,16 +806,16 @@ show_help() {
     example_timezone_offset="$(get_example_timezone_offset)"
 
     cat <<-EOF
-HB Moxie API Tools
+Ratel Ledger API Tools
 
-A command-line tool for calling HB Moxie APIs
+A command-line tool for calling Ratel Ledger APIs
 
 Usage:
-    hbmtools.sh [--tz-name <name>] [--tz-offset <offset>] [--raw-response] <command> [command-options]
+    rateltools.sh [--tz-name <name>] [--tz-offset <offset>] [--raw-response] <command> [command-options]
 
 Environment Variables (Required):
-    HBMTOOL_SERVER_BASEURL      HB Moxie server base URL (e.g., http://localhost:8080)
-    HBMTOOL_TOKEN               HB Moxie API token
+    RATELTOOL_SERVER_BASEURL      Ratel Ledger server base URL (e.g., http://localhost:8080)
+    RATELTOOL_TOKEN               Ratel Ledger API token
 
     You can also set the above environment variables in a '.env' file located in the current directory, parent directory or home directory.
 
@@ -831,23 +831,23 @@ Commands:
 
 Examples:
     # Set environment variables
-    export HBMTOOL_SERVER_BASEURL="http://localhost:8080"
-    export HBMTOOL_TOKEN="YOUR_TOKEN"
+    export RATELTOOL_SERVER_BASEURL="http://localhost:8080"
+    export RATELTOOL_TOKEN="YOUR_TOKEN"
 
     # List all available commands
-    hbmtools.sh list
+    rateltools.sh list
 
     # Show help for a specific command
-    hbmtools.sh help server-version
+    rateltools.sh help server-version
 
     # Call server-version API
-    hbmtools.sh server-version
+    rateltools.sh server-version
 
     # Call API with timezone name
-    hbmtools.sh --tz-name ${example_timezone_name} transactions-list --count 10
+    rateltools.sh --tz-name ${example_timezone_name} transactions-list --count 10
 
     # Call API with timezone offset
-    hbmtools.sh --tz-offset ${example_timezone_offset} transactions-list --count 10
+    rateltools.sh --tz-offset ${example_timezone_offset} transactions-list --count 10
 EOF
 }
 
@@ -860,7 +860,7 @@ list_commands() {
     done
 
     echo ""
-    echo "Use 'hbmtools.sh help <api-command>' to see detailed information about an API command."
+    echo "Use 'rateltools.sh help <api-command>' to see detailed information about an API command."
 }
 
 show_command_help() {
@@ -870,7 +870,7 @@ show_command_help() {
     if [ -z "$config" ]; then
         echo_red "Error: Unknown command '$command_name'"
         echo ""
-        echo "Use 'hbmtools.sh list' to see all available commands."
+        echo "Use 'rateltools.sh list' to see all available commands."
         exit 1
     fi
 
@@ -922,13 +922,13 @@ show_command_help() {
     current_tz_name="$(get_system_timezone_name)"
     current_tz_offset="$(get_system_timezone_offset)"
     if [ "$requires_timezone" = "true" ] && [ -n "$current_tz_name" ]; then
-        echo "  hbmtools.sh --tz-name ${current_tz_name} $name"
+        echo "  rateltools.sh --tz-name ${current_tz_name} $name"
     elif [ "$requires_timezone" = "true" ] && [ -n "$current_tz_offset" ]; then
-        echo "  hbmtools.sh --tz-offset ${current_tz_offset} $name"
+        echo "  rateltools.sh --tz-offset ${current_tz_offset} $name"
     elif [ "$requires_timezone" = "true" ]; then
-        echo "  hbmtools.sh --tz-name <name> $name"
+        echo "  rateltools.sh --tz-name <name> $name"
     else
-        echo "  hbmtools.sh $name"
+        echo "  rateltools.sh $name"
     fi
 }
 
@@ -941,21 +941,21 @@ call_api() {
     if [ -z "$config" ]; then
         echo_red "Error: Unknown command '$command_name'"
         echo ""
-        echo "Use 'hbmtools.sh list' to see all available commands."
+        echo "Use 'rateltools.sh list' to see all available commands."
         exit 1
     fi
 
-    serverBaseUrl="$HBMTOOL_SERVER_BASEURL"
-    authToken="$HBMTOOL_TOKEN"
+    serverBaseUrl="$RATELTOOL_SERVER_BASEURL"
+    authToken="$RATELTOOL_TOKEN"
 
     if [ -z "$serverBaseUrl" ]; then
-        echo_red "Error: Environment variable 'HBMTOOL_SERVER_BASEURL' is not set."
-        echo "Please set it to your HB Moxie server base URL (e.g., http://localhost:8080)"
+        echo_red "Error: Environment variable 'RATELTOOL_SERVER_BASEURL' is not set."
+        echo "Please set it to your Ratel Ledger server base URL (e.g., http://localhost:8080)"
         exit 1
     fi
 
     if [ -z "$authToken" ]; then
-        echo_red "Error: Environment variable 'HBMTOOL_TOKEN' is not set."
+        echo_red "Error: Environment variable 'RATELTOOL_TOKEN' is not set."
         echo "Please set it to your API token."
         exit 1
     fi
@@ -978,8 +978,8 @@ call_api() {
         echo "Please provide either '--tz-name' or '--tz-offset' parameter."
         echo ""
         echo "Examples:"
-        echo "  hbmtools.sh --tz-name <name> $command_name ..."
-        echo "  hbmtools.sh --tz-offset <offset> $command_name ..."
+        echo "  rateltools.sh --tz-name <name> $command_name ..."
+        echo "  rateltools.sh --tz-offset <offset> $command_name ..."
         exit 1
     fi
 
@@ -1124,7 +1124,7 @@ call_api() {
         if [ "$json_params" != "{}" ]; then
             if [ -n "$timezone_headers" ]; then
                 response="$(curl -s -X "POST" \
-                    -H "Authorization: Bearer $HBMTOOL_TOKEN" \
+                    -H "Authorization: Bearer $RATELTOOL_TOKEN" \
                     -H "Content-Type: application/json" \
                     -H "$timezone_headers" \
                     -d "$json_params" \
@@ -1132,7 +1132,7 @@ call_api() {
                 curl_exit_code=$?
             else
                 response="$(curl -s -X "POST" \
-                    -H "Authorization: Bearer $HBMTOOL_TOKEN" \
+                    -H "Authorization: Bearer $RATELTOOL_TOKEN" \
                     -H "Content-Type: application/json" \
                     -d "$json_params" \
                     "$url")"
@@ -1141,13 +1141,13 @@ call_api() {
         else
             if [ -n "$timezone_headers" ]; then
                 response="$(curl -s -X "POST" \
-                    -H "Authorization: Bearer $HBMTOOL_TOKEN" \
+                    -H "Authorization: Bearer $RATELTOOL_TOKEN" \
                     -H "$timezone_headers" \
                     "$url")"
                 curl_exit_code=$?
             else
                 response="$(curl -s -X "POST" \
-                    -H "Authorization: Bearer $HBMTOOL_TOKEN" \
+                    -H "Authorization: Bearer $RATELTOOL_TOKEN" \
                     "$url")"
                 curl_exit_code=$?
             fi
@@ -1162,12 +1162,12 @@ call_api() {
 
         if [ -n "$timezone_headers" ]; then
             response="$(curl -s -X "$method" \
-                -H "Authorization: Bearer $HBMTOOL_TOKEN" \
+                -H "Authorization: Bearer $RATELTOOL_TOKEN" \
                 -H "$timezone_headers" \
                 "$url")"
         else
             response="$(curl -s -X "$method" \
-                -H "Authorization: Bearer $HBMTOOL_TOKEN" \
+                -H "Authorization: Bearer $RATELTOOL_TOKEN" \
                 "$url")"
         fi
         curl_exit_code=$?

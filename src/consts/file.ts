@@ -98,20 +98,20 @@ export const CHARDET_ENCODING_NAME_MAPPING: Record<string, string> = {
 
 export const SUPPORTED_IMPORT_FILE_CATEGORY_AND_TYPES: ImportFileCategoryAndTypes[] = [
     {
-        categoryName: 'HB Moxie File Format',
+        categoryName: 'Ratel Ledger File Format',
         fileTypes: [
             {
-                type: 'hbmoxie',
-                name: 'hbmoxie Data Export File',
+                type: 'ratel_ledger',
+                name: 'Ratel Ledger Data Export File',
                 extensions: '.csv,.tsv',
                 subTypes: [
                     {
-                        type: 'hbmoxie_csv',
+                        type: 'ratel_ledger_csv',
                         name: 'CSV (Comma-separated values) File',
                         extensions: '.csv',
                     },
                     {
-                        type: 'hbmoxie_tsv',
+                        type: 'ratel_ledger_tsv',
                         name: 'TSV (Tab-separated values) File',
                         extensions: '.tsv',
                     }

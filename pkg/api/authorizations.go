@@ -6,14 +6,14 @@ import (
 
 	"github.com/pquerna/otp/totp"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/avatars"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/duplicatechecker"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/services"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/avatars"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/duplicatechecker"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/services"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
 )
 
 // AuthorizationsApi represents authorization api
@@ -546,6 +546,18 @@ func (a *AuthorizationsApi) DesktopAutoLoginHandler(c *core.WebContext) (any, *e
 		return nil, errs.ErrCannotLoginByPassword
 	}
 
+	userCount, err := a.users.GetTotalUndeletedUserCount(c)
+
+	if err != nil {
+		log.Errorf(c, "[authorizations.DesktopAutoLoginHandler] failed to count users, because %s", err.Error())
+		return nil, errs.Or(err, errs.ErrSystemError)
+	}
+
+	if userCount != 1 {
+		log.Warnf(c, "[authorizations.DesktopAutoLoginHandler] auto-login requires exactly one user, but found %d", userCount)
+		return nil, errs.ErrAutoLoginRequiresSingleUser
+	}
+
 	user, err := a.users.GetFirstUser(c)
 
 	if err != nil {
@@ -561,6 +573,20 @@ func (a *AuthorizationsApi) DesktopAutoLoginHandler(c *core.WebContext) (any, *e
 	if user.Disabled {
 		log.Warnf(c, "[authorizations.DesktopAutoLoginHandler] auto-login failed, user \"%s\" is disabled", user.Username)
 		return nil, errs.ErrUserIsDisabled
+	}
+
+	if config.EnableTwoFactor {
+		twoFactorEnabled, err := a.twoFactorAuthorizations.ExistsTwoFactorSetting(c, user.Uid)
+
+		if err != nil {
+			log.Errorf(c, "[authorizations.DesktopAutoLoginHandler] failed to check two-factor setting for user \"uid:%d\", because %s", user.Uid, err.Error())
+			return nil, errs.Or(err, errs.ErrSystemError)
+		}
+
+		if twoFactorEnabled {
+			log.Warnf(c, "[authorizations.DesktopAutoLoginHandler] auto-login is not available for user \"uid:%d\" because two-factor authentication is enabled", user.Uid)
+			return nil, errs.ErrAutoLoginRequiresTwoFactor
+		}
 	}
 
 	err = a.users.UpdateUserLastLoginTime(c, user.Uid)

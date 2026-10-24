@@ -3,34 +3,34 @@ import { isEnableDebug } from './settings.ts';
 function logDebug(msg: string, obj?: unknown): void {
     if (isEnableDebug()) {
         if (obj) {
-            console.debug('[HB Moxie Debug] ' + msg, obj);
+            console.debug('[Ratel Ledger Debug] ' + msg, obj);
         } else {
-            console.debug('[HB Moxie Debug] ' + msg);
+            console.debug('[Ratel Ledger Debug] ' + msg);
         }
     }
 }
 
 function logInfo(msg: string, obj?: unknown): void {
     if (obj) {
-        console.info('[HB Moxie Info] ' + msg, obj);
+        console.info('[Ratel Ledger Info] ' + msg, obj);
     } else {
-        console.info('[HB Moxie Info] ' + msg);
+        console.info('[Ratel Ledger Info] ' + msg);
     }
 }
 
 function logWarn(msg: string, obj?: unknown): void {
     if (obj) {
-        console.warn('[HB Moxie Warn] ' + msg, obj);
+        console.warn('[Ratel Ledger Warn] ' + msg, obj);
     } else {
-        console.warn('[HB Moxie Warn] ' + msg);
+        console.warn('[Ratel Ledger Warn] ' + msg);
     }
 }
 
 function logError(msg: string, obj?: unknown): void {
     if (obj) {
-        console.error('[HB Moxie Error] ' + msg, obj);
+        console.error('[Ratel Ledger Error] ' + msg, obj);
     } else {
-        console.error('[HB Moxie Error] ' + msg);
+        console.error('[Ratel Ledger Error] ' + msg);
     }
 }
 

@@ -5,10 +5,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/datatable"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/datatable"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
 // DataTableTransactionDataExporter defines the structure of plain text data table exporter for transaction data

@@ -1,6 +1,6 @@
 # Contributing
 
-Guidelines for contributing to HB Moxie.
+Guidelines for contributing to Ratel Ledger.
 
 ---
 
@@ -24,8 +24,8 @@ Guidelines for contributing to HB Moxie.
 1. Fork the repository on GitHub.
 2. Clone your fork:
    ```bash
-   git clone https://github.com/<your-username>/HB_Moxie.git
-   cd HB_Moxie
+   git clone https://github.com/<your-username>/ratel-ledger.git
+   cd ratel-ledger
    ```
 3. Set up the development environment (see [Development Guide](DEVELOPMENT.md)).
 4. Create a feature branch and make your changes.
@@ -40,7 +40,7 @@ See [docs/DEVELOPMENT.md](DEVELOPMENT.md) for complete setup instructions. Quick
 ```bash
 go get .
 npm install
-go build -o hbmoxie_bin . && ./hbmoxie_bin server run  # Terminal 1
+go build -o ratel-ledger . && ./ratel-ledger server run  # Terminal 1
 npm run serve                                           # Terminal 2
 ```
 
@@ -131,7 +131,7 @@ chore: update Go dependencies to latest patch versions
 
 1. **Ensure your code builds** — both backend and frontend must compile without errors:
    ```bash
-   go build -o hbmoxie_bin .
+   go build -o ratel-ledger .
    npx vue-tsc --noEmit
    npm run build
    ```
@@ -233,4 +233,4 @@ Describe:
 
 ## License
 
-By contributing to HB Moxie, you agree that your contributions will be licensed under the [MIT License](../LICENSE).
+By contributing to Ratel Ledger, you agree that your contributions will be licensed under the [MIT License](../LICENSE).

@@ -1,5 +1,5 @@
 function getServerSetting(key: string): string | number | boolean | Record<string, string> | undefined | null {
-    const settings = window.HBMOXIE_SERVER_SETTINGS || {};
+    const settings = window.RATEL_LEDGER_SERVER_SETTINGS || {};
     return settings[key];
 }
 

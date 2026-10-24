@@ -8,7 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
 )
 
 const webContextRequestIdFieldKey = "REQUEST_ID"
@@ -32,7 +32,8 @@ const ClientTimezoneNameHeaderName = "X-Timezone-Name"
 const tokenHeaderName = "Authorization"
 const tokenHeaderValuePrefix = "bearer "
 const tokenQueryStringParam = "token"
-const tokenCookieParam = "hbm_auth_token"
+const tokenCookieParam = "ratel_auth_token"
+const legacyTokenCookieParam = "hbm_auth_token"
 
 // WebContext represents the request and response context
 type WebContext struct {
@@ -166,7 +167,11 @@ func (c *WebContext) GetTokenStringFromCookie() string {
 	tokenCookie, err := c.Cookie(tokenCookieParam)
 
 	if err != nil {
-		return ""
+		// Accept the pre-rename cookie so existing sessions survive the upgrade.
+		tokenCookie, err = c.Cookie(legacyTokenCookieParam)
+		if err != nil {
+			return ""
+		}
 	}
 
 	return tokenCookie

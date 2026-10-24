@@ -10,7 +10,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
 )
 
 const (
@@ -126,6 +126,10 @@ func (w *RotateFileWriter) openFile() error {
 	if w.file != nil {
 		logFallbackLogger.Warnf("[rotate_file_writer.removeOldFiles] cannot reopen log file \"%s\"", w.file.Name())
 		return nil
+	}
+
+	if err := os.MkdirAll(filepath.Dir(w.filePath), 0750); err != nil {
+		return errs.NewLoggingError(fmt.Sprintf("cannot create log directory for \"%s\", because %s", w.filePath, err.Error()), err)
 	}
 
 	file, err := os.OpenFile(w.filePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)

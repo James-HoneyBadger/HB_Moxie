@@ -1,6 +1,6 @@
 package models
 
-import "github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+import "github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 
 // ImportTransaction represents the imported transaction data
 type ImportTransaction struct {

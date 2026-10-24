@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
-const hbmoxieServerSettingsGlobalVariableName = "HBMOXIE_SERVER_SETTINGS"
-const hbmoxieServerSettingsGlobalVariableFullName = "window." + hbmoxieServerSettingsGlobalVariableName
-const hbmoxieServerSettingsJavascriptFileHeader = hbmoxieServerSettingsGlobalVariableFullName +
-	"=" + hbmoxieServerSettingsGlobalVariableFullName + "||{};\n"
+const ratelLedgerServerSettingsGlobalVariableName = "RATEL_LEDGER_SERVER_SETTINGS"
+const ratelLedgerServerSettingsGlobalVariableFullName = "window." + ratelLedgerServerSettingsGlobalVariableName
+const ratelLedgerServerSettingsJavascriptFileHeader = ratelLedgerServerSettingsGlobalVariableFullName +
+	"=" + ratelLedgerServerSettingsGlobalVariableFullName + "||{};\n"
 
 // ServerSettingsApi represents server settings api
 type ServerSettingsApi struct {
@@ -33,7 +33,7 @@ var (
 func (a *ServerSettingsApi) ServerSettingsJavascriptHandler(c *core.WebContext) ([]byte, string, *errs.Error) {
 	config := a.CurrentConfig()
 	builder := &strings.Builder{}
-	builder.WriteString(hbmoxieServerSettingsJavascriptFileHeader)
+	builder.WriteString(ratelLedgerServerSettingsJavascriptFileHeader)
 
 	a.appendBooleanSetting(builder, "a", config.EnableInternalAuth)
 	a.appendBooleanSetting(builder, "o", config.EnableOAuth2Login)
@@ -142,7 +142,7 @@ func (a *ServerSettingsApi) ServerSettingsJavascriptHandler(c *core.WebContext) 
 }
 
 func (a *ServerSettingsApi) appendStringSetting(builder *strings.Builder, key string, value string) {
-	builder.WriteString(hbmoxieServerSettingsGlobalVariableFullName)
+	builder.WriteString(ratelLedgerServerSettingsGlobalVariableFullName)
 	builder.WriteString("[")
 	a.appendEncodedString(builder, key)
 	builder.WriteString("]=")
@@ -153,7 +153,7 @@ func (a *ServerSettingsApi) appendStringSetting(builder *strings.Builder, key st
 }
 
 func (a *ServerSettingsApi) appendMultiLanguageTipSetting(builder *strings.Builder, key string, value settings.MultiLanguageContentConfig) {
-	builder.WriteString(hbmoxieServerSettingsGlobalVariableFullName)
+	builder.WriteString(ratelLedgerServerSettingsGlobalVariableFullName)
 	builder.WriteString("[")
 	a.appendEncodedString(builder, key)
 	builder.WriteString("]={\n")
@@ -173,7 +173,7 @@ func (a *ServerSettingsApi) appendMultiLanguageTipSetting(builder *strings.Build
 }
 
 func (a *ServerSettingsApi) appendBooleanSetting(builder *strings.Builder, key string, value bool) {
-	builder.WriteString(hbmoxieServerSettingsGlobalVariableFullName)
+	builder.WriteString(ratelLedgerServerSettingsGlobalVariableFullName)
 	builder.WriteString("[")
 	a.appendEncodedString(builder, key)
 	builder.WriteString("]=")
@@ -188,7 +188,7 @@ func (a *ServerSettingsApi) appendBooleanSetting(builder *strings.Builder, key s
 }
 
 func (a *ServerSettingsApi) appendIntegerSetting(builder *strings.Builder, key string, value int) {
-	builder.WriteString(hbmoxieServerSettingsGlobalVariableFullName)
+	builder.WriteString(ratelLedgerServerSettingsGlobalVariableFullName)
 	builder.WriteString("[")
 	a.appendEncodedString(builder, key)
 	builder.WriteString("]=")

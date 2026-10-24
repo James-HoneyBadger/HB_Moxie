@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
 )
 
 const (

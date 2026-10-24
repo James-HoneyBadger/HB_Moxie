@@ -1,0 +1,794 @@
+{
+  "components": {
+    "schemas": {
+      "ApplicationCloudSetting": {
+        "properties": {
+          "settingKey": {
+            "type": "string"
+          },
+          "settingValue": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "settingKey",
+          "settingValue"
+        ]
+      },
+      "ApplicationCloudSettingSlice": {
+        "items": {
+          "$ref": "#/components/schemas/ApplicationCloudSetting"
+        },
+        "type": "array"
+      },
+      "AuthResponse": {
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "need2FA": {
+            "type": "boolean"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserBasicInfo"
+          },
+          "applicationCloudSettings": {
+            "$ref": "#/components/schemas/ApplicationCloudSettingSlice"
+          },
+          "notificationContent": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "token",
+          "need2FA",
+          "user"
+        ]
+      },
+      "BackupDeleteRequest": {
+        "properties": {
+          "fileName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "fileName"
+        ]
+      },
+      "BackupListResponse": {
+        "properties": {
+          "fileName": {
+            "type": "string"
+          },
+          "fileSize": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "fileName",
+          "fileSize",
+          "createdAt"
+        ]
+      },
+      "BackupRequest": {
+        "properties": {
+          "password": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "password"
+        ]
+      },
+      "BackupRestoreRequest": {
+        "properties": {
+          "fileName": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "fileName",
+          "password"
+        ]
+      },
+      "TokenGenerateAPIRequest": {
+        "properties": {
+          "expiresInSeconds": {
+            "type": "integer"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "expiresInSeconds",
+          "password"
+        ]
+      },
+      "TokenGenerateAPIResponse": {
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "apiBaseUrl": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "token",
+          "apiBaseUrl"
+        ]
+      },
+      "TokenGenerateMCPRequest": {
+        "properties": {
+          "expiresInSeconds": {
+            "type": "integer"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "expiresInSeconds",
+          "password"
+        ]
+      },
+      "TokenGenerateMCPResponse": {
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "mcpUrl": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "token",
+          "mcpUrl"
+        ]
+      },
+      "TransactionAmountsRequest": {
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "excludeAccountIds": {
+            "type": "string"
+          },
+          "excludeCategoryIds": {
+            "type": "string"
+          },
+          "useTransactionTimezone": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "query",
+          "excludeAccountIds",
+          "excludeCategoryIds",
+          "useTransactionTimezone"
+        ]
+      },
+      "TransactionAmountsResponseItem": {
+        "properties": {
+          "startTime": {
+            "type": "integer"
+          },
+          "endTime": {
+            "type": "integer"
+          },
+          "amounts": {
+            "items": {
+              "$ref": "#/components/schemas/TransactionAmountsResponseItemAmountInfo"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "startTime",
+          "endTime",
+          "amounts"
+        ]
+      },
+      "TransactionAmountsResponseItemAmountInfo": {
+        "properties": {
+          "currency": {
+            "type": "string"
+          },
+          "incomeAmount": {
+            "type": "integer"
+          },
+          "expenseAmount": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "currency",
+          "incomeAmount",
+          "expenseAmount"
+        ]
+      },
+      "TransactionStatisticAssetTrendsRequest": {
+        "properties": {
+          "startTime": {
+            "type": "integer"
+          },
+          "endTime": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "startTime",
+          "endTime"
+        ]
+      },
+      "TransactionStatisticAssetTrendsResponseDataItem": {
+        "properties": {
+          "accountId": {
+            "type": "string"
+          },
+          "accountOpeningBalance": {
+            "type": "integer"
+          },
+          "accountClosingBalance": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "accountId",
+          "accountOpeningBalance",
+          "accountClosingBalance"
+        ]
+      },
+      "TransactionStatisticAssetTrendsResponseItem": {
+        "properties": {
+          "year": {
+            "type": "integer"
+          },
+          "month": {
+            "type": "integer"
+          },
+          "day": {
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TransactionStatisticAssetTrendsResponseDataItem"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "year",
+          "month",
+          "day",
+          "items"
+        ]
+      },
+      "TransactionStatisticRequest": {
+        "properties": {
+          "startTime": {
+            "type": "integer"
+          },
+          "endTime": {
+            "type": "integer"
+          },
+          "tagFilter": {
+            "type": "string"
+          },
+          "keyword": {
+            "type": "string"
+          },
+          "useTransactionTimezone": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "startTime",
+          "endTime",
+          "tagFilter",
+          "keyword",
+          "useTransactionTimezone"
+        ]
+      },
+      "TransactionStatisticResponse": {
+        "properties": {
+          "startTime": {
+            "type": "integer"
+          },
+          "endTime": {
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TransactionStatisticResponseItem"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "startTime",
+          "endTime",
+          "items"
+        ]
+      },
+      "TransactionStatisticResponseItem": {
+        "properties": {
+          "categoryId": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "relatedAccountId": {
+            "type": "string"
+          },
+          "relatedAccountType": {
+            "type": "integer"
+          },
+          "amount": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "categoryId",
+          "accountId",
+          "amount"
+        ]
+      },
+      "TransactionStatisticTrendsRequest": {
+        "properties": {
+          "startYearMonth": {
+            "type": "string"
+          },
+          "endYearMonth": {
+            "type": "string"
+          },
+          "tagFilter": {
+            "type": "string"
+          },
+          "keyword": {
+            "type": "string"
+          },
+          "useTransactionTimezone": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "startYearMonth",
+          "endYearMonth",
+          "tagFilter",
+          "keyword",
+          "useTransactionTimezone"
+        ]
+      },
+      "TransactionStatisticTrendsResponseItem": {
+        "properties": {
+          "year": {
+            "type": "integer"
+          },
+          "month": {
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TransactionStatisticResponseItem"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "year",
+          "month",
+          "items"
+        ]
+      },
+      "TwoFactorLoginRequest": {
+        "properties": {
+          "passcode": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "passcode"
+        ]
+      },
+      "UserBasicInfo": {
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "avatarProvider": {
+            "type": "string"
+          },
+          "defaultAccountId": {
+            "type": "string"
+          },
+          "transactionEditScope": {
+            "type": "integer"
+          },
+          "language": {
+            "type": "string"
+          },
+          "defaultCurrency": {
+            "type": "string"
+          },
+          "firstDayOfWeek": {
+            "type": "integer"
+          },
+          "fiscalYearStart": {
+            "type": "integer"
+          },
+          "calendarDisplayType": {
+            "type": "integer"
+          },
+          "dateDisplayType": {
+            "type": "integer"
+          },
+          "longDateFormat": {
+            "type": "integer"
+          },
+          "shortDateFormat": {
+            "type": "integer"
+          },
+          "longTimeFormat": {
+            "type": "integer"
+          },
+          "shortTimeFormat": {
+            "type": "integer"
+          },
+          "fiscalYearFormat": {
+            "type": "integer"
+          },
+          "currencyDisplayType": {
+            "type": "integer"
+          },
+          "numeralSystem": {
+            "type": "integer"
+          },
+          "decimalSeparator": {
+            "type": "integer"
+          },
+          "digitGroupingSymbol": {
+            "type": "integer"
+          },
+          "digitGrouping": {
+            "type": "integer"
+          },
+          "coordinateDisplayType": {
+            "type": "integer"
+          },
+          "expenseAmountColor": {
+            "type": "integer"
+          },
+          "incomeAmountColor": {
+            "type": "integer"
+          },
+          "emailVerified": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "username",
+          "email",
+          "nickname",
+          "avatar",
+          "defaultAccountId",
+          "transactionEditScope",
+          "language",
+          "defaultCurrency",
+          "firstDayOfWeek",
+          "fiscalYearStart",
+          "calendarDisplayType",
+          "dateDisplayType",
+          "longDateFormat",
+          "shortDateFormat",
+          "longTimeFormat",
+          "shortTimeFormat",
+          "fiscalYearFormat",
+          "currencyDisplayType",
+          "numeralSystem",
+          "decimalSeparator",
+          "digitGroupingSymbol",
+          "digitGrouping",
+          "coordinateDisplayType",
+          "expenseAmountColor",
+          "incomeAmountColor",
+          "emailVerified"
+        ]
+      },
+      "UserLoginRequest": {
+        "properties": {
+          "loginName": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "loginName",
+          "password"
+        ]
+      }
+    }
+  },
+  "info": {
+    "description": "Self-hosted personal finance API exposed by the local Ratel Ledger backend.",
+    "title": "Ratel Ledger API",
+    "version": "1.4.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/authorize.json": {
+      "post": {
+        "operationId": "authorize",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Log in with username or email and password"
+      }
+    },
+    "/api/auto_login.json": {
+      "post": {
+        "operationId": "autoLogin",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Log in the single desktop user without a password"
+      }
+    },
+    "/api/v1/backups/create.json": {
+      "post": {
+        "operationId": "createBackup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BackupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupListResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Create a SQLite snapshot backup"
+      }
+    },
+    "/api/v1/backups/delete.json": {
+      "post": {
+        "operationId": "deleteBackup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BackupDeleteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Delete a backup archive"
+      }
+    },
+    "/api/v1/backups/list.json": {
+      "get": {
+        "operationId": "listBackups",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/BackupListResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "List backup archives"
+      }
+    },
+    "/api/v1/backups/restore.json": {
+      "post": {
+        "operationId": "restoreBackup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BackupRestoreRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Restore a SQLite snapshot backup"
+      }
+    },
+    "/api/v1/tokens/generate/api.json": {
+      "post": {
+        "operationId": "generateApiToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenGenerateAPIRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenGenerateAPIResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Generate an API token"
+      }
+    },
+    "/api/v1/tokens/generate/mcp.json": {
+      "post": {
+        "operationId": "generateMcpToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenGenerateMCPRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenGenerateMCPResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Generate an MCP token"
+      }
+    }
+  }
+}

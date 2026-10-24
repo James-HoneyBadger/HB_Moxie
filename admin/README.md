@@ -1,6 +1,6 @@
-# HB Moxie System Administration Tool
+# Ratel Ledger System Administration Tool
 
-A standalone desktop application for managing HB Moxie configuration, users, and database. Built with [Fyne](https://fyne.io/) — a native Go GUI toolkit.
+A standalone desktop application for managing Ratel Ledger configuration, users, and database. Built with [Fyne](https://fyne.io/) — a native Go GUI toolkit.
 
 ## Features
 
@@ -10,7 +10,7 @@ A standalone desktop application for managing HB Moxie configuration, users, and
 - System info (config path, database path, database size)
 
 ### Configuration Management
-- Browse all `hbmoxie.ini` sections in a sidebar list
+- Browse all `ratel-ledger.ini` sections in a sidebar list
 - Edit any configuration key with live form fields
 - Password/secret fields are masked by default
 - **Save** creates a timestamped backup before writing
@@ -49,19 +49,19 @@ sudo apt install -y gcc libgl1-mesa-dev xorg-dev
 
 ```bash
 cd admin
-go build -o hbmoxie-admin .
+go build -o ratel-ledger-admin .
 ```
 
 ## Running
 
-Run from the HB Moxie project root so the tool can find `conf/hbmoxie.ini`:
+Run from the Ratel Ledger project root so the tool can find `conf/ratel-ledger.ini`:
 
 ```bash
-./admin/hbmoxie-admin
+./admin/ratel-ledger-admin
 ```
 
 The tool will:
-1. Load `conf/hbmoxie.ini` to find database settings
+1. Load `conf/ratel-ledger.ini` to find database settings
 2. Open the SQLite database directly
 3. Launch a native desktop window (1400x850)
 

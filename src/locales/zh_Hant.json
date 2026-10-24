@@ -1,7 +1,7 @@
 {
     "global": {
         "app": {
-            "title": "HB_Moxie"
+            "title": "Ratel Ledger"
         }
     },
     "language": {
@@ -137,20 +137,20 @@
             "clearTransactionsInAccountTip": "您不能還原此操作。此操作將會清除您在 {account} 帳戶中的交易資料。請輸入您目前的密碼以確認。",
             "accountActivationAndResendValidationEmailTip": "帳號啟用連結已經傳送到您的信箱地址：{email}，如果您沒有收到郵件，請再次輸入密碼並點擊下方的按鈕重新發送驗證郵件。",
             "resendValidationEmailTip": "如果您沒有收到郵件，請再次輸入密碼並點擊下方的按鈕重新發送驗證郵件到：{email}",
-            "oauth2bindTip": "您正在使用 {providerName} 登入 \"{userName}\" 使用者，請輸入您的 HB_Moxie 的密碼以進行驗證。"
+            "oauth2bindTip": "您正在使用 {providerName} 登入 \"{userName}\" 使用者，請輸入您的 Ratel Ledger 的密碼以進行驗證。"
         }
     },
     "dataExport": {
-        "defaultExportFilename": "HB_Moxie_匯出資料",
-        "exportFilename": "HB_Moxie_{nickname}_匯出資料",
-        "defaultExportStatisticsFileName": "HB_Moxie_統計資料",
-        "exportStatisticsFileName": "HB_Moxie_{nickname}_統計資料",
-        "defaultExportReconciliationStatementsFileName": "HB_Moxie_對帳單",
-        "exportReconciliationStatementsFileName": "HB_Moxie_{nickname}_對帳單",
-        "defaultImportDataMappingFileName": "HB_Moxie_匯入資料對應檔案",
-        "defaultImportHandlingScript": "HB_Moxie_匯入處理腳本",
-        "defaultImportReplaceRuleFileName": "HB_Moxie_匯入替換規則檔案",
-        "defaultImportCheckResultFileName": "HB_Moxie_匯入檢查結果"
+        "defaultExportFilename": "ratel-ledger_匯出資料",
+        "exportFilename": "ratel-ledger_{nickname}_匯出資料",
+        "defaultExportStatisticsFileName": "ratel-ledger_統計資料",
+        "exportStatisticsFileName": "ratel-ledger_{nickname}_統計資料",
+        "defaultExportReconciliationStatementsFileName": "ratel-ledger_對帳單",
+        "exportReconciliationStatementsFileName": "ratel-ledger_{nickname}_對帳單",
+        "defaultImportDataMappingFileName": "ratel-ledger_匯入資料對應檔案",
+        "defaultImportHandlingScript": "ratel-ledger_匯入處理腳本",
+        "defaultImportReplaceRuleFileName": "ratel-ledger_匯入替換規則檔案",
+        "defaultImportCheckResultFileName": "ratel-ledger_匯入檢查結果"
     },
     "calendar": {
         "Gregorian": "公曆",
@@ -1620,8 +1620,8 @@
     "Change Language": "變更語言",
     "Date is too early": "日期過早",
     "User Canceled": "使用者已取消",
-    "Welcome to HB_Moxie": "歡迎使用 HB_Moxie",
-    "Please log in with your HB_Moxie account": "請使用您的 HB_Moxie 帳號登入",
+    "Welcome to Ratel Ledger": "歡迎使用 Ratel Ledger",
+    "Please log in with your Ratel Ledger account": "請使用您的 Ratel Ledger 帳號登入",
     "Unlock Application": "解鎖應用程式",
     "Please enter your PIN code or use WebAuthn to unlock application": "請輸入您的 PIN 碼，或使用 WebAuthn 解鎖應用程式",
     "Please enter your PIN code to unlock application": "請輸入您的 PIN 碼解鎖應用程式",
@@ -1977,13 +1977,13 @@
     "Filter Description": "篩選描述",
     "How to import this file?": "如何匯入此檔案？",
     "How to export this file?": "如何匯出此檔案？",
-    "HB_Moxie File Format": "HB_Moxie 檔案格式",
+    "Ratel Ledger File Format": "Ratel Ledger 檔案格式",
     "Custom File Format": "自訂檔案格式",
     "General Data Exchange Format": "通用資料交換格式",
     "General Bank Statement Format": "通用銀行對帳單格式",
     "Other Bank/Payment App Statement File": "其他銀行/支付應用程式對帳單檔案",
     "Other Finance App File Format": "其他金融應用程式檔案格式",
-    "HB_Moxie Data Export File": "HB_Moxie 資料匯出檔案",
+    "Ratel Ledger Data Export File": "Ratel Ledger 資料匯出檔案",
     "Excel Workbook File": "Excel 工作簿檔案",
     "Excel Workbook File (.xlsx)": "Excel 工作簿檔案 (.xlsx)",
     "Excel 97-2003 Workbook File (.xls)": "Excel 97-2003 工作簿檔案 (.xls)",

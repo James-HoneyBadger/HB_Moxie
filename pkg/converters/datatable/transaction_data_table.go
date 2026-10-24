@@ -1,8 +1,8 @@
 package datatable
 
 import (
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
 )
 
 // TransactionDataTable defines the structure of transaction data table

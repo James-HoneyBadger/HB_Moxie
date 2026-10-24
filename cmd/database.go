@@ -3,16 +3,17 @@ package cmd
 import (
 	"github.com/urfave/cli/v3"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/datastore"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/datastore"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
 )
 
 // Database represents the database command
 var Database = &cli.Command{
 	Name:  "database",
-	Usage: "HB Moxie database maintenance",
+	Usage: "Ratel Ledger database maintenance",
 	Commands: []*cli.Command{
 		{
 			Name:   "update",
@@ -53,6 +54,15 @@ func updateAllDatabaseTablesStructure(c *core.CliContext) error {
 
 	log.BootInfof(c, "[database.updateAllDatabaseTablesStructure] user table maintained successfully")
 
+	err = ensureUserCredentialColumnLengths(c)
+
+	if err != nil {
+		log.BootErrorf(c, "[database.updateAllDatabaseTablesStructure] user credential column migration failed, because %s", err.Error())
+		return err
+	}
+
+	log.BootInfof(c, "[database.updateAllDatabaseTablesStructure] user credential columns checked successfully")
+
 	err = datastore.Container.UserStore.SyncStructs(new(models.TwoFactor))
 
 	if err != nil {
@@ -76,6 +86,15 @@ func updateAllDatabaseTablesStructure(c *core.CliContext) error {
 	}
 
 	log.BootInfof(c, "[database.updateAllDatabaseTablesStructure] token record table maintained successfully")
+
+	err = ensureTokenSecretColumnLength(c)
+
+	if err != nil {
+		log.BootErrorf(c, "[database.updateAllDatabaseTablesStructure] token record secret column migration failed, because %s", err.Error())
+		return err
+	}
+
+	log.BootInfof(c, "[database.updateAllDatabaseTablesStructure] token record secret column checked successfully")
 
 	err = datastore.Container.UserDataStore.SyncStructs(new(models.Account))
 
@@ -174,4 +193,64 @@ func updateAllDatabaseTablesStructure(c *core.CliContext) error {
 	log.BootInfof(c, "[database.updateAllDatabaseTablesStructure] insights explorer table maintained successfully")
 
 	return nil
+}
+
+// ensureUserCredentialColumnLengths widens the password and salt columns for
+// MySQL and PostgreSQL databases created before versioned password hashes.
+func ensureUserCredentialColumnLengths(c *core.CliContext) error {
+	config := settings.Container.GetCurrentConfig()
+
+	if config == nil || config.DatabaseConfig == nil {
+		return nil
+	}
+
+	var statements []string
+
+	switch config.DatabaseConfig.DatabaseType {
+	case settings.MySqlDbType:
+		statements = []string{
+			"ALTER TABLE `user` MODIFY COLUMN password VARCHAR(128) NOT NULL",
+			"ALTER TABLE `user` MODIFY COLUMN salt VARCHAR(32) NOT NULL",
+		}
+	case settings.PostgresDbType:
+		statements = []string{
+			"ALTER TABLE \"user\" ALTER COLUMN password TYPE VARCHAR(128)",
+			"ALTER TABLE \"user\" ALTER COLUMN salt TYPE VARCHAR(32)",
+		}
+	default:
+		// SQLite does not enforce VARCHAR lengths.
+		return nil
+	}
+
+	for _, statement := range statements {
+		if err := datastore.Container.UserStore.Choose(0).Exec(c, statement); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ensureTokenSecretColumnLength widens token_record.secret for MySQL and PostgreSQL
+// databases created before token secrets were increased to 32 characters.
+func ensureTokenSecretColumnLength(c *core.CliContext) error {
+	config := settings.Container.GetCurrentConfig()
+
+	if config == nil || config.DatabaseConfig == nil {
+		return nil
+	}
+
+	var statement string
+
+	switch config.DatabaseConfig.DatabaseType {
+	case settings.MySqlDbType:
+		statement = "ALTER TABLE token_record MODIFY COLUMN secret VARCHAR(64) NOT NULL"
+	case settings.PostgresDbType:
+		statement = "ALTER TABLE token_record ALTER COLUMN secret TYPE VARCHAR(64)"
+	default:
+		// SQLite does not enforce VARCHAR lengths.
+		return nil
+	}
+
+	return datastore.Container.TokenStore.Choose(0).Exec(c, statement)
 }

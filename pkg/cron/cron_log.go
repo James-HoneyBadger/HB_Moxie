@@ -5,8 +5,8 @@ import (
 	"github.com/go-co-op/gocron/v2"
 	"strings"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
 )
 
 // GocronLoggerAdapter represents the logger adapter for gocron

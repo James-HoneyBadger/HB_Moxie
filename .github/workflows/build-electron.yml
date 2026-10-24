@@ -1,0 +1,202 @@
+name: Build Electron Desktop Packages
+
+on:
+  workflow_call:
+    inputs:
+      release-build:
+        description: Whether this is a release build ("1" or "0")
+        required: false
+        type: string
+        default: "0"
+      build-unix-time:
+        description: Unix timestamp for the build
+        required: false
+        type: string
+        default: ""
+      build-date:
+        description: Date string for the build
+        required: false
+        type: string
+        default: ""
+      artifact-prefix:
+        description: Prefix for uploaded Electron artifacts
+        required: true
+        type: string
+      check-3rd-api:
+        description: Whether to test third-party exchange rate APIs
+        required: false
+        type: string
+        default: ""
+      skip-tests:
+        description: Tests to skip during the backend build
+        required: false
+        type: string
+        default: ""
+  workflow_dispatch:
+    inputs:
+      artifact-prefix:
+        description: Prefix for uploaded artifacts
+        required: true
+        type: string
+        default: ratel-ledger-electron-dev
+      release-build:
+        description: Build as release
+        required: false
+        type: choice
+        default: "0"
+        options:
+          - "0"
+          - "1"
+
+jobs:
+  build-electron-linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.25.7"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Build backend
+        shell: bash
+        env:
+          RELEASE_BUILD: "${{ inputs.release-build }}"
+          BUILD_PIPELINE: "1"
+          BUILD_UNIXTIME: "${{ inputs.build-unix-time }}"
+          BUILD_DATE: "${{ inputs.build-date }}"
+          CHECK_3RD_API: "${{ inputs.check-3rd-api }}"
+          SKIP_TESTS: "${{ inputs.skip-tests }}"
+        run: ./scripts/build.sh backend
+
+      - name: Build frontend
+        shell: bash
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build Electron packages
+        shell: bash
+        working-directory: electron
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: |
+          npm ci
+          npx electron-builder --linux --publish never
+
+      - name: Upload Electron packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-prefix }}-linux
+          path: |
+            electron/dist/*.AppImage
+            electron/dist/*.deb
+            electron/dist/latest-linux.yml
+            electron/dist/*.blockmap
+          if-no-files-found: error
+
+  build-electron-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.25.7"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Build backend
+        shell: bash
+        env:
+          CGO_ENABLED: "1"
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          COMMIT_HASH="$(git rev-parse --short=7 HEAD)"
+          go build -trimpath -tags timetzdata \
+            -ldflags "-X main.Version=${VERSION} -X main.CommitHash=${COMMIT_HASH} -X main.BuildUnixTime=${{ inputs.build-unix-time }}" \
+            -o ratel-ledger .
+
+      - name: Build frontend
+        shell: bash
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build Electron packages
+        shell: bash
+        working-directory: electron
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: |
+          npm ci
+          npx electron-builder --mac --publish never
+
+      - name: Upload Electron packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-prefix }}-macos
+          path: |
+            electron/dist/*.dmg
+            electron/dist/latest-mac.yml
+            electron/dist/*.blockmap
+          if-no-files-found: error
+
+  build-electron-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Build Windows backend
+        uses: ./.github/actions/build-windows-backend
+        with:
+          release-build: ${{ inputs.release-build }}
+          build-unix-time: ${{ inputs.build-unix-time }}
+          build-date: ${{ inputs.build-date }}
+          check-3rd-api: ${{ inputs.check-3rd-api }}
+          skip-tests: ${{ inputs.skip-tests }}
+          backend-artifact-name-prefix: ${{ inputs.artifact-prefix }}-backend
+          upload-artifact: "false"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Build frontend
+        shell: pwsh
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build Electron packages
+        shell: pwsh
+        working-directory: electron
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: |
+          npm ci
+          npx electron-builder --win --publish never
+
+      - name: Upload Electron packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-prefix }}-windows
+          path: |
+            electron/dist/*.exe
+            electron/dist/latest.yml
+            electron/dist/*.blockmap
+          if-no-files-found: error

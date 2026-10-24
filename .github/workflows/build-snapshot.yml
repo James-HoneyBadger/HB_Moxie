@@ -11,9 +11,10 @@ jobs:
     outputs:
       build-unix-time: ${{ steps.variable.outputs.build_unix_time }}
       build-date: ${{ steps.variable.outputs.build_date }}
-      hbmoxie-package-file-name-prefix: ${{ steps.variable.outputs.hbmoxie_package_file_name_prefix }}
-      hbmoxie-package-artifact-name-prefix: ${{ steps.variable.outputs.hbmoxie_package_artifact_name_prefix }}
-      hbmoxie-backend-artifact-name-prefix: ${{ steps.variable.outputs.hbmoxie_backend_artifact_name_prefix }}
+      ratel_ledger_package_file_name_prefix: ${{ steps.variable.outputs.ratel_ledger_package_file_name_prefix }}
+      ratel_ledger_package_artifact_name_prefix: ${{ steps.variable.outputs.ratel_ledger_package_artifact_name_prefix }}
+      ratel_ledger_backend_artifact_name_prefix: ${{ steps.variable.outputs.ratel_ledger_backend_artifact_name_prefix }}
+      ratel_ledger_electron_artifact_name_prefix: ${{ steps.variable.outputs.ratel_ledger_electron_artifact_name_prefix }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -23,9 +24,10 @@ jobs:
         run: |
           echo "build_unix_time=$(date '+%s')" >> "$GITHUB_OUTPUT"
           echo "build_date=$(date '+%Y%m%d')" >> "$GITHUB_OUTPUT"
-          echo "hbmoxie_package_file_name_prefix=hbmoxie-dev-package-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
-          echo "hbmoxie_package_artifact_name_prefix=hbmoxie-build-dev-package-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
-          echo "hbmoxie_backend_artifact_name_prefix=hbmoxie-build-dev-backend-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
+          echo "ratel_ledger_package_file_name_prefix=ratel-ledger-dev-package-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
+          echo "ratel_ledger_package_artifact_name_prefix=ratel-ledger-build-dev-package-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
+          echo "ratel_ledger_backend_artifact_name_prefix=ratel-ledger-build-dev-backend-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
+          echo "ratel_ledger_electron_artifact_name_prefix=ratel-ledger-build-dev-electron-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
 
   build-linux-package:
     runs-on: ubuntu-24.04
@@ -42,8 +44,8 @@ jobs:
           check-3rd-api: ${{ vars.CHECK_3RD_API }}
           skip-tests: ${{ vars.SKIP_TESTS }}
           platform-name: linux-amd64
-          package-file-name-prefix: ${{ needs.setup.outputs.hbmoxie-package-file-name-prefix }}
-          package-artifact-name-prefix: ${{ needs.setup.outputs.hbmoxie-package-artifact-name-prefix }}
+          package-file-name-prefix: ${{ needs.setup.outputs.ratel_ledger_package_file_name_prefix }}
+          package-artifact-name-prefix: ${{ needs.setup.outputs.ratel_ledger_package_artifact_name_prefix }}
 
   build-windows-backend:
     needs:
@@ -59,7 +61,7 @@ jobs:
           build-date: ${{ needs.setup.outputs.build-date }}
           check-3rd-api: ${{ vars.CHECK_3RD_API }}
           skip-tests: ${{ vars.SKIP_TESTS }}
-          backend-artifact-name-prefix: ${{ needs.setup.outputs.hbmoxie-backend-artifact-name-prefix }}
+          backend-artifact-name-prefix: ${{ needs.setup.outputs.ratel_ledger_backend_artifact_name_prefix }}
 
   build-windows-package:
     needs:
@@ -73,6 +75,18 @@ jobs:
 
       - uses: ./.github/actions/build-windows-package
         with:
-          package-file-name-prefix: ${{ needs.setup.outputs.hbmoxie-package-file-name-prefix }}
-          package-artifact-name-prefix: ${{ needs.setup.outputs.hbmoxie-package-artifact-name-prefix }}
-          backend-artifact-name-prefix: ${{ needs.setup.outputs.hbmoxie-backend-artifact-name-prefix }}
+          package-file-name-prefix: ${{ needs.setup.outputs.ratel_ledger_package_file_name_prefix }}
+          package-artifact-name-prefix: ${{ needs.setup.outputs.ratel_ledger_package_artifact_name_prefix }}
+          backend-artifact-name-prefix: ${{ needs.setup.outputs.ratel_ledger_backend_artifact_name_prefix }}
+
+  build-electron:
+    needs:
+      - setup
+    uses: ./.github/workflows/build-electron.yml
+    with:
+      release-build: "0"
+      build-unix-time: ${{ needs.setup.outputs.build-unix-time }}
+      build-date: ${{ needs.setup.outputs.build-date }}
+      artifact-prefix: ${{ needs.setup.outputs.ratel_ledger_electron_artifact_name_prefix }}
+      check-3rd-api: ${{ vars.CHECK_3RD_API }}
+      skip-tests: ${{ vars.SKIP_TESTS }}

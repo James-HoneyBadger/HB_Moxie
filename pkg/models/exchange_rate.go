@@ -3,7 +3,7 @@ package models
 import (
 	"strings"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
 const UserCustomExchangeRateFactorInDatabase = int64(100000000)

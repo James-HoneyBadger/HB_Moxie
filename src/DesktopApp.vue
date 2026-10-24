@@ -89,8 +89,8 @@ exchangeRatesStore.removeExpiredExchangeRates(true);
 exchangeRatesStore.autoUpdateExchangeRatesData();
 
 // Listen for quick-add transaction from Electron global shortcut / tray menu
-if (window.hbmoxie?.onQuickAddTransaction) {
-    window.hbmoxie.onQuickAddTransaction(() => {
+if (window.ratelLedger?.onQuickAddTransaction) {
+    window.ratelLedger.onQuickAddTransaction(() => {
         desktopPageStore.setShowAddTransactionDialogInTransactionList();
         router.push('/transaction/list');
     });

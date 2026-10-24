@@ -1,4 +1,4 @@
-module github.com/James-HoneyBadger/HB_Moxie/admin
+module github.com/James-HoneyBadger/ratel-ledger/admin
 
 go 1.25.0
 

@@ -51,9 +51,9 @@ type TableInfo struct {
 
 func main() {
 	workDir, _ := os.Getwd()
-	configPath := filepath.Join(workDir, "conf", "hbmoxie.ini")
+	configPath := filepath.Join(workDir, "conf", "ratel-ledger.ini")
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		configPath = filepath.Join(workDir, "..", "conf", "hbmoxie.ini")
+		configPath = filepath.Join(workDir, "..", "conf", "ratel-ledger.ini")
 	}
 
 	cfg, err := ini.LoadSources(ini.LoadOptions{IgnoreInlineComment: true}, configPath)
@@ -66,7 +66,7 @@ func main() {
 		log.Fatalf("Only sqlite3 supported (found: %s)", dbType)
 	}
 
-	dbPath := cfg.Section("database").Key("db_path").MustString("data/hbmoxie.db")
+	dbPath := cfg.Section("database").Key("db_path").MustString("data/ratel-ledger.db")
 	if !filepath.IsAbs(dbPath) {
 		configDir := filepath.Dir(filepath.Dir(configPath))
 		dbPath = filepath.Join(configDir, dbPath)
@@ -84,8 +84,8 @@ func main() {
 		db:         db,
 	}
 
-	a.fyneApp = app.NewWithID("org.honeybadger.hbmoxie.admin")
-	a.window = a.fyneApp.NewWindow("HB Moxie — System Administration")
+	a.fyneApp = app.NewWithID("org.honeybadger.ratelledger.admin")
+	a.window = a.fyneApp.NewWindow("Ratel Ledger — System Administration")
 	a.window.Resize(fyne.NewSize(1400, 850))
 	a.window.CenterOnScreen()
 
@@ -158,7 +158,7 @@ func (a *AdminApp) loadTables() []TableInfo {
 }
 
 func (a *AdminApp) exportDatabase(w io.Writer) {
-	fmt.Fprintf(w, "-- HB Moxie Database Export\n")
+	fmt.Fprintf(w, "-- Ratel Ledger Database Export\n")
 	fmt.Fprintf(w, "-- Generated: %s\n", time.Now().Format("2006-01-02 15:04:05"))
 	fmt.Fprintf(w, "-- Database: %s\n\n", a.dbPath)
 

@@ -9,13 +9,13 @@ import (
 	"xorm.io/builder"
 	"xorm.io/xorm"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/datastore"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/uuid"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/datastore"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/uuid"
 )
 
 const pageCountForLoadTransactionAmounts = 1000
@@ -26,16 +26,21 @@ type TransactionService struct {
 	ServiceUsingUuid
 }
 
-// Initialize a transaction service singleton instance
-var (
-	Transactions = &TransactionService{
+// NewTransactionService returns a transaction service with explicit dependencies.
+func NewTransactionService(container *datastore.DataStoreContainer, uuidContainer *uuid.UuidContainer) *TransactionService {
+	return &TransactionService{
 		ServiceUsingDB: ServiceUsingDB{
-			container: datastore.Container,
+			container: container,
 		},
 		ServiceUsingUuid: ServiceUsingUuid{
-			container: uuid.Container,
+			container: uuidContainer,
 		},
 	}
+}
+
+// Initialize a transaction service singleton instance
+var (
+	Transactions = NewTransactionService(datastore.Container, uuid.Container)
 )
 
 // GetTotalTransactionCountByUid returns total transaction count of user
@@ -1856,6 +1861,38 @@ func (s *TransactionService) GetAccountsTotalIncomeAndExpense(c core.Context, ui
 
 	minTransactionTime := startTransactionTime
 	maxTransactionTime := endTransactionTime
+
+	if !useTransactionTimezone {
+		finalConditionParams := make([]any, 0, len(conditionParams)+2)
+		finalConditionParams = append(finalConditionParams, conditionParams...)
+		finalConditionParams = append(finalConditionParams, minTransactionTime, maxTransactionTime)
+
+		var groupedAmounts []*models.Transaction
+
+		if err := s.UserDataDB(uid).NewSession(c).
+			Select("type, account_id, SUM(amount) AS amount").
+			Where(condition, finalConditionParams...).
+			GroupBy("type, account_id").
+			Find(&groupedAmounts); err != nil {
+			return nil, nil, err
+		}
+
+		incomeAmounts := make(map[int64]int64)
+		expenseAmounts := make(map[int64]int64)
+
+		for i := 0; i < len(groupedAmounts); i++ {
+			groupedAmount := groupedAmounts[i]
+
+			if groupedAmount.Type == models.TRANSACTION_DB_TYPE_INCOME {
+				incomeAmounts[groupedAmount.AccountId] = groupedAmount.Amount
+			} else if groupedAmount.Type == models.TRANSACTION_DB_TYPE_EXPENSE {
+				expenseAmounts[groupedAmount.AccountId] = groupedAmount.Amount
+			}
+		}
+
+		return incomeAmounts, expenseAmounts, nil
+	}
+
 	var allTransactions []*models.Transaction
 
 	for maxTransactionTime > 0 {
@@ -1951,6 +1988,44 @@ func (s *TransactionService) GetAccountsAndCategoriesTotalInflowAndOutflow(c cor
 
 	minTransactionTime := startTransactionTime
 	maxTransactionTime := endTransactionTime
+
+	// When the client timezone is used, the SQL range already represents the
+	// requested local date range, so the database can aggregate the rows.
+	// The per-transaction timezone path below still needs row-level filtering.
+	if !useTransactionTimezone {
+		finalCondition := condition
+		finalConditionParams := make([]any, 0, len(conditionParams)+4)
+		finalConditionParams = append(finalConditionParams, conditionParams...)
+
+		if minTransactionTime > 0 {
+			finalCondition = finalCondition + " AND transaction_time>=?"
+			finalConditionParams = append(finalConditionParams, minTransactionTime)
+		}
+
+		if maxTransactionTime > 0 {
+			finalCondition = finalCondition + " AND transaction_time<=?"
+			finalConditionParams = append(finalConditionParams, maxTransactionTime)
+		}
+
+		if keyword != "" {
+			finalCondition = finalCondition + " AND comment LIKE ?"
+			finalConditionParams = append(finalConditionParams, "%%"+keyword+"%%")
+		}
+
+		sess := s.UserDataDB(uid).NewSession(c).
+			Select("type, category_id, account_id, related_account_id, SUM(amount) AS amount").
+			Where(finalCondition, finalConditionParams...)
+		sess = s.appendFilterTagIdsConditionToQuery(sess, uid, maxTransactionTime, minTransactionTime, tagFilters, noTags)
+
+		var transactionTotalAmounts []*models.Transaction
+
+		if err := sess.GroupBy("type, category_id, account_id, related_account_id").Find(&transactionTotalAmounts); err != nil {
+			return nil, err
+		}
+
+		return transactionTotalAmounts, nil
+	}
+
 	var allTransactions []*models.Transaction
 
 	for maxTransactionTime >= 0 {

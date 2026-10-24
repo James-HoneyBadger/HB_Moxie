@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Frequently Asked Questions
-    url: https://github.com/James-HoneyBadger/HB_Moxie/wiki/FAQ
+    url: https://github.com/James-HoneyBadger/ratel-ledger/wiki/FAQ
     about: Please check whether your question has already been mentioned here.
   - name: Usage Questions
-    url: https://github.com/James-HoneyBadger/HB_Moxie/discussions/categories/q-a
-    about: Questions about using HB Moxie can be discussed in GitHub Discussions.
+    url: https://github.com/James-HoneyBadger/ratel-ledger/discussions/categories/q-a
+    about: Questions about using Ratel Ledger can be discussed in GitHub Discussions.

@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"reflect"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
 // MCPQueryAllAccountsBalanceResponse represents the response structure for querying accounts balance
@@ -44,7 +44,7 @@ func (h *mcpQueryAllAccountsBalanceToolHandler) Name() string {
 
 // Description returns the description of the MCP tool
 func (h *mcpQueryAllAccountsBalanceToolHandler) Description() string {
-	return "Query all accounts balance for the current user in HB Moxie."
+	return "Query all accounts balance for the current user in Ratel Ledger."
 }
 
 // InputType returns the input type for the MCP tool request

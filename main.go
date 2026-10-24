@@ -9,9 +9,9 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/James-HoneyBadger/HB_Moxie/cmd"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/cmd"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
 var (
@@ -31,7 +31,7 @@ func main() {
 	core.BuildTime = BuildUnixTime
 
 	cmd := &cli.Command{
-		Name:    "HB Moxie",
+		Name:    "Ratel Ledger",
 		Usage:   "A lightweight, self-hosted personal finance app with a user-friendly interface and powerful finance management features.",
 		Version: GetFullVersion(),
 		Commands: []*cli.Command{
@@ -57,7 +57,7 @@ func main() {
 	err := cmd.Run(context.Background(), os.Args)
 
 	if err != nil {
-		log.Fatalf("Failed to run HB Moxie with %s: %v", os.Args, err)
+		log.Fatalf("Failed to run Ratel Ledger with %s: %v", os.Args, err)
 	}
 }
 

@@ -1,7 +1,7 @@
 {
-  "name": "hb-moxie-desktop",
+  "name": "ratel-ledger-desktop",
   "version": "1.0.0",
-  "description": "HB Moxie — A Honey Badger approach to personal finance management",
+  "description": "Ratel Ledger — private, local-first personal finance management",
   "main": "main.js",
   "author": "Honey Badger Universe",
   "license": "MIT",
@@ -20,8 +20,8 @@
     "electron-builder": "^25.0.0"
   },
   "build": {
-    "appId": "com.hbmoxie.desktop",
-    "productName": "HB Moxie",
+    "appId": "com.honeybadger.ratelledger",
+    "productName": "Ratel Ledger",
     "directories": {
       "output": "dist"
     },
@@ -32,8 +32,12 @@
     ],
     "extraResources": [
       {
-        "from": "../hbmoxie",
-        "to": "backend/hbmoxie"
+        "from": "../",
+        "to": "backend/",
+        "filter": [
+          "ratel-ledger",
+          "ratel-ledger.exe"
+        ]
       },
       {
         "from": "../conf",
@@ -44,7 +48,7 @@
         "to": "backend/templates"
       },
       {
-        "from": "../public",
+        "from": "../dist",
         "to": "backend/public"
       }
     ],

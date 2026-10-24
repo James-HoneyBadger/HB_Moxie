@@ -150,9 +150,42 @@ func TestMD5EncodeToString(t *testing.T) {
 func TestEncodePassword(t *testing.T) {
 	password := "foobar"
 	salt := "salt"
-	expectedValue := "QrpKShMygoe4Ym4ibnA7cNDzCcSonBkgFl69IrtnDmp3oROft3/Td/DNXjsweosa"
 	actualValue := EncodePassword(password, salt)
-	assert.Equal(t, expectedValue, actualValue)
+
+	assert.Contains(t, actualValue, "pbkdf2-sha256$600000$")
+
+	matched, needsRehash := VerifyPassword(password, salt, actualValue)
+	assert.True(t, matched)
+	assert.False(t, needsRehash)
+
+	matched, _ = VerifyPassword("wrong", salt, actualValue)
+	assert.False(t, matched)
+}
+
+func TestVerifyPassword_LegacyHash(t *testing.T) {
+	password := "foobar"
+	salt := "salt"
+	legacyValue := "QrpKShMygoe4Ym4ibnA7cNDzCcSonBkgFl69IrtnDmp3oROft3/Td/DNXjsweosa"
+
+	matched, needsRehash := VerifyPassword(password, salt, legacyValue)
+	assert.True(t, matched)
+	assert.True(t, needsRehash)
+
+	matched, _ = VerifyPassword("wrong", salt, legacyValue)
+	assert.False(t, matched)
+}
+
+func TestEncodeRecoveryCode_RemainsLegacyCompatible(t *testing.T) {
+	recoveryCode := "abcde-12345"
+	salt := "salt"
+	actualValue := EncodeRecoveryCode(recoveryCode, salt)
+
+	assert.Len(t, actualValue, 64)
+	assert.NotContains(t, actualValue, "$")
+
+	matched, needsRehash := VerifyPassword(recoveryCode, salt, actualValue)
+	assert.True(t, matched)
+	assert.True(t, needsRehash)
 }
 
 func TestEncryptSecretAndDecryptSecret(t *testing.T) {

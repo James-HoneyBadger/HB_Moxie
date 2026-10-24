@@ -1,10 +1,14 @@
 package datastore
 
 import (
+	"fmt"
+	"strings"
+
 	"xorm.io/xorm"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
 )
 
 // Database represents a database instance
@@ -42,6 +46,38 @@ func (db *Database) DoTransaction(c core.Context, fn func(sess *xorm.Session) er
 	}
 
 	return nil
+}
+
+// Exec executes a statement with the specified context
+func (db *Database) Exec(c core.Context, statement string, args ...any) error {
+	sess := db.NewSession(c)
+	defer sess.Close()
+
+	statementArgs := make([]any, 0, len(args)+1)
+	statementArgs = append(statementArgs, statement)
+	statementArgs = append(statementArgs, args...)
+
+	_, err := sess.Exec(statementArgs...)
+	return err
+}
+
+// VacuumInto writes a consistent snapshot of the SQLite database to the destination path
+func (db *Database) VacuumInto(c core.Context, destPath string) error {
+	if db.databaseType != settings.Sqlite3DbType {
+		return errs.ErrDatabaseTypeInvalid
+	}
+
+	escapedPath := strings.ReplaceAll(destPath, "'", "''")
+	return db.Exec(c, fmt.Sprintf("VACUUM INTO '%s'", escapedPath))
+}
+
+// Close closes the underlying database connections
+func (db *Database) Close() error {
+	if db == nil || db.engineGroup == nil {
+		return nil
+	}
+
+	return db.engineGroup.Close()
 }
 
 // SetSavePoint sets a save point in the current transaction

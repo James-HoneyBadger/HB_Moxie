@@ -1,21 +1,23 @@
 {
-  "name": "hbmoxie",
+  "name": "ratel-ledger",
   "version": "1.4.0",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/James-HoneyBadger/HB_Moxie.git"
+    "url": "git+https://github.com/James-HoneyBadger/ratel-ledger.git"
   },
   "author": "James Temple",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/James-HoneyBadger/HB_Moxie/issues"
+    "url": "https://github.com/James-HoneyBadger/ratel-ledger/issues"
   },
   "scripts": {
     "serve": "cross-env NODE_ENV=development vite",
     "build": "cross-env NODE_ENV=production vite build",
     "lint": "vue-tsc --noEmit && eslint . --fix",
-    "test": "cross-env TS_NODE_PROJECT=\"./tsconfig.jest.json\" jest"
+    "test": "cross-env TS_NODE_PROJECT=\"./tsconfig.jest.json\" jest",
+    "openapi:generate": "go run ./cmd/openapi",
+    "openapi:check": "go run ./cmd/openapi --check"
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",

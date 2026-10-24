@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/datatable"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/datatable"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
 )
 
 // CsvFileBasicDataTable defines the structure of csv data table

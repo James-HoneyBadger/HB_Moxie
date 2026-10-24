@@ -1,6 +1,6 @@
 # User Guide
 
-A complete guide to using HB Moxie for personal finance management.
+A complete guide to using Ratel Ledger for personal finance management.
 
 ---
 
@@ -35,10 +35,10 @@ A complete guide to using HB Moxie for personal finance management.
 
 ### First Login
 
-1. Launch the HB Moxie desktop application.
+1. Launch the Ratel Ledger desktop application.
 2. Log in with the default credentials:
    - **Username:** `admin`
-   - **Password:** `hbmoxie2024!`
+   - **Password:** the random password printed in the startup log on first launch.
 3. Change your password immediately via **Settings → Security**.
 4. Set your preferred currency, timezone, and language in **Settings → Basic**.
 
@@ -147,7 +147,7 @@ If enabled by your administrator, you can attach pictures (receipts, invoices) t
 
 ### Draft Auto-Save
 
-HB Moxie can automatically save transaction drafts as you type. Enable this in **Settings → Basic → Auto-save transaction draft**.
+Ratel Ledger can automatically save transaction drafts as you type. Enable this in **Settings → Basic → Auto-save transaction draft**.
 
 ---
 
@@ -199,7 +199,7 @@ Categories have two levels:
 
 ### Preset Categories
 
-HB Moxie includes preset category sets you can import during initial setup:
+Ratel Ledger includes preset category sets you can import during initial setup:
 1. Go to **Categories**.
 2. Click **Import Preset**.
 3. Select a preset group and confirm.
@@ -238,7 +238,7 @@ Import transactions from external financial software and bank exports.
 
 | Category | Formats |
 |----------|---------|
-| **HB Moxie** | CSV, TSV |
+| **Ratel Ledger** | CSV, TSV |
 | **Custom** | CSV/TSV/SSV (configurable), Excel (.xlsx, .xls) |
 | **Quicken** | QFX, QIF (Y/M/D, M/D/Y, D/M/Y date formats), IIF |
 | **Microsoft Money** | OFX |
@@ -262,7 +262,7 @@ Import transactions from external financial software and bank exports.
 For non-standard file formats, you can:
 1. Upload the file.
 2. Use the **Custom Script** tab to write a transformation script.
-3. Map the transformed data to HB Moxie's transaction fields.
+3. Map the transformed data to Ratel Ledger's transaction fields.
 
 ### Import Tips
 
@@ -361,7 +361,7 @@ Saved explorers appear in the Insights sidebar. You can reorder, edit, or delete
 
 ## Exchange Rates
 
-HB Moxie automatically fetches exchange rates for multi-currency support.
+Ratel Ledger automatically fetches exchange rates for multi-currency support.
 
 ### Automatic Updates
 
@@ -492,7 +492,7 @@ If configured by the administrator, you can log in using an external identity pr
 1. Go to **Settings → Security**.
 2. Click **Link** next to the OAuth2 provider.
 3. Authorize the application in the provider's interface.
-4. Your HB Moxie account is now linked.
+4. Your Ratel Ledger account is now linked.
 
 ### Unlinking
 
@@ -502,7 +502,7 @@ Go to **Settings → Security** and click **Unlink** to disconnect the external 
 
 ## API Tokens
 
-Generate tokens for programmatic access to the HB Moxie API.
+Generate tokens for programmatic access to the Ratel Ledger API.
 
 ### Generating a Token
 

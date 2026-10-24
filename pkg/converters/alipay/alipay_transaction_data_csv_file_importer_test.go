@@ -8,11 +8,11 @@ import (
 
 	"golang.org/x/text/encoding/simplifiedchinese"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/converters/converter"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/converter"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
 func TestAlipayCsvFileImporterParseImportedData_MinimumValidData(t *testing.T) {

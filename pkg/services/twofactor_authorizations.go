@@ -7,14 +7,14 @@ import (
 	"github.com/pquerna/otp/totp"
 	"xorm.io/xorm"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/datastore"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/locales"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/uuid"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/datastore"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/locales"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/uuid"
 )
 
 const (
@@ -149,7 +149,7 @@ func (s *TwoFactorAuthorizationService) GetAndUseUserTwoFactorRecoveryCode(c cor
 		return errs.ErrUserIdInvalid
 	}
 
-	recoveryCode = utils.EncodePassword(recoveryCode, salt)
+	recoveryCode = utils.EncodeRecoveryCode(recoveryCode, salt)
 	exists, err := s.UserDB().NewSession(c).Cols("uid", "recovery_code").Where("uid=? AND recovery_code=? AND used=?", uid, recoveryCode, false).Exist(&models.TwoFactorRecoveryCode{})
 
 	if err != nil {
@@ -189,7 +189,7 @@ func (s *TwoFactorAuthorizationService) CreateTwoFactorRecoveryCodes(c core.Cont
 		twoFactorRecoveryCodes[i] = &models.TwoFactorRecoveryCode{
 			Uid:             uid,
 			Used:            false,
-			RecoveryCode:    utils.EncodePassword(recoveryCodes[i], salt),
+			RecoveryCode:    utils.EncodeRecoveryCode(recoveryCodes[i], salt),
 			CreatedUnixTime: time.Now().Unix(),
 		}
 	}

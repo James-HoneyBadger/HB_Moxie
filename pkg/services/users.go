@@ -11,18 +11,18 @@ import (
 
 	"xorm.io/xorm"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/datastore"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/locales"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/mail"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/models"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/storage"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/templates"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/uuid"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/datastore"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/locales"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/mail"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/storage"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/templates"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/uuid"
 )
 
 const verifyEmailUrlFormat = "%sdesktop#/verify_email?token=%s"
@@ -78,11 +78,34 @@ func (s *UserService) GetUserByUsernameOrEmailAndPassword(c core.Context, loginn
 		return nil, 0, errs.ErrUserNotFound
 	}
 
-	if !s.IsPasswordEqualsUserPassword(password, user) {
+	matched, needsRehash := utils.VerifyPassword(password, user.Salt, user.Password)
+
+	if !matched {
 		return nil, user.Uid, errs.ErrUserPasswordWrong
 	}
 
+	if needsRehash {
+		if err = s.rehashPassword(c, user, password); err != nil {
+			log.Warnf(c, "[users.GetUserByUsernameOrEmailAndPassword] failed to upgrade password hash for user \"uid:%d\", because %s", user.Uid, err.Error())
+		}
+	}
+
 	return user, user.Uid, nil
+}
+
+func (s *UserService) rehashPassword(c core.Context, user *models.User, password string) error {
+	encodedPassword := utils.EncodePassword(password, user.Salt)
+
+	updatedRows, err := s.UserDB().NewSession(c).Cols("password").Where("uid=? AND deleted=?", user.Uid, false).Update(&models.User{Password: encodedPassword})
+
+	if err != nil {
+		return err
+	} else if updatedRows < 1 {
+		return errs.ErrUserNotFound
+	}
+
+	user.Password = encodedPassword
+	return nil
 }
 
 // GetUserById returns the user model according to user uid
@@ -115,6 +138,11 @@ func (s *UserService) GetFirstUser(c core.Context) (*models.User, error) {
 	}
 
 	return user, nil
+}
+
+// GetTotalUndeletedUserCount returns the count of non-deleted users
+func (s *UserService) GetTotalUndeletedUserCount(c core.Context) (int64, error) {
+	return s.UserDB().NewSession(c).Where("deleted=?", false).Count(&models.User{})
 }
 
 // GetUserByUsername returns the user model according to user name
@@ -219,7 +247,7 @@ func (s *UserService) CreateUser(c core.Context, user *models.User, noPassword b
 		return errs.ErrPasswordIsEmpty
 	}
 
-	if user.Salt, err = utils.GetRandomString(10); err != nil {
+	if user.Salt, err = utils.GetRandomString(16); err != nil {
 		return err
 	}
 
@@ -755,5 +783,6 @@ func (s *UserService) SendVerifyEmail(user *models.User, verifyEmailToken string
 
 // IsPasswordEqualsUserPassword returns whether the given password is correct
 func (s *UserService) IsPasswordEqualsUserPassword(password string, user *models.User) bool {
-	return utils.SecureCompare(utils.EncodePassword(password, user.Salt), user.Password)
+	matched, _ := utils.VerifyPassword(password, user.Salt, user.Password)
+	return matched
 }

@@ -311,7 +311,7 @@ func (a *AdminApp) makeDatabaseTab() fyne.CanvasObject {
 				"Database exported successfully to:\n"+writer.URI().Path(),
 				a.window)
 		}, a.window)
-		d.SetFileName(fmt.Sprintf("hbmoxie_export_%s.sql", ""))
+		d.SetFileName(fmt.Sprintf("ratel_ledger_export_%s.sql", ""))
 		d.Show()
 	})
 	exportBtn.Importance = widget.HighImportance
@@ -372,5 +372,3 @@ func (a *AdminApp) makeDatabaseTab() fyne.CanvasObject {
 
 	return split
 }
-
-

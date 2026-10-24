@@ -1,9 +1,9 @@
 package provider
 
 import (
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/data"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/data"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
 )
 
 // LargeLanguageModelProvider defines the structure of large language model provider

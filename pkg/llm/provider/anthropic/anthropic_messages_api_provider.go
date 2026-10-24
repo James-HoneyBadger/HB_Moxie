@@ -3,9 +3,9 @@ package anthropic
 import (
 	"net/http"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/llm/provider"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/provider"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
 )
 
 // AnthropicOfficialMessagesAPIProvider defines the structure of Anthropic official messages API provider

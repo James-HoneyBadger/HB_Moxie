@@ -1,9 +1,9 @@
-declare const __HBMOXIE_IS_PRODUCTION__: boolean;
-declare const __HBMOXIE_VERSION__: string;
-declare const __HBMOXIE_BUILD_UNIX_TIME__: string;
-declare const __HBMOXIE_BUILD_COMMIT_HASH__: string;
-declare const __HBMOXIE_LICENSE__: string;
-declare const __HBMOXIE_THIRD_PARTY_LICENSES__: LicenseInfo[];
+declare const __RATEL_LEDGER_IS_PRODUCTION__: boolean;
+declare const __RATEL_LEDGER_VERSION__: string;
+declare const __RATEL_LEDGER_BUILD_UNIX_TIME__: string;
+declare const __RATEL_LEDGER_BUILD_COMMIT_HASH__: string;
+declare const __RATEL_LEDGER_LICENSE__: string;
+declare const __RATEL_LEDGER_THIRD_PARTY_LICENSES__: LicenseInfo[];
 
 declare interface LicenseInfo {
     name: string;
@@ -14,10 +14,10 @@ declare interface LicenseInfo {
 }
 
 interface Window {
-    HBMOXIE_SERVER_SETTINGS?: {
+    RATEL_LEDGER_SERVER_SETTINGS?: {
         [key: string]: string | number | boolean | undefined | null;
     };
-    hbmoxie?: {
+    ratelLedger?: {
         platform: string;
         isDesktopApp: boolean;
         apiBaseUrl?: string;

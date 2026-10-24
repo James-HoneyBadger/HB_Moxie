@@ -1,6 +1,6 @@
 package models
 
-import "github.com/James-HoneyBadger/HB_Moxie/pkg/core"
+import "github.com/James-HoneyBadger/ratel-ledger/pkg/core"
 
 // UserExternalAuth represents user external auth data stored in database
 type UserExternalAuth struct {

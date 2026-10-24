@@ -7,8 +7,8 @@ import (
 
 	"golang.org/x/net/html/charset"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
 )
 
 // gnucashDatabaseReader defines the structure of gnucash database reader

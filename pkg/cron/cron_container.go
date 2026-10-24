@@ -5,10 +5,10 @@ import (
 
 	"github.com/go-co-op/gocron/v2"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/settings"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
 )
 
 // CronJobSchedulerContainer contains the current cron job scheduler
@@ -86,7 +86,11 @@ func (c *CronJobSchedulerContainer) registerAllJobs(ctx core.Context, config *se
 	}
 
 	if config.EnableAutoBackup {
-		Container.registerIntervalJob(ctx, NewAutoBackupJob(config))
+		if config.DatabaseConfig != nil && config.DatabaseConfig.DatabaseType == settings.Sqlite3DbType {
+			Container.registerIntervalJob(ctx, NewAutoBackupJob(config))
+		} else {
+			log.Warnf(ctx, "[cron_container.registerAllJobs] auto backup is only supported for SQLite databases, the job will not be registered")
+		}
 	}
 }
 

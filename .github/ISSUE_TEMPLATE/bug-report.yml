@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report a bug in HB Moxie
+description: Report a bug in Ratel Ledger
 body:
   - type: checkboxes
     id: checkboxes
@@ -7,7 +7,7 @@ body:
       label: Before You Submit
       description: Please check whether the following items have been completed.
       options:
-        - label: I've already checked that this bug hasn't been raised in [issues](https://github.com/James-HoneyBadger/HB_Moxie/issues)
+        - label: I've already checked that this bug hasn't been raised in [issues](https://github.com/James-HoneyBadger/ratel-ledger/issues)
           required: true
 
   - type: textarea
@@ -31,10 +31,10 @@ body:
       required: true
 
   - type: input
-    id: hbmoxie-version
+    id: ratel-ledger-version
     attributes:
-      label: HB Moxie Version
-      description: HB Moxie version and commit hash of your instance, e.g. "v1.0.0 (20e2444)"
+      label: Ratel Ledger Version
+      description: Ratel Ledger version and commit hash of your instance, e.g. "v1.0.0 (20e2444)"
     validations:
       required: true
 
@@ -42,7 +42,7 @@ body:
     id: server-os
     attributes:
       label: Server Operating System
-      description: The operating system information you are using to deploy HB Moxie, e.g "Debian GNU/Linux 11 amd64"
+      description: The operating system information you are using to deploy Ratel Ledger, e.g "Debian GNU/Linux 11 amd64"
 
   - type: input
     id: server-database
@@ -53,9 +53,9 @@ body:
   - type: dropdown
     id: reproduce-on-demo-site
     attributes:
-      label: Can you reproduce this bug on a fresh HB Moxie instance?
+      label: Can you reproduce this bug on a fresh Ratel Ledger instance?
       description: |
-        HB Moxie repository: https://github.com/James-HoneyBadger/HB_Moxie
+        Ratel Ledger repository: https://github.com/James-HoneyBadger/ratel-ledger
       options:
         - "No"
         - "Yes"

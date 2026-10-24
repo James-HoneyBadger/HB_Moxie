@@ -153,9 +153,9 @@ dist/
 __pycache__/
 
 # Binary and build files
-hbmoxie
-hbmoxie_bin
-admin/hbmoxie-admin
+ratel-ledger
+ratel-ledger_bin
+admin/ratel-ledger-admin
 package/
 
 # Environment variable files

@@ -5,15 +5,15 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/cron"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/log"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/cron"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
 )
 
 // CronJobs represents the cron command
 var CronJobs = &cli.Command{
 	Name:  "cron",
-	Usage: "HB Moxie cron job utilities",
+	Usage: "Ratel Ledger cron job utilities",
 	Commands: []*cli.Command{
 		{
 			Name:   "list",

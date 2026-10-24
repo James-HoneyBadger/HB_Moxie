@@ -7,17 +7,17 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/errs"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/mail"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/requestid"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/mail"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/requestid"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
 // Utilities represents the utilities command
 var Utilities = &cli.Command{
 	Name:  "utility",
-	Usage: "HB Moxie utilities",
+	Usage: "Ratel Ledger utilities",
 	Commands: []*cli.Command{
 		{
 			Name:   "parse-default-request-id",
@@ -94,7 +94,7 @@ func sendTestMail(c *core.CliContext) error {
 
 	err = mail.Container.SendMail(&mail.MailMessage{
 		To:      toAddress,
-		Subject: "HB Moxie test e-mail",
+		Subject: "Ratel Ledger test e-mail",
 		Body:    "This is a test e-mail",
 	})
 

@@ -1,6 +1,6 @@
 # Development Guide
 
-Instructions for setting up a development environment, building, testing, and debugging HB Moxie.
+Instructions for setting up a development environment, building, testing, and debugging Ratel Ledger.
 
 ---
 
@@ -56,8 +56,8 @@ brew install go node gcc git
 ## Repository Setup
 
 ```bash
-git clone https://github.com/James-HoneyBadger/HB_Moxie.git
-cd HB_Moxie
+git clone https://github.com/James-HoneyBadger/ratel-ledger.git
+cd ratel-ledger
 ```
 
 ### Backend Dependencies
@@ -80,7 +80,7 @@ The typical development loop:
 
 1. **Start the backend** in one terminal:
    ```bash
-   go build -o hbmoxie_bin . && ./hbmoxie_bin server run
+   go build -o ratel-ledger . && ./ratel-ledger server run
    ```
 
 2. **Start the frontend dev server** in another terminal:
@@ -101,7 +101,7 @@ The typical development loop:
 ### Project Structure
 
 ```
-hbmoxie.go          # Main entry point, CLI command registration
+main.go          # Main entry point, CLI command registration
 cmd/
   base.go           # CLI helper utilities
   webserver.go      # HTTP server setup, routes, middleware
@@ -156,9 +156,9 @@ pkg/
 ### Configuration Loading
 
 Configuration is loaded in `pkg/settings/setting.go`:
-- Reads from INI file (`conf/hbmoxie.ini`)
-- Environment variables take precedence (`HBM_{SECTION}_{KEY}`)
-- File-path variables for secrets (`HBMCFP_{SECTION}_{KEY}`)
+- Reads from INI file (`conf/ratel-ledger.ini`)
+- Environment variables take precedence (`RATEL_{SECTION}_{KEY}`)
+- File-path variables for secrets (`RATELCFP_{SECTION}_{KEY}`)
 
 ### Database Access
 
@@ -246,11 +246,28 @@ Routes are defined in `src/router/desktop.ts` with authentication guards. The ro
 
 ## Running the Full Stack
 
-### Option 1: Separate Processes
+### Option 1: One Command
+
+From the repository root:
+
+```bash
+./run.sh
+```
+
+This builds the backend, builds the frontend when needed, installs missing dependencies, and launches the Electron app. Other modes:
+
+```bash
+./run.sh --rebuild    # force a frontend rebuild
+./run.sh --server     # backend only
+./run.sh --build-only # build without launching
+./run.sh --help
+```
+
+### Option 2: Separate Processes
 
 ```bash
 # Terminal 1 — Backend
-go build -o hbmoxie_bin . && ./hbmoxie_bin server run
+go build -o ratel-ledger . && ./ratel-ledger server run
 
 # Terminal 2 — Frontend (dev server with HMR)
 npm run serve
@@ -258,24 +275,36 @@ npm run serve
 
 Access at `http://localhost:8081` for frontend development (or run the Electron app for full desktop testing).
 
-### Option 2: Production Build
+### Option 3: Production Build
 
 ```bash
 # Build frontend
 npm run build
-cp dist/desktop.html dist/index.html
 
 # Build and run backend
-go build -o hbmoxie_bin . && ./hbmoxie_bin server run
+go build -o ratel-ledger . && ./ratel-ledger server run
 ```
 
 Access via the Electron app, or at `http://localhost:8080` for backend-only testing.
 
-### Option 3: Full Package
+### Option 4: Full Package
 
 ```bash
 ./scripts/build.sh package
 ```
+
+---
+
+## API Contract Generation
+
+The OpenAPI document and frontend API types are generated from the Go models:
+
+```bash
+go run ./cmd/openapi          # regenerate docs/openapi.json and src/models/generated/api.ts
+go run ./cmd/openapi --check  # verify generated files are current (used by CI)
+```
+
+Equivalent npm scripts are available as `npm run openapi:generate` and `npm run openapi:check`.
 
 ---
 
@@ -368,14 +397,13 @@ CGO_ENABLED=1 go build \
   -ldflags "-X main.Version=dev \
             -X main.CommitHash=$(git rev-parse --short HEAD) \
             -X main.BuildUnixTime=$(date +%s)" \
-  -o hbmoxie_bin .
+  -o ratel-ledger .
 ```
 
 ### Manual Frontend Build
 
 ```bash
 npm run build
-cp dist/desktop.html dist/index.html
 ```
 
 ---
@@ -387,7 +415,7 @@ Database schema updates are handled automatically by xorm on startup when `auto_
 ### Manual Update
 
 ```bash
-./hbmoxie_bin database update
+./ratel-ledger database update
 ```
 
 ### Tables
@@ -534,7 +562,7 @@ log_query = true
 Or via environment:
 
 ```bash
-HBM_GLOBAL_MODE=development HBM_LOG_LEVEL=debug ./hbmoxie_bin server run
+RATEL_GLOBAL_MODE=development RATEL_LOG_LEVEL=debug ./ratel-ledger server run
 ```
 
 ### Frontend Debugging
@@ -548,7 +576,7 @@ Vue DevTools extension is recommended for inspecting component state, Pinia stor
 Every request gets a unique ID. Parse it for debugging:
 
 ```bash
-./hbmoxie_bin utility parse-default-request-id --id <request-id>
+./ratel-ledger utility parse-default-request-id --id <request-id>
 ```
 
 This decodes the server ID, instance, timestamp, sequence, and client IP from the request ID.
@@ -558,5 +586,5 @@ This decodes the server ID, instance, timestamp, sequence, and client IP from th
 Verify SMTP configuration:
 
 ```bash
-./hbmoxie_bin utility send-test-mail --to user@example.com
+./ratel-ledger utility send-test-mail --to user@example.com
 ```

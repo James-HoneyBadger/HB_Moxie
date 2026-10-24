@@ -1,6 +1,6 @@
 # Electron Desktop Application
 
-Guide for building, running, and packaging the HB Moxie standalone desktop application.
+Guide for building, running, and packaging the Ratel Ledger standalone desktop application.
 
 ---
 
@@ -18,10 +18,10 @@ Guide for building, running, and packaging the HB Moxie standalone desktop appli
 
 ## Overview
 
-The Electron shell wraps HB Moxie into a native desktop application. It:
+The Electron shell wraps Ratel Ledger into a native desktop application. It:
 
 - Spawns the Go backend as a child process on a random free port
-- Serves the Vue.js frontend via a custom `app://hbmoxie` protocol
+- Serves the Vue.js frontend via a custom `app://ratel-ledger` protocol
 - Proxies API requests to the Go backend
 - Provides native window management (menu bar, window controls, system tray)
 
@@ -47,14 +47,13 @@ Users get a self-contained application with no browser or terminal needed.
 From the project root:
 
 ```bash
-go build -o hbmoxie_bin .
+go build -o ratel-ledger .
 ```
 
 ### 2. Build the Frontend
 
 ```bash
 npm run build
-cp dist/desktop.html dist/index.html
 ```
 
 ### 3. Start the Electron App
@@ -67,9 +66,9 @@ npm start
 
 The Electron app will:
 1. Find a free port
-2. Start `../hbmoxie_bin server run` as a child process
-3. Wait for the backend health check to respond
-4. Open the main window pointing to `app://hbmoxie/desktop.html`
+2. Start `../ratel-ledger server run` as a child process
+3. Wait for the backend TCP port to accept connections
+4. Open the main window pointing to `app://ratel-ledger/desktop.html`
 
 ---
 
@@ -80,22 +79,22 @@ The Electron app will:
 ```
 Electron Main Process (main.js)
 │
-├── Child Process: Go Backend (hbmoxie_bin server run)
+├── Child Process: Go Backend (ratel-ledger server run)
 │     └── Listens on 127.0.0.1:<random-port>
 │
-├── Custom Protocol: app://hbmoxie
+├── Custom Protocol: app://ratel-ledger
 │     └── Serves files from dist/ directory
 │
 ├── Request Interception
 │     └── Proxies /api/*, /avatar/*, /pictures/*, etc. to Go backend
 │
 └── BrowserWindow
-      └── Loads app://hbmoxie/desktop.html
+      └── Loads app://ratel-ledger/desktop.html
 ```
 
 ### Custom Protocol
 
-The `app://hbmoxie` protocol serves frontend files directly from the filesystem without an HTTP server, improving security and performance.
+The `app://ratel-ledger` protocol serves frontend files directly from the filesystem without an HTTP server, improving security and performance.
 
 ### API Proxying
 
@@ -118,10 +117,10 @@ These URL paths are intercepted and forwarded to the Go backend:
 `electron/preload.js` exposes a limited API to the renderer:
 
 ```javascript
-window.hbmoxie = {
+window.ratelLedger = {
     platform: process.platform,    // 'linux', 'darwin', 'win32'
     isDesktopApp: true,
-    apiBaseUrl: 'app://hbmoxie'
+    apiBaseUrl: 'app://ratel-ledger'
 };
 ```
 
@@ -142,8 +141,9 @@ window.hbmoxie = {
 
 ### Backend Lifecycle
 
-- **Startup**: The Go binary is spawned with environment variables `HBM_SERVER_HTTP_ADDR=127.0.0.1` and `HBM_SERVER_HTTP_PORT=<port>`.
-- **Health polling**: The main process polls `/healthz.json` until the backend responds.
+- **Startup**: The Go binary is spawned with `RATEL_WORK_DIR=<userData>`, `RATEL_SERVER_HTTP_ADDR=127.0.0.1`, and `RATEL_SERVER_HTTP_PORT=<port>`.
+- **Readiness**: The main process waits until the backend TCP port accepts connections.
+- **Single instance**: A second launch focuses the existing window instead of starting another backend against the same SQLite file.
 - **Shutdown**: On app quit, `SIGTERM` is sent to the Go process. If it doesn't exit within 3 seconds, `SIGKILL` is sent.
 
 ---
@@ -174,6 +174,18 @@ npm run build:win
 
 Packages are output to `electron/dist/`.
 
+### CI Packages
+
+The reusable `.github/workflows/build-electron.yml` workflow builds native packages on GitHub-hosted runners:
+
+| Runner | Artifacts |
+|--------|-----------|
+| `ubuntu-24.04` | AppImage, `.deb`, `latest-linux.yml` |
+| `macos-latest` | `.dmg`, `latest-mac.yml` |
+| `windows-latest` | NSIS `.exe`, `latest.yml` |
+
+The release workflow calls it for `v*.*.*` tags and attaches the installers to the draft GitHub release. Snapshot builds attach the same artifacts to the workflow run. Packages are unsigned by default; configure `CSC_LINK`/`CSC_KEY_PASSWORD` (and notarization credentials for macOS) in repository secrets to sign them.
+
 ### Build Configuration
 
 The `electron/package.json` contains the `electron-builder` configuration:
@@ -181,10 +193,10 @@ The `electron/package.json` contains the `electron-builder` configuration:
 ```json
 {
   "build": {
-    "appId": "com.hbmoxie.desktop",
-    "productName": "HB Moxie",
+    "appId": "com.honeybadger.ratelledger",
+    "productName": "Ratel Ledger",
     "extraResources": [
-      { "from": "../hbmoxie_bin", "to": "backend/hbmoxie" },
+      { "from": "../", "to": "backend/", "filter": ["ratel-ledger", "ratel-ledger.exe"] },
       { "from": "../conf", "to": "backend/conf" },
       { "from": "../templates", "to": "backend/templates" },
       { "from": "../dist", "to": "backend/public" }
@@ -201,23 +213,25 @@ Before building a distributable package:
 
 1. Build the Go backend binary for the target platform
 2. Build the frontend (`npm run build` from project root)
-3. Copy `dist/desktop.html` to `dist/index.html`
-4. Ensure `conf/hbmoxie.ini` has sensible defaults
-5. Run `cd electron && npm run build:<platform>`
+3. Ensure `conf/ratel-ledger.ini` has sensible defaults
+4. Run `cd electron && npm run build:<platform>`
 
 ---
 
 ## Configuration
 
-The Electron app uses `conf/hbmoxie.ini` for configuration. When packaged, the config file is located at:
+The Electron app uses `conf/ratel-ledger.ini` for configuration. On first launch of a packaged build, the template is copied from the read-only application resources into Electron's per-user data directory (`app.getPath('userData')`):
 
-| Platform | Path |
-|----------|------|
-| Linux | `<install-dir>/resources/backend/conf/hbmoxie.ini` |
-| macOS | `HB Moxie.app/Contents/Resources/backend/conf/hbmoxie.ini` |
-| Windows | `<install-dir>/resources/backend/conf/hbmoxie.ini` |
+```
+<userData>/
+  conf/ratel-ledger.ini
+  templates/
+  data/ratel-ledger.db
+  log/ratel-ledger.log
+  storage/
+```
 
-The backend data directory (SQLite database, logs, storage) defaults to the `data/` folder relative to the binary location.
+Subsequent launches reuse the existing files, so generated secrets and user data survive upgrades. The backend binary itself remains in `resources/backend/`.
 
 ---
 
@@ -225,7 +239,7 @@ The backend data directory (SQLite database, logs, storage) defaults to the `dat
 
 ### Backend Fails to Start
 
-- Check that `hbmoxie_bin` (or `hbmoxie` when packaged) exists and is executable.
+- Check that the backend binary (`ratel-ledger`, or `ratel-ledger.exe` on Windows) exists and is executable.
 - Check the log output in the terminal (when running `npm start`).
 - Ensure no other process is blocking the randomly selected port.
 

@@ -1,7 +1,7 @@
 {
     "global": {
         "app": {
-            "title": "HB_Moxie"
+            "title": "Ratel Ledger"
         }
     },
     "language": {
@@ -137,20 +137,20 @@
             "clearTransactionsInAccountTip": "NO PUEDES deshacer esta acción. Se eliminarán todas las transacciones de {account}. Por favor introduce tu contraseña para confirmar.",
             "accountActivationAndResendValidationEmailTip": "El enlace de activación de la cuenta se envió a tu dirección de correo electrónico: {email}. Si no recibes el correo, introduce nuevamente la contraseña y haz clic en el botón de abajo para reenviar el correo de validación.",
             "resendValidationEmailTip": "Si no recibes el correo, introduce nuevamente la contraseña y haz clic en el botón de abajo para reenviar el correo de validación a: {email}",
-            "oauth2bindTip": "Estás iniciando sesión con el usuario {userName} usando {providerName}. Porfavor introduce tu contraseña de HB_Moxie para verificar."
+            "oauth2bindTip": "Estás iniciando sesión con el usuario {userName} usando {providerName}. Porfavor introduce tu contraseña de Ratel Ledger para verificar."
         }
     },
     "dataExport": {
-        "defaultExportFilename": "HB_Moxie_export_data",
-        "exportFilename": "HB_Moxie_{nickname}_export_data",
-        "defaultExportStatisticsFileName": "HB_Moxie_statistics_data",
-        "exportStatisticsFileName": "HB_Moxie_{nickname}_statistics_data",
-        "defaultExportReconciliationStatementsFileName": "HB_Moxie_reconciliation_statements",
-        "exportReconciliationStatementsFileName": "HB_Moxie_{nickname}_reconciliation_statements",
-        "defaultImportDataMappingFileName": "HB_Moxie_import_data_mapping",
-        "defaultImportHandlingScript": "HB_Moxie_handling_script",
-        "defaultImportReplaceRuleFileName": "HB_Moxie_import_replace_rule",
-        "defaultImportCheckResultFileName": "HB_Moxie_import_check_result"
+        "defaultExportFilename": "ratel-ledger_export_data",
+        "exportFilename": "ratel-ledger_{nickname}_export_data",
+        "defaultExportStatisticsFileName": "ratel-ledger_statistics_data",
+        "exportStatisticsFileName": "ratel-ledger_{nickname}_statistics_data",
+        "defaultExportReconciliationStatementsFileName": "ratel-ledger_reconciliation_statements",
+        "exportReconciliationStatementsFileName": "ratel-ledger_{nickname}_reconciliation_statements",
+        "defaultImportDataMappingFileName": "ratel-ledger_import_data_mapping",
+        "defaultImportHandlingScript": "ratel-ledger_handling_script",
+        "defaultImportReplaceRuleFileName": "ratel-ledger_import_replace_rule",
+        "defaultImportCheckResultFileName": "ratel-ledger_import_check_result"
     },
     "calendar": {
         "Gregorian": "Gregoriano",
@@ -1620,8 +1620,8 @@
     "Change Language": "Cambiar Idioma",
     "Date is too early": "La Fecha Es Demasiado Temprana",
     "User Canceled": "Usuario cancelado",
-    "Welcome to HB_Moxie": "Bienvenido a HB_Moxie",
-    "Please log in with your HB_Moxie account": "Inicia sesión con tu cuenta de HB_Moxie",
+    "Welcome to Ratel Ledger": "Bienvenido a Ratel Ledger",
+    "Please log in with your Ratel Ledger account": "Inicia sesión con tu cuenta de Ratel Ledger",
     "Unlock Application": "Desbloquear Aplicación",
     "Please enter your PIN code or use WebAuthn to unlock application": "Ingresa tu código PIN o utiliza WebAuthn para desbloquear la aplicación",
     "Please enter your PIN code to unlock application": "Ingrese tu código PIN para desbloquear la aplicación",
@@ -1977,13 +1977,13 @@
     "Filter Description": "Descripción del Filtro",
     "How to import this file?": "¿Cómo importar este archivo?",
     "How to export this file?": "¿Cómo exportar este archivo?",
-    "HB_Moxie File Format": "Formato de Archivo HB_Moxie",
+    "Ratel Ledger File Format": "Formato de Archivo Ratel Ledger",
     "Custom File Format": "Formato de Archivo Personalizado",
     "General Data Exchange Format": "Formato General de Intercambio de Datos",
     "General Bank Statement Format": "Formato General de Extracto Bancario",
     "Other Bank/Payment App Statement File": "Extracto de Otra Entidad Bancaria/Aplicación",
     "Other Finance App File Format": "Otro Formato de Archivo de Aplicación Financiera",
-    "HB_Moxie Data Export File": "Datos exportados de HB_Moxie",
+    "Ratel Ledger Data Export File": "Datos exportados de Ratel Ledger",
     "Excel Workbook File": "Archivo Excel",
     "Excel Workbook File (.xlsx)": "Excel Workbook File (.xlsx)",
     "Excel 97-2003 Workbook File (.xls)": "Excel 97-2003 Workbook File (.xls)",

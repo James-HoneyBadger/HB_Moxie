@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/core"
-	"github.com/James-HoneyBadger/HB_Moxie/pkg/utils"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 )
 
 // TransactionEditScope represents the scope which transaction can be edited
@@ -86,8 +86,8 @@ type User struct {
 	Username              string `xorm:"VARCHAR(32) UNIQUE NOT NULL"`
 	Email                 string `xorm:"VARCHAR(100) UNIQUE NOT NULL"`
 	Nickname              string `xorm:"VARCHAR(64) NOT NULL"`
-	Password              string `xorm:"VARCHAR(64) NOT NULL"`
-	Salt                  string `xorm:"VARCHAR(10) NOT NULL"`
+	Password              string `xorm:"VARCHAR(128) NOT NULL"`
+	Salt                  string `xorm:"VARCHAR(32) NOT NULL"`
 	CustomAvatarType      string `xorm:"VARCHAR(10)"`
 	DefaultAccountId      int64
 	TransactionEditScope  TransactionEditScope       `xorm:"TINYINT NOT NULL"`

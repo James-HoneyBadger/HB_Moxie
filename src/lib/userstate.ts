@@ -8,16 +8,17 @@ import { isString, isObject } from './common.ts';
 import { isEnableApplicationLock } from './settings.ts';
 import logger from './logger.ts';
 
+// Kept from before the rename: changing this salt invalidates existing app-lock credentials.
 const appLockSecretBaseStringPrefix: string = 'HBM_LOCK_SECRET_';
 
-const tokenLocalStorageKey: string = 'hbm_user_token';
-const webauthnConfigLocalStorageKey: string = 'hbm_user_webauthn_config';
-const userInfoLocalStorageKey: string = 'hbm_user_info';
-const transactionDraftLocalStorageKey: string = 'hbm_user_draft_transaction';
+const tokenLocalStorageKey: string = 'ratel_user_token';
+const webauthnConfigLocalStorageKey: string = 'ratel_user_webauthn_config';
+const userInfoLocalStorageKey: string = 'ratel_user_info';
+const transactionDraftLocalStorageKey: string = 'ratel_user_draft_transaction';
 
-const tokenSessionStorageKey: string = 'hbm_user_session_token';
-const encryptedTokenSessionStorageKey: string = 'hbm_user_session_encrypted_token';
-const appLockStateSessionStorageKey: string = 'hbm_user_app_lock_state'; // { 'username': '', secret: '' }
+const tokenSessionStorageKey: string = 'ratel_user_session_token';
+const encryptedTokenSessionStorageKey: string = 'ratel_user_session_encrypted_token';
+const appLockStateSessionStorageKey: string = 'ratel_user_app_lock_state'; // { 'username': '', secret: '' }
 
 function getAppLockSecret(pinCode: string): string {
     const hashedPinCode = CryptoJS.SHA256(appLockSecretBaseStringPrefix + pinCode).toString();
