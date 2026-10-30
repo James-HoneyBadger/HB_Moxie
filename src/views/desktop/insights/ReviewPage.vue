@@ -73,9 +73,14 @@
                             <span class="text-subtitle-2">{{ accountName(group.accountId) }}</span>
                             <v-spacer />
                             <span class="text-subtitle-2">{{ formatAmount(group.amount, group.accountId) }}</span>
+                            <v-btn class="ms-2" size="x-small" variant="text" :disabled="dismissing"
+                                   @click="dismiss(TransactionReviewDismissalKind.Duplicate, group.key)">
+                                {{ tt('Dismiss') }}
+                            </v-btn>
                         </div>
-                        <div class="text-caption text-medium-emphasis mt-1"
-                             :key="transaction.id" v-for="transaction in group.transactions">
+                        <div class="text-caption text-medium-emphasis mt-1 review-clickable"
+                             :key="transaction.id" v-for="transaction in group.transactions"
+                             @click="openTransaction(transaction)">
                             {{ formatTime(transaction.time) }}
                             <template v-if="transaction.comment"> · {{ transaction.comment }}</template>
                         </div>
@@ -101,8 +106,13 @@
                             <span class="text-subtitle-2">{{ categoryName(item.transaction.categoryId) }}</span>
                             <v-spacer />
                             <span class="text-subtitle-2">{{ formatAmount(item.transaction.amount, item.transaction.accountId) }}</span>
+                            <v-btn class="ms-2" size="x-small" variant="text" :disabled="dismissing"
+                                   @click="dismiss(TransactionReviewDismissalKind.Unusual, item.key)">
+                                {{ tt('Dismiss') }}
+                            </v-btn>
                         </div>
-                        <div class="text-caption text-medium-emphasis mt-1">
+                        <div class="text-caption text-medium-emphasis mt-1 review-clickable"
+                             @click="openTransaction(item.transaction)">
                             {{ formatTime(item.transaction.time) }}
                             · {{ tt('Category Average') }} {{ formatAmount(item.categoryMean, item.transaction.accountId) }}
                             · {{ tt('Z-Score') }} {{ item.zScore }}
@@ -133,6 +143,7 @@
                             <th class="text-end">{{ tt('Average Amount') }}</th>
                             <th class="text-end">{{ tt('Price Change') }}</th>
                             <th>{{ tt('Last Charge') }}</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -150,6 +161,12 @@
                                 <span v-else class="text-medium-emphasis">—</span>
                             </td>
                             <td>{{ formatTime(subscription.lastTime) }}</td>
+                            <td class="text-end">
+                                <v-btn size="x-small" variant="text" :disabled="dismissing"
+                                       @click="dismiss(TransactionReviewDismissalKind.Subscription, subscription.key)">
+                                    {{ tt('Dismiss') }}
+                                </v-btn>
+                            </td>
                         </tr>
                         </tbody>
                     </v-table>
@@ -157,11 +174,20 @@
             </v-card>
         </v-col>
     </v-row>
+
+    <edit-dialog ref="editDialog" :type="TransactionEditPageType.Transaction" />
 </template>
 
 <script setup lang="ts">
 import { mdiAlertOutline, mdiAutorenew, mdiContentDuplicate, mdiRefresh } from '@mdi/js';
 
+import EditDialog from '@/views/desktop/transactions/list/dialogs/EditDialog.vue';
+import type { TransactionReviewTransaction } from '@/models/transaction_review.ts';
+import { TransactionReviewDismissalKind } from '@/models/transaction_review.ts';
+
+import { useTemplateRef } from 'vue';
+
+import { TransactionEditPageType } from '@/views/base/transactions/TransactionEditPageBase.ts';
 import { useI18n } from '@/locales/helpers.ts';
 import { useTransactionReviewPageBase } from '@/views/base/insights/TransactionReviewPageBase.ts';
 
@@ -169,6 +195,7 @@ const { tt } = useI18n();
 const {
     periodOptions,
     loading,
+    dismissing,
     months,
     review,
     errorMessage,
@@ -183,9 +210,16 @@ const {
     formatAmountInCurrency,
     formatTime,
     cadenceName,
+    dismiss,
     reload,
     init
 } = useTransactionReviewPageBase();
+
+const editDialog = useTemplateRef<InstanceType<typeof EditDialog>>('editDialog');
+
+function openTransaction(transaction: TransactionReviewTransaction): void {
+    editDialog.value?.open({ id: transaction.id, type: transaction.type, currentTransaction: undefined });
+}
 
 init();
 </script>
@@ -206,5 +240,9 @@ init();
 
 .review-item:last-child {
     border-bottom: none;
+}
+
+.review-clickable {
+    cursor: pointer;
 }
 </style>

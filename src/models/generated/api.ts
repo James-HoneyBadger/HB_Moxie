@@ -136,6 +136,11 @@ export interface TransactionAmountsResponseItemAmountInfo {
     readonly expenseAmount: number;
 }
 
+export interface TransactionReviewDismissRequest {
+    readonly kind: string;
+    readonly key: string;
+}
+
 export interface TransactionSplitIndexItem {
     readonly transactionId: string;
     readonly total: number;

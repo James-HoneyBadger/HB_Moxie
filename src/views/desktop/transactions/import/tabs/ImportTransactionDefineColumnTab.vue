@@ -234,6 +234,7 @@ import { type DateFormatOrder, KnownDateTimeFormat } from '@/core/datetime.ts';
 import { KnownDateTimezoneFormat } from '@/core/timezone.ts';
 import { TransactionType } from '@/core/transaction.ts';
 import { ImportTransactionColumnType, ImportTransactionDataMapping } from '@/core/import_transaction.ts';
+import { getImportMappingSignature, getImportMappingStore } from '@/lib/import_mapping_storage.ts';
 import { KnownFileType } from '@/core/file.ts';
 import { KNOWN_COLUMN_NAME_MAPPING, KNOWN_TRANSACTION_TYPE_NAME_MAPPING } from '@/consts/import_transaction.ts';
 
@@ -253,7 +254,8 @@ import {
     mdiCheck,
     mdiClose,
     mdiFolderOpenOutline,
-    mdiContentSaveOutline
+    mdiContentSaveOutline,
+    mdiEraser
 } from '@mdi/js';
 
 type SnackBarType = InstanceType<typeof SnackBar>;
@@ -313,6 +315,11 @@ const menus = computed<ImportTransactionDefineColumnMenu[]>(() => [
         prependIcon: mdiContentSaveOutline,
         title: tt('Save Data Mapping File'),
         onClick: saveColumnMappingFile
+    },
+    {
+        prependIcon: mdiEraser,
+        title: tt('Forget Saved Mapping'),
+        onClick: forgetSavedMapping
     }
 ]);
 
@@ -679,12 +686,48 @@ function saveColumnMappingFile(): void {
     startDownloadFile(fileName, KnownFileType.JSON.createBlob(parsedFileDataColumnMapping.value.toJson()));
 }
 
+let mappingSignature: string | undefined;
+let saveMappingTimer: ReturnType<typeof setTimeout> | undefined;
+
+function rememberMapping(): void {
+    if (!mappingSignature) {
+        return;
+    }
+
+    getImportMappingStore().save(mappingSignature, parsedFileDataColumnMapping.value);
+}
+
+function forgetSavedMapping(): void {
+    if (!mappingSignature) {
+        return;
+    }
+
+    getImportMappingStore().forget(mappingSignature);
+    snackbar.value?.showMessage('Saved mapping forgotten');
+}
+
 watch(() => props.parsedFileData, (newValue, oldValue) => {
     if (newValue && !oldValue && getObjectOwnFieldCount(parsedFileDataColumnMapping.value.dataColumnMapping) < 1) {
+        mappingSignature = getImportMappingSignature(newValue);
+        const savedMapping = mappingSignature ? getImportMappingStore().load(mappingSignature) : undefined;
+
+        // A mapping saved for this layout is a better starting point than guessing.
+        if (savedMapping) {
+            parsedFileDataColumnMapping.value = savedMapping;
+            snackbar.value?.showMessage('Saved mapping loaded');
+            return;
+        }
+
         autoSetColumnMapping();
         autoSetTransactionTypeMapping();
     }
 }, { immediate: true });
+
+watch(parsedFileDataColumnMapping, () => {
+    // Save after the edits settle, so a burst of column assignments writes once.
+    clearTimeout(saveMappingTimer);
+    saveMappingTimer = setTimeout(rememberMapping, 800);
+}, { deep: true });
 
 defineExpose({
     menus,

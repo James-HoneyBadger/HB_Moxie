@@ -58,6 +58,7 @@ type apiSchemaTypes struct {
 	SharedExpenseEntryResponse           models.SharedExpenseEntryResponse
 	SharedExpenseSettlementDeleteRequest models.SharedExpenseSettlementDeleteRequest
 	AIAssistantAskRequest                models.AIAssistantAskRequest
+	TransactionReviewDismissRequest      models.TransactionReviewDismissRequest
 	AIAssistantAskResponse               models.AIAssistantAskResponse
 }
 
@@ -179,6 +180,12 @@ func generatedPaths() map[string]any {
 		},
 		"/api/v1/tokens/generate/mcp.json": map[string]any{
 			"post": jsonOperation("generateMcpToken", "Generate an MCP token", "TokenGenerateMCPRequest", "TokenGenerateMCPResponse"),
+		},
+		"/api/v1/insights/review/dismiss.json": map[string]any{
+			"post": jsonOperation("dismissTransactionReviewFinding", "Hide a review finding until it is restored", "TransactionReviewDismissRequest", "boolean"),
+		},
+		"/api/v1/insights/review/restore.json": map[string]any{
+			"post": jsonOperation("restoreTransactionReviewFinding", "Show a dismissed review finding again", "TransactionReviewDismissRequest", "boolean"),
 		},
 		"/api/v1/ai/ask.json": map[string]any{
 			"post": jsonOperation("askAIAssistant", "Ask a question about the user's finances; only an aggregated summary is sent to the configured model", "AIAssistantAskRequest", "AIAssistantAskResponse"),

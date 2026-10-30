@@ -138,7 +138,8 @@ import type {
     InsightsExplorerInfoResponse,
 } from '@/models/explorer.ts';
 import type {
-    TransactionReviewResponse
+    TransactionReviewResponse,
+    TransactionReviewDismissRequest
 } from '@/models/transaction_review.ts';
 import type {
     TransactionSplits,
@@ -829,10 +830,20 @@ export default {
     getAllInsightsExplorers: (): ApiResponsePromise<InsightsExplorerInfoResponse[]> => {
         return axios.get<ApiResponse<InsightsExplorerInfoResponse[]>>('v1/insights/explorers/list.json');
     },
-    getTransactionReview: ({ months }: { months: number }): ApiResponsePromise<TransactionReviewResponse> => {
+    getTransactionReview: ({ months, zScoreThreshold, duplicateMaxBucket }: { months: number, zScoreThreshold?: number, duplicateMaxBucket?: number }): ApiResponsePromise<TransactionReviewResponse> => {
         return axios.get<ApiResponse<TransactionReviewResponse>>('v1/insights/review.json', {
-            params: { months }
+            params: {
+                months,
+                z_score: zScoreThreshold,
+                duplicate_max_bucket: duplicateMaxBucket
+            }
         });
+    },
+    dismissTransactionReviewFinding: (req: TransactionReviewDismissRequest): ApiResponsePromise<boolean> => {
+        return axios.post<ApiResponse<boolean>>('v1/insights/review/dismiss.json', req);
+    },
+    restoreTransactionReviewFinding: (req: TransactionReviewDismissRequest): ApiResponsePromise<boolean> => {
+        return axios.post<ApiResponse<boolean>>('v1/insights/review/restore.json', req);
     },
     getTransactionSplitIndex: ({ minTime, maxTime }: { minTime: number, maxTime: number }): ApiResponsePromise<TransactionSplitIndexItem[]> => {
         return axios.get<ApiResponse<TransactionSplitIndexItem[]>>(`v1/transactions/splits/index.json?min_time=${minTime}&max_time=${maxTime}`);

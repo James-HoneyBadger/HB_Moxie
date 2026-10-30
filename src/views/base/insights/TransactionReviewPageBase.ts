@@ -5,7 +5,9 @@ import { useI18n } from '@/locales/helpers.ts';
 import { useAccountsStore } from '@/stores/account.ts';
 import { useTransactionCategoriesStore } from '@/stores/transactionCategory.ts';
 
+import { TransactionReviewDismissalKind } from '@/models/transaction_review.ts';
 import type {
+    TransactionReviewDismissRequest,
     TransactionReviewDuplicateGroup,
     TransactionReviewResponse,
     TransactionReviewSubscription,
@@ -33,6 +35,7 @@ export function useTransactionReviewPageBase() {
     const transactionCategoriesStore = useTransactionCategoriesStore();
 
     const loading = ref<boolean>(false);
+    const dismissing = ref<boolean>(false);
     const months = ref<number>(12);
     const review = ref<TransactionReviewResponse | null>(null);
     const errorMessage = ref<string>('');
@@ -118,6 +121,23 @@ export function useTransactionReviewPageBase() {
         }
     }
 
+    function dismiss(kind: TransactionReviewDismissalKind, key: string): Promise<boolean> {
+        const request: TransactionReviewDismissRequest = { kind, key };
+
+        dismissing.value = true;
+
+        return services.dismissTransactionReviewFinding(request).then(() => {
+            dismissing.value = false;
+            reload();
+            return true;
+        }).catch(error => {
+            logger.error('failed to dismiss review finding', error);
+            errorMessage.value = tt('Failed to save data');
+            dismissing.value = false;
+            return false;
+        });
+    }
+
     function reload(): void {
         loading.value = true;
         errorMessage.value = '';
@@ -141,6 +161,7 @@ export function useTransactionReviewPageBase() {
         reviewPeriodOptions: REVIEW_PERIOD_OPTIONS,
         // states
         loading,
+        dismissing,
         months,
         review,
         errorMessage,
@@ -160,6 +181,7 @@ export function useTransactionReviewPageBase() {
         formatAmountInCurrency,
         formatTime,
         cadenceName,
+        dismiss,
         reload,
         init
     };

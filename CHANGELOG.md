@@ -34,6 +34,16 @@ details.
   across the listed people.
 - The first real database migration, which backfills the direction of splits
   created before directions existed.
+- Transaction review findings can be dismissed and restored, so a known-fine
+  duplicate charge stops reappearing. The duplicate and unusual thresholds are
+  accepted as request parameters instead of being fixed at build time, and every
+  finding links through to the transaction it came from.
+- Backend error messages are translated: all 305 messages the API can return now
+  have an `error.` entry in every locale, and `scripts/check-locales.mjs` fails
+  when a new message is added without one.
+- The import column mapping is remembered per file layout, so importing the same
+  export twice no longer means repeating the mapping, with a menu action to
+  forget it.
 - An AI assistant API (`POST /api/v1/ai/ask.json`) that answers questions about
   the user's finances with a language model the user configures in
   `[llm_ai_assistant]`. It is disabled by default, and only an aggregated,

@@ -367,6 +367,21 @@ Saved explorers appear in the Insights sidebar. You can reorder, edit, or delete
 
 ---
 
+## Transaction Review
+
+Reviews recent transactions for possible duplicate charges, unusual spending and
+recurring subscriptions.
+
+- **Dismiss** hides a finding you have already checked, and it stops reappearing
+  without changing any transaction.
+- Clicking the transaction details of a finding opens that transaction, so a real
+  duplicate can be corrected straight away.
+- The duplicate and unusual thresholds can be tuned through the API
+  (`z_score`, `duplicate_max_bucket`) when the defaults surface too much noise or
+  miss something.
+
+---
+
 ## Shared Expenses
 
 Track money other people owe you by splitting expense transactions with them.

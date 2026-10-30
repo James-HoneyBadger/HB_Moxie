@@ -460,6 +460,22 @@
           "expenseAmount"
         ]
       },
+      "TransactionReviewDismissRequest": {
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind",
+          "key"
+        ]
+      },
       "TransactionSplitIndexItem": {
         "properties": {
           "transactionId": {
@@ -1110,6 +1126,62 @@
           }
         },
         "summary": "Restore a SQLite snapshot backup"
+      }
+    },
+    "/api/v1/insights/review/dismiss.json": {
+      "post": {
+        "operationId": "dismissTransactionReviewFinding",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionReviewDismissRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Hide a review finding until it is restored"
+      }
+    },
+    "/api/v1/insights/review/restore.json": {
+      "post": {
+        "operationId": "restoreTransactionReviewFinding",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionReviewDismissRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Show a dismissed review finding again"
       }
     },
     "/api/v1/tokens/generate/api.json": {

@@ -208,6 +208,14 @@ func updateAllDatabaseTablesStructure(c *core.CliContext) error {
 
 	log.BootInfof(c, "[database.updateAllDatabaseTablesStructure] shared expense settlement table maintained successfully")
 
+	err = datastore.Container.UserDataStore.SyncStructs(new(models.TransactionReviewDismissal))
+
+	if err != nil {
+		return err
+	}
+
+	log.BootInfof(c, "[database.updateAllDatabaseTablesStructure] transaction review dismissal table maintained successfully")
+
 	appliedMigrations, err := datastore.Container.RunMigrations(c)
 
 	if err != nil {

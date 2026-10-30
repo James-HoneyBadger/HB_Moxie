@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"math"
 	"sort"
 	"strings"
@@ -8,6 +9,7 @@ import (
 	"unicode"
 
 	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
 	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
 	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
@@ -26,6 +28,7 @@ type TransactionReviewRepository interface {
 // recurring subscriptions from a user's transaction history.
 type TransactionReviewService struct {
 	repository TransactionReviewRepository
+	dismissals TransactionReviewDismissalStore
 }
 
 // NewTransactionReviewService returns a review service backed by the given repository.
@@ -35,15 +38,47 @@ func NewTransactionReviewService(repository TransactionReviewRepository) *Transa
 	}
 }
 
+// TransactionReviewDismissalStore persists the findings a user does not want to
+// see again. It is separate from the transaction repository so the detection
+// heuristics stay testable without a database.
+type TransactionReviewDismissalStore interface {
+	GetDismissalKeys(c core.Context, uid int64) (map[string]bool, error)
+	AddDismissal(c core.Context, uid int64, kind string, key string) error
+	RemoveDismissal(c core.Context, uid int64, kind string, key string) error
+}
+
 // TransactionReviews is the application-wide transaction review service.
-var TransactionReviews = NewTransactionReviewService(Transactions)
+var TransactionReviews = &TransactionReviewService{
+	repository: Transactions,
+	dismissals: TransactionReviewDismissals,
+}
 
 // Review analyses the transactions of the given user over the last months.
-func (s *TransactionReviewService) Review(c core.Context, uid int64, months int32) (*models.TransactionReviewResponse, error) {
+func (s *TransactionReviewService) Review(c core.Context, uid int64, request *models.TransactionReviewRequest) (*models.TransactionReviewResponse, error) {
+	if uid <= 0 {
+		return nil, errs.ErrUserIdInvalid
+	}
+
+	if request == nil {
+		request = &models.TransactionReviewRequest{}
+	}
+
+	months := request.Months
+
 	if months <= 0 {
 		months = models.TransactionReviewDefaultMonths
 	} else if months > models.TransactionReviewMaxMonths {
 		months = models.TransactionReviewMaxMonths
+	}
+
+	options := models.TransactionReviewDefaultOptions()
+
+	if request.ZScoreThreshold > 0 && request.ZScoreThreshold <= 10 {
+		options.ZScoreThreshold = request.ZScoreThreshold
+	}
+
+	if request.DuplicateMaxBucket > 0 && request.DuplicateMaxBucket <= 20 {
+		options.DuplicateMaxBucket = request.DuplicateMaxBucket
 	}
 
 	endUnixTime := time.Now().Unix()
@@ -55,24 +90,126 @@ func (s *TransactionReviewService) Review(c core.Context, uid int64, months int3
 		return nil, err
 	}
 
-	return buildTransactionReview(transactions, startUnixTime, endUnixTime), nil
+	dismissedKeys := map[string]bool{}
+
+	if s.dismissals != nil {
+		keys, err := s.dismissals.GetDismissalKeys(c, uid)
+
+		if err != nil {
+			return nil, err
+		}
+
+		dismissedKeys = keys
+	}
+
+	return buildTransactionReview(transactions, startUnixTime, endUnixTime, options, dismissedKeys), nil
 }
 
-func buildTransactionReview(transactions []*models.Transaction, startUnixTime int64, endUnixTime int64) *models.TransactionReviewResponse {
-	return &models.TransactionReviewResponse{
-		StartTime:         startUnixTime,
-		EndTime:           endUnixTime,
-		TotalTransactions: int32(len(transactions)),
-		Duplicates:        detectDuplicateTransactions(transactions),
-		Unusual:           detectUnusualTransactions(transactions),
-		Subscriptions:     detectSubscriptions(transactions),
+// Dismiss hides a finding until it is restored.
+func (s *TransactionReviewService) Dismiss(c core.Context, uid int64, request *models.TransactionReviewDismissRequest) error {
+	if uid <= 0 {
+		return errs.ErrUserIdInvalid
 	}
+
+	if request == nil || s.dismissals == nil {
+		return errs.ErrParameterInvalid
+	}
+
+	if !isValidTransactionReviewDismissalKind(request.Kind) {
+		return errs.ErrTransactionReviewDismissalInvalid
+	}
+
+	key := strings.TrimSpace(request.Key)
+
+	if key == "" {
+		return errs.ErrTransactionReviewDismissalInvalid
+	}
+
+	return s.dismissals.AddDismissal(c, uid, request.Kind, key)
+}
+
+// Restore shows a dismissed finding again.
+func (s *TransactionReviewService) Restore(c core.Context, uid int64, request *models.TransactionReviewDismissRequest) error {
+	if uid <= 0 {
+		return errs.ErrUserIdInvalid
+	}
+
+	if request == nil || s.dismissals == nil {
+		return errs.ErrParameterInvalid
+	}
+
+	if !isValidTransactionReviewDismissalKind(request.Kind) {
+		return errs.ErrTransactionReviewDismissalInvalid
+	}
+
+	return s.dismissals.RemoveDismissal(c, uid, request.Kind, strings.TrimSpace(request.Key))
+}
+
+func isValidTransactionReviewDismissalKind(kind string) bool {
+	return kind == models.TransactionReviewDismissalKindDuplicate ||
+		kind == models.TransactionReviewDismissalKindUnusual ||
+		kind == models.TransactionReviewDismissalKindSubscription
+}
+
+func buildTransactionReview(transactions []*models.Transaction, startUnixTime int64, endUnixTime int64, options models.TransactionReviewOptions, dismissedKeys map[string]bool) *models.TransactionReviewResponse {
+	duplicates := detectDuplicateTransactions(transactions, options)
+	unusual := detectUnusualTransactions(transactions, options)
+	subscriptions := detectSubscriptions(transactions)
+
+	// Findings the user dismissed are dropped here so every caller sees the same
+	// filtered view.
+	keptDuplicates := make([]*models.TransactionReviewDuplicateGroup, 0, len(duplicates))
+
+	for _, group := range duplicates {
+		if !dismissedKeys[models.TransactionReviewDismissalKindDuplicate+"\x00"+group.Key] {
+			keptDuplicates = append(keptDuplicates, group)
+		}
+	}
+
+	keptUnusual := make([]*models.TransactionReviewUnusual, 0, len(unusual))
+
+	for _, item := range unusual {
+		if !dismissedKeys[models.TransactionReviewDismissalKindUnusual+"\x00"+item.Key] {
+			keptUnusual = append(keptUnusual, item)
+		}
+	}
+
+	keptSubscriptions := make([]*models.TransactionReviewSubscription, 0, len(subscriptions))
+
+	for _, subscription := range subscriptions {
+		if !dismissedKeys[models.TransactionReviewDismissalKindSubscription+"\x00"+subscription.Key] {
+			keptSubscriptions = append(keptSubscriptions, subscription)
+		}
+	}
+
+	return &models.TransactionReviewResponse{
+		StartTime:          startUnixTime,
+		EndTime:            endUnixTime,
+		TotalTransactions:  int32(len(transactions)),
+		ZScoreThreshold:    options.ZScoreThreshold,
+		DuplicateMaxBucket: options.DuplicateMaxBucket,
+		Duplicates:         keptDuplicates,
+		Unusual:            keptUnusual,
+		Subscriptions:      keptSubscriptions,
+	}
+}
+
+func transactionReviewDuplicateKey(accountId int64, txnType models.TransactionDbType, amount int64) string {
+	return fmt.Sprintf("%d:%d:%d", accountId, txnType, amount)
+}
+
+func transactionReviewUnusualKey(transactionId int64) string {
+	return fmt.Sprintf("%d", transactionId)
+}
+
+func transactionReviewSubscriptionKey(accountId int64, name string) string {
+	return fmt.Sprintf("%d:%s", accountId, strings.ToLower(strings.TrimSpace(name)))
 }
 
 // detectDuplicateTransactions finds transactions with the same account, type
 // and amount within a short window, which usually means a charge was recorded
 // twice or billed twice.
-func detectDuplicateTransactions(transactions []*models.Transaction) []*models.TransactionReviewDuplicateGroup {
+func detectDuplicateTransactions(transactions []*models.Transaction, options models.TransactionReviewOptions) []*models.TransactionReviewDuplicateGroup {
 	type bucketKey struct {
 		accountId int64
 		txnType   models.TransactionDbType
@@ -99,7 +236,7 @@ func detectDuplicateTransactions(transactions []*models.Transaction) []*models.T
 	groups := make([]*models.TransactionReviewDuplicateGroup, 0, len(buckets))
 
 	for key, items := range buckets {
-		if len(items) < 2 || len(items) > models.TransactionReviewDuplicateMaxBucketSize {
+		if len(items) < 2 || int32(len(items)) > options.DuplicateMaxBucket {
 			continue
 		}
 
@@ -118,6 +255,7 @@ func detectDuplicateTransactions(transactions []*models.Transaction) []*models.T
 
 			if j-i >= 2 {
 				group := &models.TransactionReviewDuplicateGroup{
+					Key:          transactionReviewDuplicateKey(key.accountId, key.txnType, key.amount),
 					AccountId:    key.accountId,
 					Type:         key.txnType,
 					Amount:       key.amount,
@@ -148,7 +286,7 @@ func detectDuplicateTransactions(transactions []*models.Transaction) []*models.T
 
 // detectUnusualTransactions flags expenses far above the usual amount for their
 // category, using a z-score over the category's own history.
-func detectUnusualTransactions(transactions []*models.Transaction) []*models.TransactionReviewUnusual {
+func detectUnusualTransactions(transactions []*models.Transaction, options models.TransactionReviewOptions) []*models.TransactionReviewUnusual {
 	type categoryStats struct {
 		mean   float64
 		stddev float64
@@ -202,11 +340,12 @@ func detectUnusualTransactions(transactions []*models.Transaction) []*models.Tra
 
 		zScore := (float64(transaction.Amount) - stats.mean) / stats.stddev
 
-		if zScore < models.TransactionReviewUnusualZScoreThreshold {
+		if zScore < options.ZScoreThreshold {
 			continue
 		}
 
 		unusual = append(unusual, &models.TransactionReviewUnusual{
+			Key:            transactionReviewUnusualKey(transaction.TransactionId),
 			Transaction:    newReviewTransaction(transaction),
 			CategoryMean:   math.Round(stats.mean*100) / 100,
 			CategoryStdDev: math.Round(stats.stddev*100) / 100,
@@ -306,6 +445,7 @@ func detectSubscriptions(transactions []*models.Transaction) []*models.Transacti
 		}
 
 		subscriptions = append(subscriptions, &models.TransactionReviewSubscription{
+			Key:           transactionReviewSubscriptionKey(last.AccountId, last.Comment),
 			Name:          strings.TrimSpace(last.Comment),
 			Cadence:       cadence,
 			Occurrences:   int32(len(items)),
@@ -442,6 +582,7 @@ func median(values []float64) float64 {
 func newReviewTransaction(transaction *models.Transaction) *models.TransactionReviewTransaction {
 	return &models.TransactionReviewTransaction{
 		Id:         transaction.TransactionId,
+		Type:       transaction.Type,
 		Time:       utils.GetUnixTimeFromTransactionTime(transaction.TransactionTime),
 		Amount:     transaction.Amount,
 		Comment:    transaction.Comment,

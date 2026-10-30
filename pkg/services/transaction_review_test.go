@@ -91,7 +91,7 @@ func TestDetectDuplicateTransactions(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			groups := detectDuplicateTransactions(testCase.transactions)
+			groups := detectDuplicateTransactions(testCase.transactions, models.TransactionReviewDefaultOptions())
 
 			assert.Len(t, groups, testCase.expectedGroups)
 
@@ -123,7 +123,7 @@ func TestDetectUnusualTransactions(t *testing.T) {
 	// Income is out of scope.
 	transactions = append(transactions, reviewTestTransaction(transactionId, 13, models.TRANSACTION_DB_TYPE_INCOME, 500000, 1, 5, "Salary"))
 
-	unusual := detectUnusualTransactions(transactions)
+	unusual := detectUnusualTransactions(transactions, models.TransactionReviewDefaultOptions())
 
 	assert.Len(t, unusual, 1)
 	assert.Equal(t, int64(100000), unusual[0].Transaction.Amount)
@@ -248,7 +248,7 @@ func TestTransactionReviewServiceReview(t *testing.T) {
 	}
 
 	service := NewTransactionReviewService(repository)
-	response, err := service.Review(core.NewNullContext(), 42, 0)
+	response, err := service.Review(core.NewNullContext(), 42, &models.TransactionReviewRequest{})
 
 	assert.Nil(t, err)
 	assert.True(t, repository.called)
@@ -262,7 +262,75 @@ func TestTransactionReviewServiceClampsMonths(t *testing.T) {
 	repository := &fakeTransactionReviewRepository{}
 	service := NewTransactionReviewService(repository)
 
-	response, err := service.Review(core.NewNullContext(), 42, models.TransactionReviewMaxMonths+100)
+	response, err := service.Review(core.NewNullContext(), 42, &models.TransactionReviewRequest{Months: models.TransactionReviewMaxMonths + 100})
 	assert.Nil(t, err)
 	assert.Equal(t, int64(models.TransactionReviewMaxMonths)*30*reviewTestDay, response.EndTime-response.StartTime)
+}
+
+func TestTransactionReviewFindingsCarryDismissKeys(t *testing.T) {
+	transactions := []*models.Transaction{
+		reviewTestTransaction(1, 0, models.TRANSACTION_DB_TYPE_EXPENSE, 1500, 1, 2, "Shop"),
+		reviewTestTransaction(2, 1, models.TRANSACTION_DB_TYPE_EXPENSE, 1500, 1, 2, "Shop"),
+	}
+
+	duplicates := detectDuplicateTransactions(transactions, models.TransactionReviewDefaultOptions())
+
+	assert.Len(t, duplicates, 1)
+	assert.Equal(t, "1:3:1500", duplicates[0].Key, "account, type and amount identify the finding")
+	assert.Equal(t, models.TRANSACTION_DB_TYPE_EXPENSE, duplicates[0].Transactions[0].Type, "the type lets a finding open its transaction")
+}
+
+func TestBuildTransactionReviewDropsDismissedFindings(t *testing.T) {
+	transactions := []*models.Transaction{
+		reviewTestTransaction(1, 0, models.TRANSACTION_DB_TYPE_EXPENSE, 1500, 1, 2, "Shop"),
+		reviewTestTransaction(2, 1, models.TRANSACTION_DB_TYPE_EXPENSE, 1500, 1, 2, "Shop"),
+		reviewTestTransaction(3, 0, models.TRANSACTION_DB_TYPE_EXPENSE, 4200, 1, 2, "Other"),
+		reviewTestTransaction(4, 1, models.TRANSACTION_DB_TYPE_EXPENSE, 4200, 1, 2, "Other"),
+	}
+
+	response := buildTransactionReview(transactions, 0, 0, models.TransactionReviewDefaultOptions(), map[string]bool{
+		models.TransactionReviewDismissalKindDuplicate + "\x00" + transactionReviewDuplicateKey(1, models.TRANSACTION_DB_TYPE_EXPENSE, 1500): true,
+	})
+
+	assert.Len(t, response.Duplicates, 1, "only the dismissed group is hidden")
+	assert.Equal(t, int64(4200), response.Duplicates[0].Amount)
+	assert.Equal(t, int32(4), response.TotalTransactions, "dismissal must not change the review scope")
+}
+
+func TestBuildTransactionReviewReportsThresholds(t *testing.T) {
+	options := models.TransactionReviewOptions{ZScoreThreshold: 2.5, DuplicateMaxBucket: 6}
+	response := buildTransactionReview(nil, 100, 200, options, nil)
+
+	assert.Equal(t, 2.5, response.ZScoreThreshold)
+	assert.Equal(t, int32(6), response.DuplicateMaxBucket)
+	assert.Equal(t, int64(100), response.StartTime)
+	assert.Equal(t, int64(200), response.EndTime)
+}
+
+func TestTransactionReviewServiceHonoursThresholdOverrides(t *testing.T) {
+	repository := &fakeTransactionReviewRepository{}
+	service := NewTransactionReviewService(repository)
+
+	response, err := service.Review(core.NewNullContext(), 42, &models.TransactionReviewRequest{
+		ZScoreThreshold:    2,
+		DuplicateMaxBucket: 9,
+	})
+
+	assert.Nil(t, err)
+	assert.Equal(t, 2.0, response.ZScoreThreshold)
+	assert.Equal(t, int32(9), response.DuplicateMaxBucket)
+}
+
+func TestTransactionReviewServiceIgnoresOutOfRangeThresholds(t *testing.T) {
+	repository := &fakeTransactionReviewRepository{}
+	service := NewTransactionReviewService(repository)
+
+	response, err := service.Review(core.NewNullContext(), 42, &models.TransactionReviewRequest{
+		ZScoreThreshold:    99,
+		DuplicateMaxBucket: 100,
+	})
+
+	assert.Nil(t, err)
+	assert.Equal(t, models.TransactionReviewUnusualZScoreThreshold, response.ZScoreThreshold, "an out of range value falls back to the default")
+	assert.Equal(t, int32(models.TransactionReviewDuplicateMaxBucketSize), response.DuplicateMaxBucket)
 }

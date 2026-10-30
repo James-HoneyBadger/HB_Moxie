@@ -424,6 +424,8 @@ func startWebServer(c *core.CliContext) error {
 
 			// Transaction review (duplicates, unusual spending, subscriptions)
 			apiV1Route.GET("/insights/review.json", bindApi(api.TransactionReviews.TransactionReviewHandler))
+			apiV1Route.POST("/insights/review/dismiss.json", bindApi(api.TransactionReviews.TransactionReviewDismissHandler))
+			apiV1Route.POST("/insights/review/restore.json", bindApi(api.TransactionReviews.TransactionReviewRestoreHandler))
 
 			// Large Language Models
 			if config.ReceiptImageRecognitionLLMConfig != nil && config.ReceiptImageRecognitionLLMConfig.LLMProvider != "" {

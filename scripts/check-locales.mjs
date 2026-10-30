@@ -51,6 +51,24 @@ function reportKeys(label, keys) {
     console.error(shown.join('\n'));
 }
 
+// Every message a backend error can carry lives in pkg/errs as a literal. The
+// interface looks up `error.<message>`, so a message without a key would surface
+// in English no matter which locale the user picked.
+function loadServerErrorMessages() {
+    const errsDir = join(root, 'pkg/errs');
+    const messages = new Set();
+
+    for (const file of readdirSync(errsDir).filter(name => name.endsWith('.go') && !name.endsWith('_test.go'))) {
+        const content = readFileSync(join(errsDir, file), 'utf8');
+
+        for (const match of content.matchAll(/New(?:Normal|System)Error\([^,]+,\s*\d+,\s*[^,]+,\s*"([^"]+)"\)/g)) {
+            messages.add(match[1]);
+        }
+    }
+
+    return [...messages].sort();
+}
+
 const locales = loadLocales();
 const canonical = locales.get(CANONICAL);
 
@@ -104,7 +122,18 @@ if (problems.length > 0) {
     process.exit(1);
 }
 
-console.log(`Locale check passed: ${locales.size} locales, ${canonical.size} keys each.`);
+const serverErrorMessages = loadServerErrorMessages();
+const untranslatedErrors = serverErrorMessages.filter(message => !canonical.has(`error.${message}`));
+
+if (untranslatedErrors.length > 0) {
+    console.error(`Locale check failed: ${untranslatedErrors.length} backend error message(s) have no "error." key in ${CANONICAL}.json.`);
+    reportKeys('missing error keys', untranslatedErrors.map(message => `error.${message}`));
+    console.error('');
+    console.error('Add the message to the "error" section of every locale so it is not shown in English.');
+    process.exit(1);
+}
+
+console.log(`Locale check passed: ${locales.size} locales, ${canonical.size} keys each, ${serverErrorMessages.length} backend error messages translated.`);
 
 const sorted = untranslated.sort((a, b) => a.identical / a.total - b.identical / b.total);
 
@@ -112,4 +141,24 @@ for (const { name, identical, total } of sorted) {
     const percent = Math.round((identical / total) * 1000) / 10;
 
     console.log(`  ${name.padEnd(8)} ${String(identical).padStart(4)} of ${total} strings identical to English (${percent}%)`);
+}
+
+// The error namespace is the one place where English text is deliberately kept
+// for configuration-only messages, so report it separately.
+const englishErrors = [...canonical.keys()]
+    .filter(key => key.startsWith('error.'))
+    .map(key => ({ key, value: canonical.get(key) }));
+const untranslatedByLocale = locales.size > 1
+    ? [...locales]
+        .filter(([name]) => name !== CANONICAL)
+        .map(([name, messages]) => ({
+            name,
+            count: englishErrors.filter(({ key, value }) => messages.get(key) === value).length
+        }))
+        .sort((a, b) => b.count - a.count)
+    : [];
+
+if (untranslatedByLocale.length > 0) {
+    const worst = untranslatedByLocale[0];
+    console.log(`  error strings still in English: ${untranslatedByLocale.map(entry => `${entry.name} ${entry.count}`).join(', ')}`);
 }

@@ -876,6 +876,33 @@ POST /api/v1/insights/explorers/delete.json
 
 ---
 
+## Transaction Review
+
+### Review Transactions
+
+```
+GET /api/v1/insights/review.json?months=12&z_score=3&duplicate_max_bucket=4
+```
+
+`z_score` (0-10) and `duplicate_max_bucket` (0-20) are optional; out-of-range
+values fall back to the defaults, which are echoed in the response.
+
+### Dismiss and Restore a Finding
+
+```
+POST /api/v1/insights/review/dismiss.json
+POST /api/v1/insights/review/restore.json
+```
+
+```json
+{ "kind": "duplicate", "key": "<key from the review response>" }
+```
+
+`kind` is `duplicate`, `unusual` or `subscription`. Every finding carries a stable
+`key`, so dismissing one survives later reviews.
+
+---
+
 ## AI Assistant
 
 Answers a question about the user's finances with the configured language model.
