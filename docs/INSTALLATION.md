@@ -22,7 +22,7 @@ Complete instructions for installing and running Ratel Ledger as a desktop appli
 | RAM | 256 MB |
 | Disk | 200 MB (application) + database storage |
 | Go | 1.26+ (build from source only) |
-| Node.js | 20.19+ or 22.12+ (build from source only) |
+| Node.js | 22.12+ (build from source only) |
 
 ---
 

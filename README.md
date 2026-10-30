@@ -97,7 +97,7 @@ go run .
 |----------|------------|
 | Backend  | Go 1.26, Gin, xorm |
 | Frontend | Vue 3, Vuetify 3, TypeScript, Vite |
-| Desktop  | Electron 33 |
+| Desktop  | Electron 45 |
 | Database | SQLite 3 / MySQL / PostgreSQL |
 | Build    | Vite 7, Go toolchain, electron-builder |
 

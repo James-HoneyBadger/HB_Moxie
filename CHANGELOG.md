@@ -24,6 +24,9 @@ details.
 
 ### Changed
 
+- Upgrade the desktop shell to Electron 45.1 (from 33, which reached
+  end-of-life in April 2025) and electron-builder 26, dropping the unused
+  `electron-is-dev` dependency. The Electron 45 toolchain requires Node 22.12+.
 - Builds are reproducible: `go mod download` replaces `go get .`, `npm ci`
   replaces `npm install`, and the pre-test `go clean -cache` is gone.
 - `npm run lint` no longer rewrites files; `npm run lint:fix` applies fixes.

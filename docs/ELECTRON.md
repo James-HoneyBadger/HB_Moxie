@@ -33,7 +33,7 @@ Users get a self-contained application with no browser or terminal needed.
 
 | Tool | Version |
 |------|---------|
-| Node.js | 20.19+ or 22.12+ |
+| Node.js | 22.12+ (required by the Electron 45 toolchain) |
 | npm | 9+ |
 | Go | 1.26+ (to build the backend binary) |
 | GCC | For SQLite CGO compilation |
@@ -60,7 +60,7 @@ npm run build
 
 ```bash
 cd electron
-npm install
+npm ci
 npm start
 ```
 
@@ -251,7 +251,7 @@ Subsequent launches reuse the existing files, so generated secrets and user data
 
 ### "Cannot find module" Errors
 
-Run `npm install` in the `electron/` directory to install Electron dependencies.
+Run `npm ci` in the `electron/` directory to install Electron dependencies.
 
 ### Port Conflicts
 
