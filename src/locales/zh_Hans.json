@@ -2591,5 +2591,15 @@
     "Add Person": "添加成员",
     "Failed to save data": "保存数据失败",
     "Track how much other people owe you by splitting expense transactions with them.": "通过与他人分摊支出，记录他们应付给你的金额。",
-    "Select an expense transaction": "选择一笔支出交易"
+    "Select an expense transaction": "选择一笔支出交易",
+    "They Owe Me": "对方应付我",
+    "I Owe Them": "我应付对方",
+    "Split Equally": "平均分摊",
+    "Settle Up": "结清",
+    "Settlement": "结算",
+    "They Paid Me": "对方已付我",
+    "I Paid Them": "我已付对方",
+    "You Owe": "你应付",
+    "Owes You": "对方应付",
+    "Rename": "重命名"
 }

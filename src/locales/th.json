@@ -2591,5 +2591,15 @@
     "Add Person": "เพิ่มบุคคล",
     "Failed to save data": "บันทึกข้อมูลไม่สำเร็จ",
     "Track how much other people owe you by splitting expense transactions with them.": "ติดตามว่าผู้อื่นค้างชำระคุณเท่าใดโดยแบ่งค่าใช้จ่ายกับพวกเขา",
-    "Select an expense transaction": "เลือกรายการค่าใช้จ่าย"
+    "Select an expense transaction": "เลือกรายการค่าใช้จ่าย",
+    "They Owe Me": "เขาค้างจ่ายฉัน",
+    "I Owe Them": "ฉันค้างจ่ายเขา",
+    "Split Equally": "หารเท่ากัน",
+    "Settle Up": "ชำระบัญชี",
+    "Settlement": "การชำระ",
+    "They Paid Me": "เขาจ่ายฉัน",
+    "I Paid Them": "ฉันจ่ายเขา",
+    "You Owe": "คุณค้างจ่าย",
+    "Owes You": "ค้างจ่ายคุณ",
+    "Rename": "เปลี่ยนชื่อ"
 }

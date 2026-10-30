@@ -45,12 +45,39 @@ export interface SharedExpenseEntryResponse {
     readonly splitAmount: number;
     readonly currency: string;
     readonly comment: string;
+    readonly direction: number;
+    readonly isSettlement: boolean;
+    readonly settlementId: string;
+}
+
+export interface SharedExpenseSettlementDeleteRequest {
+    readonly settlementId: string;
+}
+
+export interface SharedExpenseSettlementInfoResponse {
+    readonly settlementId: string;
+    readonly personName: string;
+    readonly currency: string;
+    readonly amount: number;
+    readonly time: number;
+    readonly comment: string;
+}
+
+export interface SharedExpenseSettlementRequest {
+    readonly personName: string;
+    readonly currency: string;
+    readonly amount: number;
+    readonly time: number;
+    readonly comment: string;
 }
 
 export interface SharedExpenseSummaryItem {
     readonly personName: string;
     readonly currency: string;
     readonly total: number;
+    readonly owedToMe: number;
+    readonly iOwe: number;
+    readonly settled: number;
     readonly entryCount: number;
     readonly lastTime: number;
 }
@@ -107,6 +134,11 @@ export interface TransactionSplitInfoResponse {
     readonly amount: number;
 }
 
+export interface TransactionSplitRenamePersonRequest {
+    readonly oldName: string;
+    readonly newName: string;
+}
+
 export interface TransactionSplitRequestItem {
     readonly personName: string;
     readonly amount: number;
@@ -114,6 +146,7 @@ export interface TransactionSplitRequestItem {
 
 export interface TransactionSplitUpdateRequest {
     readonly transactionId: string;
+    readonly direction: number;
     readonly splits: TransactionSplitRequestItem[];
 }
 
@@ -121,6 +154,7 @@ export interface TransactionSplitsResponse {
     readonly transactionId: string;
     readonly transactionAmount: number;
     readonly currency: string;
+    readonly direction: number;
     readonly splits: TransactionSplitInfoResponse[];
 }
 

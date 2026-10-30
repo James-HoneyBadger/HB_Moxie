@@ -2591,5 +2591,15 @@
     "Add Person": "நபரைச் சேர்",
     "Failed to save data": "தரவைச் சேமிக்க முடியவில்லை",
     "Track how much other people owe you by splitting expense transactions with them.": "செலவுகளை மற்றவர்களுடன் பகிர்ந்து, அவர்கள் உங்களுக்கு எவ்வளவு கொடுக்க வேண்டும் என்பதைக் கண்காணியுங்கள்.",
-    "Select an expense transaction": "ஒரு செலவுப் பரிவர்த்தனையைத் தேர்ந்தெடு"
+    "Select an expense transaction": "ஒரு செலவுப் பரிவர்த்தனையைத் தேர்ந்தெடு",
+    "They Owe Me": "எனக்கு நிலுவை",
+    "I Owe Them": "நான் நிலுவை",
+    "Split Equally": "சமமாகப் பிரி",
+    "Settle Up": "தீர்த்துக்கொள்",
+    "Settlement": "தீர்வு",
+    "They Paid Me": "எனக்குக் கொடுத்தார்கள்",
+    "I Paid Them": "நான் கொடுத்தேன்",
+    "You Owe": "நீங்கள் நிலுவை",
+    "Owes You": "உங்களுக்கு நிலுவை",
+    "Rename": "மறுபெயரிடு"
 }

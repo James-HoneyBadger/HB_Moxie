@@ -2591,5 +2591,15 @@
     "Add Person": "Добавить человека",
     "Failed to save data": "Не удалось сохранить данные",
     "Track how much other people owe you by splitting expense transactions with them.": "Отслеживайте, сколько вам должны другие, разделяя с ними расходы.",
-    "Select an expense transaction": "Выберите транзакцию расхода"
+    "Select an expense transaction": "Выберите транзакцию расхода",
+    "They Owe Me": "Мне должны",
+    "I Owe Them": "Я должен",
+    "Split Equally": "Разделить поровну",
+    "Settle Up": "Рассчитаться",
+    "Settlement": "Расчёт",
+    "They Paid Me": "Мне заплатили",
+    "I Paid Them": "Я заплатил",
+    "You Owe": "Вы должны",
+    "Owes You": "Вам должен",
+    "Rename": "Переименовать"
 }

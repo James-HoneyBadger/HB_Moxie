@@ -21,6 +21,13 @@
                                 :no-data-text="tt('No data')"
                                 v-model="selectedTransactionId" />
 
+                <v-btn-toggle class="mb-3" density="compact" variant="outlined"
+                              :disabled="submitting || !transactionId"
+                              v-model="direction">
+                    <v-btn :value="SplitDirection.TheyOweMe" size="small">{{ tt('They Owe Me') }}</v-btn>
+                    <v-btn :value="SplitDirection.IOweThem" size="small">{{ tt('I Owe Them') }}</v-btn>
+                </v-btn-toggle>
+
                 <div class="d-flex align-center flex-wrap mb-3" v-if="transactionAmount > 0">
                     <span class="text-body-2">{{ tt('Transaction Amount') }}:</span>
                     <span class="text-body-2 font-weight-bold ms-1">{{ formatAmountInCurrency(transactionAmount, currency) }}</span>
@@ -32,10 +39,11 @@
 
                 <v-row class="align-center" :key="row.key" v-for="row in rows">
                     <v-col cols="12" md="5">
-                        <v-text-field density="compact" variant="outlined"
-                                      :label="tt('Person Name')"
-                                      :disabled="submitting"
-                                      v-model="row.personName" />
+                        <v-combobox density="compact" variant="outlined"
+                                    :items="knownPeople" :label="tt('Person Name')"
+                                    :no-data-text="tt('No data')"
+                                    :disabled="submitting"
+                                    v-model="row.personName" />
                     </v-col>
                     <v-col cols="12" md="5">
                         <amount-input :currency="currency"
@@ -54,12 +62,20 @@
                     </v-col>
                 </v-row>
 
-                <v-btn class="mt-2" variant="text" size="small"
-                       :disabled="submitting || rows.length >= maxSplitCount"
-                       @click="addRow">
-                    <v-icon :icon="mdiPlus" start />
-                    {{ tt('Add Person') }}
-                </v-btn>
+                <div class="d-flex flex-wrap align-center">
+                    <v-btn class="mt-2" variant="text" size="small"
+                           :disabled="submitting || rows.length >= maxSplitCount"
+                           @click="addRow">
+                        <v-icon :icon="mdiPlus" start />
+                        {{ tt('Add Person') }}
+                    </v-btn>
+                    <v-btn class="mt-2 ms-2" variant="text" size="small"
+                           :disabled="submitting || !transactionId || transactionAmount <= 0 || rows.length < 1"
+                           @click="splitEqually">
+                        <v-icon :icon="mdiScaleBalance" start />
+                        {{ tt('Split Equally') }}
+                    </v-btn>
+                </div>
             </v-card-text>
 
             <v-card-actions>
@@ -81,10 +97,12 @@ import { ref, computed, watch } from 'vue';
 import {
     mdiAccountMultipleCheckOutline,
     mdiPlus,
+    mdiScaleBalance,
     mdiTrashCanOutline
 } from '@mdi/js';
 
 import type { TransactionInfoResponse, TransactionListByMaxTimeRequest } from '@/models/transaction.ts';
+import { SplitDirection } from '@/models/transaction_split.ts';
 import type { TransactionSplitUpdateRequest } from '@/models/transaction_split.ts';
 
 import { useAccountsStore } from '@/stores/account.ts';
@@ -116,6 +134,7 @@ export interface SplitExpenseDialogOptions {
     transactionAmount?: number;
     currency?: string;
     defaultPersonName?: string;
+    direction?: number;
 }
 
 const emit = defineEmits<{
@@ -141,6 +160,9 @@ const rows = ref<SplitFormRow[]>([]);
 const selectedTransactionId = ref<string>('');
 const expenses = ref<TransactionInfoResponse[]>([]);
 const expensesLoading = ref<boolean>(false);
+
+const direction = ref<number>(SplitDirection.TheyOweMe);
+const knownPeople = ref<string[]>([]);
 
 const allocatedAmount = computed<number>(() =>
     rows.value.reduce((total, row) => total + (Number.isFinite(row.amount) ? Math.abs(row.amount) : 0), 0));
@@ -209,6 +231,32 @@ function loadExpenses(): void {
     });
 }
 
+function loadKnownPeople(): void {
+    if (knownPeople.value.length > 0) {
+        return;
+    }
+
+    services.getKnownPeople().then(response => {
+        knownPeople.value = response.data.result ?? [];
+    }).catch(error => {
+        logger.error('failed to load known people', error);
+    });
+}
+
+function splitEqually(): void {
+    if (rows.value.length < 1 || transactionAmount.value <= 0) {
+        return;
+    }
+
+    const share = Math.floor(transactionAmount.value / rows.value.length);
+    const remainder = transactionAmount.value - share * rows.value.length;
+
+    rows.value = rows.value.map((row, index) => ({
+        ...row,
+        amount: index === 0 ? share + remainder : share
+    }));
+}
+
 function applySelectedTransaction(id: string): void {
     const expense = expenses.value.find(item => item.id === id);
 
@@ -241,6 +289,9 @@ function open(options?: SplitExpenseDialogOptions): void {
     submitting.value = false;
     selectedTransactionId.value = '';
     defaultPersonName.value = opts.defaultPersonName ?? '';
+    direction.value = opts.direction ?? SplitDirection.TheyOweMe;
+
+    loadKnownPeople();
 
     if (opts.transactionId) {
         transactionId.value = opts.transactionId;
@@ -253,6 +304,7 @@ function open(options?: SplitExpenseDialogOptions): void {
 
             transactionAmount.value = Math.abs(response.data.result?.transactionAmount ?? transactionAmount.value);
             currency.value = response.data.result?.currency ?? currency.value;
+            direction.value = response.data.result?.direction ?? direction.value;
 
             // A transaction without shares is a new split, even when it was opened
             // from a specific transaction.
@@ -305,6 +357,7 @@ function submit(): void {
 
     const request: TransactionSplitUpdateRequest = {
         transactionId: transactionId.value,
+        direction: direction.value,
         splits: rows.value.map(row => ({
             personName: row.personName.trim(),
             amount: Math.abs(row.amount)

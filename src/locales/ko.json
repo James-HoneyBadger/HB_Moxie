@@ -2591,5 +2591,15 @@
     "Add Person": "사람 추가",
     "Failed to save data": "데이터를 저장하지 못했습니다",
     "Track how much other people owe you by splitting expense transactions with them.": "지출을 다른 사람과 나누어 받을 금액을 기록하세요.",
-    "Select an expense transaction": "지출 거래 선택"
+    "Select an expense transaction": "지출 거래 선택",
+    "They Owe Me": "상대가 내게 지급",
+    "I Owe Them": "내가 상대에게 지급",
+    "Split Equally": "균등 분할",
+    "Settle Up": "정산",
+    "Settlement": "정산",
+    "They Paid Me": "상대가 지불함",
+    "I Paid Them": "내가 지불함",
+    "You Owe": "내가 줄 금액",
+    "Owes You": "받을 금액",
+    "Rename": "이름 변경"
 }

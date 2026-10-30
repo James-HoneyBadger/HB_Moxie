@@ -48,11 +48,15 @@ type apiSchemaTypes struct {
 	TransactionAmountsRequest                   models.TransactionAmountsRequest
 	TransactionAmountsResponseItem              models.TransactionAmountsResponseItem
 
-	TransactionSplitUpdateRequest models.TransactionSplitUpdateRequest
-	TransactionSplitsResponse     models.TransactionSplitsResponse
-	TransactionSplitIndexItem     models.TransactionSplitIndexItem
-	SharedExpenseSummaryItem      models.SharedExpenseSummaryItem
-	SharedExpenseEntryResponse    models.SharedExpenseEntryResponse
+	TransactionSplitUpdateRequest        models.TransactionSplitUpdateRequest
+	TransactionSplitsResponse            models.TransactionSplitsResponse
+	TransactionSplitIndexItem            models.TransactionSplitIndexItem
+	TransactionSplitRenamePersonRequest  models.TransactionSplitRenamePersonRequest
+	SharedExpenseSettlementRequest       models.SharedExpenseSettlementRequest
+	SharedExpenseSettlementInfoResponse  models.SharedExpenseSettlementInfoResponse
+	SharedExpenseSummaryItem             models.SharedExpenseSummaryItem
+	SharedExpenseEntryResponse           models.SharedExpenseEntryResponse
+	SharedExpenseSettlementDeleteRequest models.SharedExpenseSettlementDeleteRequest
 }
 
 func main() {
@@ -192,6 +196,21 @@ func generatedPaths() map[string]any {
 		},
 		"/api/v1/transactions/splits/summary.json": map[string]any{
 			"get": responseOperation("getSharedExpenseSummary", "Summarize what each person owes the user, grouped by currency", arraySchema("SharedExpenseSummaryItem")),
+		},
+		"/api/v1/transactions/splits/people.json": map[string]any{
+			"get": responseOperation("listKnownPeople", "List the people the user shares expenses with", map[string]any{
+				"type":  "array",
+				"items": map[string]any{"type": "string"},
+			}),
+		},
+		"/api/v1/transactions/splits/settle.json": map[string]any{
+			"post": jsonOperation("settleSharedExpense", "Record a payment between the user and another person", "SharedExpenseSettlementRequest", "SharedExpenseSettlementInfoResponse"),
+		},
+		"/api/v1/transactions/splits/settle/delete.json": map[string]any{
+			"post": jsonOperation("deleteSharedExpenseSettlement", "Delete a recorded settlement", "SharedExpenseSettlementDeleteRequest", "boolean"),
+		},
+		"/api/v1/transactions/splits/rename-person.json": map[string]any{
+			"post": jsonOperation("renameSharedExpensePerson", "Rename a person across every split and settlement", "TransactionSplitRenamePersonRequest", "boolean"),
 		},
 		"/api/v1/transactions/splits/person.json": map[string]any{
 			"get": withParameters(

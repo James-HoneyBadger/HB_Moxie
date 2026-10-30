@@ -2591,5 +2591,15 @@
     "Add Person": "ವ್ಯಕ್ತಿ ಸೇರಿಸಿ",
     "Failed to save data": "ಡೇಟಾ ಉಳಿಸಲು ವಿಫಲವಾಗಿದೆ",
     "Track how much other people owe you by splitting expense transactions with them.": "ಖರ್ಚುಗಳನ್ನು ಇತರರೊಂದಿಗೆ ಹಂಚಿ ಅವರು ನಿಮಗೆ ಎಷ್ಟು ಬಾಕಿ ಇದ್ದಾರೆ ಎಂಬುದನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ.",
-    "Select an expense transaction": "ಒಂದು ಖರ್ಚಿನ ವಹಿವಾಟನ್ನು ಆಯ್ಕೆಮಾಡಿ"
+    "Select an expense transaction": "ಒಂದು ಖರ್ಚಿನ ವಹಿವಾಟನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+    "They Owe Me": "ಅವರು ನನಗೆ ಬಾಕಿ",
+    "I Owe Them": "ನಾನು ಅವರಿಗೆ ಬಾಕಿ",
+    "Split Equally": "ಸಮನಾಗಿ ಹಂಚಿ",
+    "Settle Up": "ಇತ್ಯರ್ಥ ಮಾಡಿ",
+    "Settlement": "ಇತ್ಯರ್ಥ",
+    "They Paid Me": "ಅವರು ನನಗೆ ಪಾವತಿಸಿದರು",
+    "I Paid Them": "ನಾನು ಪಾವತಿಸಿದೆ",
+    "You Owe": "ನೀವು ಬಾಕಿ",
+    "Owes You": "ಅವರು ಬಾಕಿ",
+    "Rename": "ಮರುನಾಮಕರಣ"
 }

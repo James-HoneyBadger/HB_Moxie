@@ -2591,5 +2591,15 @@
     "Add Person": "メンバーを追加",
     "Failed to save data": "データの保存に失敗しました",
     "Track how much other people owe you by splitting expense transactions with them.": "支出を他の人と割り勘して、相手があなたに支払うべき金額を記録します。",
-    "Select an expense transaction": "支出の取引を選択"
+    "Select an expense transaction": "支出の取引を選択",
+    "They Owe Me": "相手が支払う",
+    "I Owe Them": "自分が支払う",
+    "Split Equally": "均等に分割",
+    "Settle Up": "精算する",
+    "Settlement": "精算",
+    "They Paid Me": "相手が支払った",
+    "I Paid Them": "自分が支払った",
+    "You Owe": "あなたの支払い",
+    "Owes You": "相手の支払い",
+    "Rename": "名前を変更"
 }

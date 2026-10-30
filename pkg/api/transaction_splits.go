@@ -112,3 +112,74 @@ func (a *TransactionSplitsApi) SharedExpensePersonHandler(c *core.WebContext) (a
 
 	return entries, nil
 }
+
+// SharedExpenseSettleHandler records a payment between the user and another person.
+func (a *TransactionSplitsApi) SharedExpenseSettleHandler(c *core.WebContext) (any, *errs.Error) {
+	var request models.SharedExpenseSettlementRequest
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		log.Warnf(c, "[transaction_splits.SharedExpenseSettleHandler] parse request failed, because %s", err.Error())
+		return nil, errs.NewIncompleteOrIncorrectSubmissionError(err)
+	}
+
+	uid := c.GetCurrentUid()
+	settlement, err := a.splits.SettleSharedExpense(c, uid, &request)
+
+	if err != nil {
+		log.Errorf(c, "[transaction_splits.SharedExpenseSettleHandler] failed to record settlement for user uid:%d, because %s", uid, err.Error())
+		return nil, errs.Or(err, errs.ErrOperationFailed)
+	}
+
+	return settlement, nil
+}
+
+// SharedExpenseSettlementDeleteHandler removes a recorded settlement.
+func (a *TransactionSplitsApi) SharedExpenseSettlementDeleteHandler(c *core.WebContext) (any, *errs.Error) {
+	var request models.SharedExpenseSettlementDeleteRequest
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		log.Warnf(c, "[transaction_splits.SharedExpenseSettlementDeleteHandler] parse request failed, because %s", err.Error())
+		return nil, errs.NewIncompleteOrIncorrectSubmissionError(err)
+	}
+
+	uid := c.GetCurrentUid()
+
+	if err := a.splits.DeleteSharedExpenseSettlement(c, uid, request.SettlementId); err != nil {
+		log.Errorf(c, "[transaction_splits.SharedExpenseSettlementDeleteHandler] failed to delete settlement \"id:%d\" for user \"uid:%d\", because %s", request.SettlementId, uid, err.Error())
+		return nil, errs.Or(err, errs.ErrOperationFailed)
+	}
+
+	return true, nil
+}
+
+// KnownPeopleHandler returns the people the user has shared expenses with.
+func (a *TransactionSplitsApi) KnownPeopleHandler(c *core.WebContext) (any, *errs.Error) {
+	uid := c.GetCurrentUid()
+	people, err := a.splits.GetKnownPeople(c, uid)
+
+	if err != nil {
+		log.Errorf(c, "[transaction_splits.KnownPeopleHandler] failed to get known people for user uid:%d, because %s", uid, err.Error())
+		return nil, errs.Or(err, errs.ErrOperationFailed)
+	}
+
+	return people, nil
+}
+
+// RenamePersonHandler renames a person across every split and settlement.
+func (a *TransactionSplitsApi) RenamePersonHandler(c *core.WebContext) (any, *errs.Error) {
+	var request models.TransactionSplitRenamePersonRequest
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		log.Warnf(c, "[transaction_splits.RenamePersonHandler] parse request failed, because %s", err.Error())
+		return nil, errs.NewIncompleteOrIncorrectSubmissionError(err)
+	}
+
+	uid := c.GetCurrentUid()
+
+	if err := a.splits.RenameSharedExpensePerson(c, uid, &request); err != nil {
+		log.Errorf(c, "[transaction_splits.RenamePersonHandler] failed to rename person for user uid:%d, because %s", uid, err.Error())
+		return nil, errs.Or(err, errs.ErrOperationFailed)
+	}
+
+	return true, nil
+}

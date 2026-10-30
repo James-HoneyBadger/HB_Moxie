@@ -2591,5 +2591,15 @@
     "Add Person": "Kişi Ekle",
     "Failed to save data": "Veriler kaydedilemedi",
     "Track how much other people owe you by splitting expense transactions with them.": "Giderleri diğer kişilerle paylaşarak size ne kadar borçlu olduklarını takip edin.",
-    "Select an expense transaction": "Bir gider işlemi seçin"
+    "Select an expense transaction": "Bir gider işlemi seçin",
+    "They Owe Me": "Bana borçlu",
+    "I Owe Them": "Ben borçluyum",
+    "Split Equally": "Eşit paylaştır",
+    "Settle Up": "Hesaplaş",
+    "Settlement": "Ödeme",
+    "They Paid Me": "Bana ödedi",
+    "I Paid Them": "Ben ödedim",
+    "You Owe": "Sen borçlusun",
+    "Owes You": "Sana borçlu",
+    "Rename": "Yeniden adlandır"
 }

@@ -2591,5 +2591,15 @@
     "Add Person": "Persoon toevoegen",
     "Failed to save data": "Gegevens opslaan mislukt",
     "Track how much other people owe you by splitting expense transactions with them.": "Houd bij hoeveel anderen jou verschuldigd zijn door uitgaven met hen te splitsen.",
-    "Select an expense transaction": "Selecteer een uitgavetransactie"
+    "Select an expense transaction": "Selecteer een uitgavetransactie",
+    "They Owe Me": "Zij zijn mij schuldig",
+    "I Owe Them": "Ik ben hun schuldig",
+    "Split Equally": "Gelijk verdelen",
+    "Settle Up": "Afrekenen",
+    "Settlement": "Afrekening",
+    "They Paid Me": "Zij hebben mij betaald",
+    "I Paid Them": "Ik heb betaald",
+    "You Owe": "Jij bent schuldig",
+    "Owes You": "Is jou schuldig",
+    "Rename": "Hernoemen"
 }

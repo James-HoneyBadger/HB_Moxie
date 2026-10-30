@@ -28,7 +28,19 @@ type Migration struct {
 
 // migrations is the ordered registry of all migrations. Append new entries at
 // the end; never reorder or rename an existing one.
-var migrations = []Migration{}
+var migrations = []Migration{
+	{
+		Id:          "20261030_01_split_direction",
+		Description: "default existing transaction splits to \"they owe me\"",
+		Up: func(c core.Context, db *Database) error {
+			// Splits created before directions existed were all shares owed by the
+			// other person, which is the zero value's meaning once defaulted.
+			_, err := db.NewSession(c).Exec("UPDATE transaction_split SET direction = ? WHERE direction = 0", models.SPLIT_DIRECTION_THEY_OWE_ME)
+
+			return err
+		},
+	},
+}
 
 // RunMigrations applies every pending migration in order and returns the ids
 // that were applied during this call.

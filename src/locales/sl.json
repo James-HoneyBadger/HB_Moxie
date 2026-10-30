@@ -2591,5 +2591,15 @@
     "Add Person": "Dodaj osebo",
     "Failed to save data": "Podatkov ni bilo mogoče shraniti",
     "Track how much other people owe you by splitting expense transactions with them.": "Spremljajte, koliko vam drugi dolgujejo, tako da izdatke razdelite z njimi.",
-    "Select an expense transaction": "Izberite transakcijo izdatka"
+    "Select an expense transaction": "Izberite transakcijo izdatka",
+    "They Owe Me": "Dolgujejo mi",
+    "I Owe Them": "Dolgujem",
+    "Split Equally": "Razdeli enako",
+    "Settle Up": "Poravnaj",
+    "Settlement": "Poravnava",
+    "They Paid Me": "Plačali so mi",
+    "I Paid Them": "Plačal sem",
+    "You Owe": "Dolguješ",
+    "Owes You": "Dolguje ti",
+    "Rename": "Preimenuj"
 }

@@ -2591,5 +2591,15 @@
     "Add Person": "Додати особу",
     "Failed to save data": "Не вдалося зберегти дані",
     "Track how much other people owe you by splitting expense transactions with them.": "Відстежуйте, скільки вам винні інші, розділяючи з ними витрати.",
-    "Select an expense transaction": "Виберіть транзакцію витрати"
+    "Select an expense transaction": "Виберіть транзакцію витрати",
+    "They Owe Me": "Мені винні",
+    "I Owe Them": "Я винен",
+    "Split Equally": "Розділити порівну",
+    "Settle Up": "Розрахуватися",
+    "Settlement": "Розрахунок",
+    "They Paid Me": "Мені сплатили",
+    "I Paid Them": "Я сплатив",
+    "You Owe": "Ви винні",
+    "Owes You": "Вам винен",
+    "Rename": "Перейменувати"
 }

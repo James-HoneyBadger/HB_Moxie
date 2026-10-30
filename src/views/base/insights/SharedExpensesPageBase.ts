@@ -5,7 +5,13 @@ import { useI18n } from '@/locales/helpers.ts';
 import { useAccountsStore } from '@/stores/account.ts';
 import { useTransactionCategoriesStore } from '@/stores/transactionCategory.ts';
 
-import type { SharedExpenseEntry, SharedExpenseSummaryItem, TransactionSplitUpdateRequest } from '@/models/transaction_split.ts';
+import type {
+    SharedExpenseEntry,
+    SharedExpenseSummaryItem,
+    SharedExpenseSettlementRequest,
+    TransactionSplitRenamePersonRequest,
+    TransactionSplitUpdateRequest
+} from '@/models/transaction_split.ts';
 
 import { parseDateTimeFromUnixTime } from '@/lib/datetime.ts';
 import services from '@/lib/services.ts';
@@ -26,6 +32,7 @@ export function useSharedExpensesPageBase() {
     const personEntries = ref<SharedExpenseEntry[]>([]);
     const personEntriesLoading = ref<boolean>(false);
     const clearing = ref<boolean>(false);
+    const settling = ref<boolean>(false);
 
     const totalOwedByCurrency = computed<{ currency: string; amount: number }[]>(() => {
         const totals: Record<string, number> = {};
@@ -106,6 +113,55 @@ export function useSharedExpensesPageBase() {
         });
     }
 
+    function settleSharedExpense(request: SharedExpenseSettlementRequest): Promise<boolean> {
+        settling.value = true;
+        errorMessage.value = '';
+
+        return services.settleSharedExpense(request).then(() => {
+            settling.value = false;
+            loadSummary();
+            return true;
+        }).catch(error => {
+            logger.error('failed to record settlement', error);
+            errorMessage.value = tt('Failed to save data');
+            settling.value = false;
+            return false;
+        });
+    }
+
+    function deleteSettlement(settlementId: string): Promise<boolean> {
+        settling.value = true;
+        errorMessage.value = '';
+
+        return services.deleteSharedExpenseSettlement({ settlementId }).then(() => {
+            settling.value = false;
+            loadSummary();
+            return true;
+        }).catch(error => {
+            logger.error('failed to delete settlement', error);
+            errorMessage.value = tt('Failed to save data');
+            settling.value = false;
+            return false;
+        });
+    }
+
+    function renamePerson(oldName: string, newName: string): Promise<boolean> {
+        const request: TransactionSplitRenamePersonRequest = { oldName, newName };
+
+        return services.renameSharedExpensePerson(request).then(() => {
+            if (selectedPerson.value === oldName) {
+                selectedPerson.value = newName;
+            }
+
+            loadSummary();
+            return true;
+        }).catch(error => {
+            logger.error('failed to rename person', error);
+            errorMessage.value = tt('Failed to save data');
+            return false;
+        });
+    }
+
     function clearSplit(entry: SharedExpenseEntry): void {
         const request: TransactionSplitUpdateRequest = { transactionId: entry.transactionId, splits: [] };
 
@@ -137,6 +193,7 @@ export function useSharedExpensesPageBase() {
         personEntries,
         personEntriesLoading,
         clearing,
+        settling,
         // computed states
         totalOwedByCurrency,
         hasSummary,
@@ -148,6 +205,9 @@ export function useSharedExpensesPageBase() {
         selectPerson,
         loadSummary,
         loadPersonEntries,
+        settleSharedExpense,
+        deleteSettlement,
+        renamePerson,
         clearSplit,
         init
     };

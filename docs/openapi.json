@@ -137,6 +137,15 @@
           },
           "comment": {
             "type": "string"
+          },
+          "direction": {
+            "type": "integer"
+          },
+          "isSettlement": {
+            "type": "boolean"
+          },
+          "settlementId": {
+            "type": "string"
           }
         },
         "additionalProperties": false,
@@ -150,6 +159,81 @@
           "transactionAmount",
           "splitAmount",
           "currency",
+          "comment",
+          "direction",
+          "isSettlement",
+          "settlementId"
+        ]
+      },
+      "SharedExpenseSettlementDeleteRequest": {
+        "properties": {
+          "settlementId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "settlementId"
+        ]
+      },
+      "SharedExpenseSettlementInfoResponse": {
+        "properties": {
+          "settlementId": {
+            "type": "string"
+          },
+          "personName": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "time": {
+            "type": "integer"
+          },
+          "comment": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "settlementId",
+          "personName",
+          "currency",
+          "amount",
+          "time",
+          "comment"
+        ]
+      },
+      "SharedExpenseSettlementRequest": {
+        "properties": {
+          "personName": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "time": {
+            "type": "integer"
+          },
+          "comment": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "personName",
+          "currency",
+          "amount",
+          "time",
           "comment"
         ]
       },
@@ -162,6 +246,15 @@
             "type": "string"
           },
           "total": {
+            "type": "integer"
+          },
+          "owedToMe": {
+            "type": "integer"
+          },
+          "iOwe": {
+            "type": "integer"
+          },
+          "settled": {
             "type": "integer"
           },
           "entryCount": {
@@ -177,6 +270,9 @@
           "personName",
           "currency",
           "total",
+          "owedToMe",
+          "iOwe",
+          "settled",
           "entryCount",
           "lastTime"
         ]
@@ -356,6 +452,22 @@
           "amount"
         ]
       },
+      "TransactionSplitRenamePersonRequest": {
+        "properties": {
+          "oldName": {
+            "type": "string"
+          },
+          "newName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "oldName",
+          "newName"
+        ]
+      },
       "TransactionSplitRequestItem": {
         "properties": {
           "personName": {
@@ -377,6 +489,9 @@
           "transactionId": {
             "type": "string"
           },
+          "direction": {
+            "type": "integer"
+          },
           "splits": {
             "items": {
               "$ref": "#/components/schemas/TransactionSplitRequestItem"
@@ -388,6 +503,7 @@
         "type": "object",
         "required": [
           "transactionId",
+          "direction",
           "splits"
         ]
       },
@@ -402,6 +518,9 @@
           "currency": {
             "type": "string"
           },
+          "direction": {
+            "type": "integer"
+          },
           "splits": {
             "items": {
               "$ref": "#/components/schemas/TransactionSplitInfoResponse"
@@ -415,6 +534,7 @@
           "transactionId",
           "transactionAmount",
           "currency",
+          "direction",
           "splits"
         ]
       },
@@ -1038,6 +1158,27 @@
         "summary": "List the shares of a transaction owed by other people"
       }
     },
+    "/api/v1/transactions/splits/people.json": {
+      "get": {
+        "operationId": "listKnownPeople",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "List the people the user shares expenses with"
+      }
+    },
     "/api/v1/transactions/splits/person.json": {
       "get": {
         "operationId": "getSharedExpensesByPerson",
@@ -1068,6 +1209,90 @@
           }
         },
         "summary": "List the shared expenses owed by one person"
+      }
+    },
+    "/api/v1/transactions/splits/rename-person.json": {
+      "post": {
+        "operationId": "renameSharedExpensePerson",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionSplitRenamePersonRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Rename a person across every split and settlement"
+      }
+    },
+    "/api/v1/transactions/splits/settle.json": {
+      "post": {
+        "operationId": "settleSharedExpense",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SharedExpenseSettlementRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SharedExpenseSettlementInfoResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Record a payment between the user and another person"
+      }
+    },
+    "/api/v1/transactions/splits/settle/delete.json": {
+      "post": {
+        "operationId": "deleteSharedExpenseSettlement",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SharedExpenseSettlementDeleteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Delete a recorded settlement"
       }
     },
     "/api/v1/transactions/splits/summary.json": {

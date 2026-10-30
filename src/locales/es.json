@@ -2591,5 +2591,15 @@
     "Add Person": "Añadir persona",
     "Failed to save data": "No se pudieron guardar los datos",
     "Track how much other people owe you by splitting expense transactions with them.": "Controla cuánto te deben otras personas dividiendo los gastos con ellas.",
-    "Select an expense transaction": "Selecciona una transacción de gasto"
+    "Select an expense transaction": "Selecciona una transacción de gasto",
+    "They Owe Me": "Me deben",
+    "I Owe Them": "Debo",
+    "Split Equally": "Dividir por igual",
+    "Settle Up": "Saldar",
+    "Settlement": "Liquidación",
+    "They Paid Me": "Me pagaron",
+    "I Paid Them": "Pagué",
+    "You Owe": "Debes",
+    "Owes You": "Te debe",
+    "Rename": "Renombrar"
 }

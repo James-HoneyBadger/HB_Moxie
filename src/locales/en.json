@@ -2591,5 +2591,15 @@
     "Add Person": "Add Person",
     "Failed to save data": "Failed to save data",
     "Track how much other people owe you by splitting expense transactions with them.": "Track how much other people owe you by splitting expense transactions with them.",
-    "Select an expense transaction": "Select an expense transaction"
+    "Select an expense transaction": "Select an expense transaction",
+    "They Owe Me": "They Owe Me",
+    "I Owe Them": "I Owe Them",
+    "Split Equally": "Split Equally",
+    "Settle Up": "Settle Up",
+    "Settlement": "Settlement",
+    "They Paid Me": "They Paid Me",
+    "I Paid Them": "I Paid Them",
+    "You Owe": "You Owe",
+    "Owes You": "Owes You",
+    "Rename": "Rename"
 }

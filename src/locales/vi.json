@@ -2591,5 +2591,15 @@
     "Add Person": "Thêm người",
     "Failed to save data": "Không lưu được dữ liệu",
     "Track how much other people owe you by splitting expense transactions with them.": "Theo dõi số tiền người khác nợ bạn bằng cách chia các khoản chi với họ.",
-    "Select an expense transaction": "Chọn một giao dịch chi"
+    "Select an expense transaction": "Chọn một giao dịch chi",
+    "They Owe Me": "Họ nợ tôi",
+    "I Owe Them": "Tôi nợ họ",
+    "Split Equally": "Chia đều",
+    "Settle Up": "Tất toán",
+    "Settlement": "Tất toán",
+    "They Paid Me": "Họ đã trả tôi",
+    "I Paid Them": "Tôi đã trả",
+    "You Owe": "Bạn nợ",
+    "Owes You": "Nợ bạn",
+    "Rename": "Đổi tên"
 }

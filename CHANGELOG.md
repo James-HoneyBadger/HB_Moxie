@@ -24,6 +24,16 @@ details.
 - Versioned database migrations with a `schema_migration` ledger, applied at
   startup after the automatic schema sync. Each migration runs once, inside a
   transaction, and is recorded only on success.
+- Shared expense settlements: record a payment between the user and another
+  person in either direction and see net balances ("owes you" / "you owe")
+  instead of only what the user is owed. Splits can now point either way, so a
+  transaction someone else paid for is recorded as a share the user owes.
+- Person handling for shared expenses: names are suggested from previous
+  entries, a rename rewrites every split and settlement so a typo does not
+  create a second person, and the split editor can divide a transaction equally
+  across the listed people.
+- The first real database migration, which backfills the direction of splits
+  created before directions existed.
 - Pull request CI covering `gofmt`, `go vet`, generated OpenAPI verification, a
   backend build, `go test -short -race`, frontend lint/tests/build, Electron
   entry-point syntax checks, a `govulncheck` vulnerability scan, and repository

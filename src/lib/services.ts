@@ -144,8 +144,11 @@ import type {
     TransactionSplits,
     TransactionSplitUpdateRequest,
     TransactionSplitIndexItem,
+    TransactionSplitRenamePersonRequest,
     SharedExpenseSummaryItem,
-    SharedExpenseEntry
+    SharedExpenseEntry,
+    SharedExpenseSettlementRequest,
+    SharedExpenseSettlementInfo
 } from '@/models/transaction_split.ts';
 import type {
     TokenGenerateAPIRequest,
@@ -845,6 +848,18 @@ export default {
     },
     getSharedExpensesByPerson: ({ personName }: { personName: string }): ApiResponsePromise<SharedExpenseEntry[]> => {
         return axios.get<ApiResponse<SharedExpenseEntry[]>>('v1/transactions/splits/person.json?personName=' + encodeURIComponent(personName));
+    },
+    getKnownPeople: (): ApiResponsePromise<string[]> => {
+        return axios.get<ApiResponse<string[]>>('v1/transactions/splits/people.json');
+    },
+    settleSharedExpense: (req: SharedExpenseSettlementRequest): ApiResponsePromise<SharedExpenseSettlementInfo> => {
+        return axios.post<ApiResponse<SharedExpenseSettlementInfo>>('v1/transactions/splits/settle.json', req);
+    },
+    deleteSharedExpenseSettlement: ({ settlementId }: { settlementId: string }): ApiResponsePromise<boolean> => {
+        return axios.post<ApiResponse<boolean>>('v1/transactions/splits/settle/delete.json', { settlementId });
+    },
+    renameSharedExpensePerson: (req: TransactionSplitRenamePersonRequest): ApiResponsePromise<boolean> => {
+        return axios.post<ApiResponse<boolean>>('v1/transactions/splits/rename-person.json', req);
     },
     getInsightsExplorer: ({ id }: { id: string }): ApiResponsePromise<InsightsExplorerInfoResponse> => {
         return axios.get<ApiResponse<InsightsExplorerInfoResponse>>('v1/insights/explorers/get.json?id=' + id);

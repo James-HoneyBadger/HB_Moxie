@@ -13,6 +13,7 @@ import { VBtnGroup } from 'vuetify/components/VBtnGroup';
 import { VBtnToggle } from 'vuetify/components/VBtnToggle';
 import { VCard, VCardActions, VCardItem, VCardSubtitle, VCardText, VCardTitle } from 'vuetify/components/VCard';
 import { VCheckbox, VCheckboxBtn } from 'vuetify/components/VCheckbox';
+import { VCombobox } from 'vuetify/components/VCombobox';
 import { VChip } from 'vuetify/components/VChip';
 import { VDataTable } from 'vuetify/components/VDataTable';
 import { VDialog } from 'vuetify/components/VDialog';
@@ -145,6 +146,7 @@ const vuetify = createVuetify({
         VCheckbox,
         VCheckboxBtn,
         VChip,
+        VCombobox,
         VDataTable,
         VDialog,
         VDivider,
