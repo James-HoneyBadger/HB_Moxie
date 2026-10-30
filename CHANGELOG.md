@@ -21,6 +21,10 @@ details.
   GitHub Actions, with minor and patch updates grouped.
 - Export tests for the admin tool, covering dump contents, SQL quote escaping,
   and error propagation.
+- Background update checks for packaged builds: the app downloads a newer
+  release and installs it on quit, notifying the user when it is ready. Only
+  AppImage and Windows installer builds self-update; set
+  `RATEL_DISABLE_UPDATE_CHECK=1` to skip the check.
 
 ### Changed
 

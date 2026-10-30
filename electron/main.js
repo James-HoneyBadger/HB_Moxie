@@ -13,6 +13,7 @@ let backendPort = 0;
 let backendUrl = '';
 let tray = null;
 let isQuitting = false;
+let appUpdater = null;
 
 const CUSTOM_SCHEME = 'app';
 const CUSTOM_HOST = 'ratel-ledger';
@@ -392,6 +393,17 @@ function createTray() {
             }
         },
         { type: 'separator' },
+        ...(appUpdater
+            ? [
+                  {
+                      label: 'Check for Updates',
+                      click: () => {
+                          appUpdater.checkForUpdates().catch(() => {});
+                      }
+                  },
+                  { type: 'separator' }
+              ]
+            : []),
         {
             label: 'Quit',
             click: () => {
@@ -453,6 +465,56 @@ function showNotification(title, body) {
         });
         notification.show();
     }
+}
+
+/**
+ * Check GitHub releases in the background and install a downloaded update on
+ * quit. Only the AppImage build can replace itself: .deb packages are updated
+ * by the system package manager, and macOS self-update requires a signed and
+ * notarized bundle, which this project does not ship yet.
+ */
+function setupAutoUpdate() {
+    if (!app.isPackaged || process.env.RATEL_DISABLE_UPDATE_CHECK === '1') {
+        return null;
+    }
+
+    const isAppImage = process.platform === 'linux' && !!process.env.APPIMAGE;
+
+    if (!isAppImage && process.platform !== 'win32') {
+        console.log('[Ratel Ledger] Auto-update is not available for this installation type');
+        return null;
+    }
+
+    let autoUpdater;
+
+    try {
+        ({ autoUpdater } = require('electron-updater'));
+    } catch (err) {
+        console.warn('[Ratel Ledger] Auto-update unavailable:', err?.message ?? err);
+        return null;
+    }
+
+    autoUpdater.autoDownload = true;
+    autoUpdater.autoInstallOnAppQuit = true;
+
+    // Update problems must never affect the running application.
+    autoUpdater.on('error', (err) => {
+        console.warn('[Ratel Ledger] Update check failed:', err?.message ?? err);
+    });
+
+    autoUpdater.on('update-downloaded', (info) => {
+        console.log(`[Ratel Ledger] Update ${info.version} downloaded`);
+        showNotification(
+            'Ratel Ledger update ready',
+            `Version ${info.version} will be installed the next time you quit.`
+        );
+    });
+
+    // Failures arrive through the 'error' event above; swallowing the rejection
+    // here avoids logging the same failure twice.
+    autoUpdater.checkForUpdates().catch(() => {});
+
+    return autoUpdater;
 }
 
 function createMainWindow() {
@@ -609,6 +671,10 @@ app.whenReady().then(async () => {
     try {
         await waitForBackend(backendPort);
         console.log('[Ratel Ledger] Backend is ready');
+
+        // Check for a newer release before building the tray menu so the
+        // "Check for Updates" entry is only shown where it can work.
+        appUpdater = setupAutoUpdate();
 
         // Create the system tray
         createTray();

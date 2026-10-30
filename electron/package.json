@@ -16,12 +16,22 @@
     "build:mac": "electron-builder --mac",
     "build:win": "electron-builder --win"
   },
+  "dependencies": {
+    "electron-updater": "^6.8.11"
+  },
   "devDependencies": {
     "electron": "^45.1.0",
     "electron-builder": "^26.18.0"
   },
   "build": {
     "appId": "com.honeybadger.ratelledger",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "James-HoneyBadger",
+        "repo": "ratel-ledger"
+      }
+    ],
     "productName": "Ratel Ledger",
     "artifactName": "ratel-ledger-${version}-${arch}.${ext}",
     "directories": {

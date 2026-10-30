@@ -11,6 +11,8 @@ Ratel Ledger is a self-contained Electron desktop application for individuals wh
 - **System Tray** — Minimize to tray, global keyboard shortcuts, desktop notifications.
 - **Auto-Login** — Single-user mode skips the login screen automatically.
 - **Automatic Backups** — Scheduled SQLite snapshots with configurable retention.
+- **Automatic Updates** — Packaged builds check for new releases in the background and
+  install them on quit (AppImage and Windows installer).
 - **Multiple Databases** — SQLite (default), MySQL, or PostgreSQL.
 - **Dark Mode** — Full dark theme support with automatic system detection.
 - **Multi-Currency** — 150+ currencies with automatic exchange rate updates from 16 data sources.

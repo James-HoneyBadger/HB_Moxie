@@ -11,6 +11,7 @@ Guide for building, running, and packaging the Ratel Ledger standalone desktop a
 - [Running in Development](#running-in-development)
 - [How It Works](#how-it-works)
 - [Building Distributable Packages](#building-distributable-packages)
+- [Updates](#updates)
 - [Configuration](#configuration)
 - [Troubleshooting](#troubleshooting)
 
@@ -215,6 +216,42 @@ Before building a distributable package:
 2. Build the frontend (`npm run build` from project root)
 3. Ensure `conf/ratel-ledger.ini` has sensible defaults
 4. Run `cd electron && npm run build:<platform>`
+
+---
+
+## Updates
+
+Packaged builds check GitHub releases in the background, download a newer
+version, and install it the next time the app quits. The user sees a desktop
+notification when the download is ready; nothing is installed while the app is
+running.
+
+| Install type | Behaviour |
+|--------------|-----------|
+| AppImage (Linux) | Self-updates |
+| NSIS installer (Windows) | Self-updates |
+| `.deb` (Linux) | Handled by the package manager; the app only logs that self-update is unavailable |
+| `.dmg` (macOS) | Disabled — self-update needs a signed and notarized bundle |
+| Development build | Disabled (only packaged builds check) |
+
+How it fits together:
+
+- `build.publish` in `electron/package.json` points at this GitHub repository.
+  `electron-builder` turns that into `resources/app-update.yml`, which
+  `electron-updater` reads at runtime.
+- The release workflow uploads `latest.yml`, `latest-linux.yml`, and
+  `latest-mac.yml` alongside the installers. **The release must be published,
+  not left as a draft** — `electron-updater` cannot see draft releases.
+- Update failures are logged as warnings and never affect the running app.
+
+To disable the check — for packaging tests or offline verification — set:
+
+```bash
+RATEL_DISABLE_UPDATE_CHECK=1
+```
+
+The tray menu gains a **Check for Updates** entry on platforms where
+self-update is supported.
 
 ---
 
