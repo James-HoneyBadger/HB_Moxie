@@ -98,7 +98,7 @@ func main() {
 		db:         db,
 	}
 
-	a.fyneApp = app.NewWithID("org.honeybadger.ratelledger.admin")
+	a.fyneApp = app.NewWithID("com.honeybadger.ratelledger.admin")
 	a.window = a.fyneApp.NewWindow("Ratel Ledger — System Administration")
 	a.window.Resize(fyne.NewSize(1400, 850))
 	a.window.CenterOnScreen()
