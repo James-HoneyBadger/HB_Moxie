@@ -56,6 +56,12 @@
                     </div>
                 </li>
                 <li class="nav-link">
+                    <router-link to="/insights/review">
+                        <v-icon class="nav-item-icon" :icon="mdiShieldCheckOutline"/>
+                        <span class="nav-item-title">{{ tt('Transaction Review') }}</span>
+                    </router-link>
+                </li>
+                <li class="nav-link">
                     <router-link to="/account/list">
                         <v-icon class="nav-item-icon" :icon="mdiCreditCardOutline"/>
                         <span class="nav-item-title">{{ tt('Accounts') }}</span>
@@ -218,6 +224,7 @@ import {
     mdiClipboardTextClockOutline,
     mdiChartPieOutline,
     mdiCompassOutline,
+    mdiShieldCheckOutline,
     mdiSwapHorizontal,
     mdiCogOutline,
     mdiInformationOutline,

@@ -138,6 +138,9 @@ import type {
     InsightsExplorerInfoResponse,
 } from '@/models/explorer.ts';
 import type {
+    TransactionReviewResponse
+} from '@/models/transaction_review.ts';
+import type {
     TokenGenerateAPIRequest,
     TokenGenerateMCPRequest,
     TokenRevokeRequest,
@@ -815,6 +818,11 @@ export default {
     },
     getAllInsightsExplorers: (): ApiResponsePromise<InsightsExplorerInfoResponse[]> => {
         return axios.get<ApiResponse<InsightsExplorerInfoResponse[]>>('v1/insights/explorers/list.json');
+    },
+    getTransactionReview: ({ months }: { months: number }): ApiResponsePromise<TransactionReviewResponse> => {
+        return axios.get<ApiResponse<TransactionReviewResponse>>('v1/insights/review.json', {
+            params: { months }
+        });
     },
     getInsightsExplorer: ({ id }: { id: string }): ApiResponsePromise<InsightsExplorerInfoResponse> => {
         return axios.get<ApiResponse<InsightsExplorerInfoResponse>>('v1/insights/explorers/get.json?id=' + id);

@@ -19,6 +19,7 @@ import TransactionListPage from '@/views/desktop/transactions/ListPage.vue';
 import StatisticsTransactionPage from '@/views/desktop/statistics/TransactionPage.vue';
 
 import InsightsExplorerPage from '@/views/desktop/insights/ExplorerPage.vue';
+import TransactionReviewPage from '@/views/desktop/insights/ReviewPage.vue';
 
 import AccountListPage from '@/views/desktop/accounts/ListPage.vue';
 
@@ -149,6 +150,11 @@ const router = createRouter({
                         initStartTime: route.query['startTime'],
                         initEndTime: route.query['endTime']
                     })
+                },
+                {
+                    path: '/insights/review',
+                    component: TransactionReviewPage,
+                    beforeEnter: checkLogin
                 },
                 {
                     path: '/account/list',
