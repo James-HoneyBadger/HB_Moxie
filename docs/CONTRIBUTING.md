@@ -149,7 +149,7 @@ chore: update Go dependencies to latest patch versions
    npm run lint        # check only; use `npm run lint:fix` to apply fixes
    ```
 
-   CI runs the same checks on every pull request: `gofmt`, `go vet`, `go test -short -race`, generated OpenAPI verification, a `govulncheck` vulnerability scan, the repository hygiene checks, `npm run lint`, `npm test`, and a frontend build. Run them locally before opening the PR to avoid a round trip.
+   CI runs the same checks on every pull request: `gofmt`, `go vet`, `go test -short -race`, generated OpenAPI verification, a `govulncheck` vulnerability scan, the repository hygiene checks, `npm run lint`, `npm test`, and a frontend build. The `admin/` module gets its own job covering formatting, vet, tests, build, and a vulnerability scan. Run them locally before opening the PR to avoid a round trip.
 
    Run the vulnerability scan locally with `govulncheck ./...`; it exits non-zero when your code reaches a known vulnerability.
 

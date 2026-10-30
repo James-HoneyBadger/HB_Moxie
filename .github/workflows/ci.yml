@@ -124,3 +124,52 @@ jobs:
 
       - name: Check for telemetry and analytics endpoints
         run: ./scripts/check-no-telemetry.sh
+
+  admin:
+    name: Admin tool (build, vet, test)
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+          cache-dependency-path: admin/go.sum
+
+      # Fyne links against OpenGL plus both the X11 and Wayland backends.
+      - name: Install Fyne build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libgl1-mesa-dev xorg-dev libwayland-dev libxkbcommon-dev
+
+      - name: Check formatting
+        working-directory: admin
+        run: |
+          unformatted="$(gofmt -l .)"
+          if [ -n "$unformatted" ]; then
+            echo "::error::The following files are not formatted with gofmt:"
+            echo "$unformatted"
+            exit 1
+          fi
+
+      - name: Vet
+        working-directory: admin
+        run: go vet ./...
+
+      - name: Unit tests
+        working-directory: admin
+        run: go test ./...
+
+      - name: Build
+        working-directory: admin
+        run: go build -o /tmp/ratel-ledger-admin .
+
+      - name: Vulnerability scan
+        working-directory: admin
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck ./...
