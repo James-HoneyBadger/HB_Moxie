@@ -8,8 +8,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-const EXPECTED_NAME = 'ratel-ledger';
-const EXPECTED_PRODUCT_NAME = 'Ratel Ledger';
+const EXPECTED_NAME = 'honey-ledger';
+const EXPECTED_PRODUCT_NAME = 'Honey Ledger';
 const EXPECTED_APP_ID_PREFIX = 'com.honeybadger.';
 const COPYRIGHT_HOLDER = 'Honey Badger Universe';
 

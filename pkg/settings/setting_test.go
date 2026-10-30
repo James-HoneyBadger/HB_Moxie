@@ -103,10 +103,16 @@ token_expired_time = 3600
 	assert.Equal(t, "production", cfgFile.Section("global").Key("mode").String())
 }
 
+func clearWorkingPathEnvironment(t *testing.T) {
+	for _, envName := range workDirEnvNames {
+		t.Setenv(envName, "")
+	}
+}
+
 func TestGetWorkingPath_LegacyEnvFallback(t *testing.T) {
 	legacyPath := t.TempDir()
-	t.Setenv(ratelWorkDirEnvName, "")
-	t.Setenv(legacyWorkDirEnvName, legacyPath)
+	clearWorkingPathEnvironment(t)
+	t.Setenv("HBM_WORK_DIR", legacyPath)
 
 	actual, err := getWorkingPath()
 	assert.NoError(t, err)
@@ -116,16 +122,27 @@ func TestGetWorkingPath_LegacyEnvFallback(t *testing.T) {
 func TestGetWorkingPath_PrefersCurrentEnv(t *testing.T) {
 	currentPath := t.TempDir()
 	legacyPath := t.TempDir()
-	t.Setenv(ratelWorkDirEnvName, currentPath)
-	t.Setenv(legacyWorkDirEnvName, legacyPath)
+	clearWorkingPathEnvironment(t)
+	t.Setenv(workDirEnvNames[0], currentPath)
+	t.Setenv("HBM_WORK_DIR", legacyPath)
 
 	actual, err := getWorkingPath()
 	assert.NoError(t, err)
 	assert.Equal(t, currentPath, actual)
 }
 
+func TestGetWorkingPath_RatelEnvFallback(t *testing.T) {
+	renamedPath := t.TempDir()
+	clearWorkingPathEnvironment(t)
+	t.Setenv("RATEL_WORK_DIR", renamedPath)
+
+	actual, err := getWorkingPath()
+	assert.NoError(t, err)
+	assert.Equal(t, renamedPath, actual)
+}
+
 func TestLoadSecurityConfiguration_EnvironmentSecretIsNotPersisted(t *testing.T) {
-	t.Setenv("RATEL_SECURITY_SECRET_KEY", "environment-secret")
+	t.Setenv("HONEY_SECURITY_SECRET_KEY", "environment-secret")
 
 	cfgFile, err := ini.LoadSources(ini.LoadOptions{IgnoreInlineComment: true}, []byte(`[security]
 secret_key =

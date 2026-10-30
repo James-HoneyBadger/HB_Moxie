@@ -13,7 +13,7 @@ import (
 // Database represents the database command
 var Database = &cli.Command{
 	Name:  "database",
-	Usage: "Ratel Ledger database maintenance",
+	Usage: "Honey Ledger database maintenance",
 	Commands: []*cli.Command{
 		{
 			Name:   "update",

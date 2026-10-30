@@ -18,10 +18,10 @@ jobs:
     outputs:
       build-unix-time: ${{ steps.variable.outputs.build_unix_time }}
       build-date: ${{ steps.variable.outputs.build_date }}
-      ratel_ledger_package_file_name_prefix: ${{ steps.variable.outputs.ratel_ledger_package_file_name_prefix }}
-      ratel_ledger_package_artifact_name_prefix: ${{ steps.variable.outputs.ratel_ledger_package_artifact_name_prefix }}
-      ratel_ledger_backend_artifact_name_prefix: ${{ steps.variable.outputs.ratel_ledger_backend_artifact_name_prefix }}
-      ratel_ledger_electron_artifact_name_prefix: ${{ steps.variable.outputs.ratel_ledger_electron_artifact_name_prefix }}
+      honey_ledger_package_file_name_prefix: ${{ steps.variable.outputs.honey_ledger_package_file_name_prefix }}
+      honey_ledger_package_artifact_name_prefix: ${{ steps.variable.outputs.honey_ledger_package_artifact_name_prefix }}
+      honey_ledger_backend_artifact_name_prefix: ${{ steps.variable.outputs.honey_ledger_backend_artifact_name_prefix }}
+      honey_ledger_electron_artifact_name_prefix: ${{ steps.variable.outputs.honey_ledger_electron_artifact_name_prefix }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -31,10 +31,10 @@ jobs:
         run: |
           echo "build_unix_time=$(date '+%s')" >> "$GITHUB_OUTPUT"
           echo "build_date=$(date '+%Y%m%d')" >> "$GITHUB_OUTPUT"
-          echo "ratel_ledger_package_file_name_prefix=ratel-ledger-${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
-          echo "ratel_ledger_package_artifact_name_prefix=ratel-ledger-build-release-package-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
-          echo "ratel_ledger_backend_artifact_name_prefix=ratel-ledger-build-release-backend-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
-          echo "ratel_ledger_electron_artifact_name_prefix=ratel-ledger-build-release-electron-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
+          echo "honey_ledger_package_file_name_prefix=honey-ledger-${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          echo "honey_ledger_package_artifact_name_prefix=honey-ledger-build-release-package-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
+          echo "honey_ledger_backend_artifact_name_prefix=honey-ledger-build-release-backend-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
+          echo "honey_ledger_electron_artifact_name_prefix=honey-ledger-build-release-electron-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
 
   build-linux-package:
     runs-on: ubuntu-24.04
@@ -52,8 +52,8 @@ jobs:
           check-3rd-api: ${{ vars.CHECK_3RD_API }}
           skip-tests: ${{ vars.SKIP_TESTS }}
           platform-name: linux-amd64
-          package-file-name-prefix: ${{ needs.setup.outputs.ratel_ledger_package_file_name_prefix }}
-          package-artifact-name-prefix: ${{ needs.setup.outputs.ratel_ledger_package_artifact_name_prefix }}
+          package-file-name-prefix: ${{ needs.setup.outputs.honey_ledger_package_file_name_prefix }}
+          package-artifact-name-prefix: ${{ needs.setup.outputs.honey_ledger_package_artifact_name_prefix }}
 
   build-windows-backend:
     needs:
@@ -70,7 +70,7 @@ jobs:
           build-date: ${{ needs.setup.outputs.build-date }}
           check-3rd-api: ${{ vars.CHECK_3RD_API }}
           skip-tests: ${{ vars.SKIP_TESTS }}
-          backend-artifact-name-prefix: ${{ needs.setup.outputs.ratel_ledger_backend_artifact_name_prefix }}
+          backend-artifact-name-prefix: ${{ needs.setup.outputs.honey_ledger_backend_artifact_name_prefix }}
 
   build-windows-package:
     needs:
@@ -84,9 +84,9 @@ jobs:
 
       - uses: ./.github/actions/build-windows-package
         with:
-          package-file-name-prefix: ${{ needs.setup.outputs.ratel_ledger_package_file_name_prefix }}
-          package-artifact-name-prefix: ${{ needs.setup.outputs.ratel_ledger_package_artifact_name_prefix }}
-          backend-artifact-name-prefix: ${{ needs.setup.outputs.ratel_ledger_backend_artifact_name_prefix }}
+          package-file-name-prefix: ${{ needs.setup.outputs.honey_ledger_package_file_name_prefix }}
+          package-artifact-name-prefix: ${{ needs.setup.outputs.honey_ledger_package_artifact_name_prefix }}
+          backend-artifact-name-prefix: ${{ needs.setup.outputs.honey_ledger_backend_artifact_name_prefix }}
 
   verify-openapi:
     runs-on: ubuntu-latest
@@ -113,7 +113,7 @@ jobs:
       release-build: "1"
       build-unix-time: ${{ needs.setup.outputs.build-unix-time }}
       build-date: ${{ needs.setup.outputs.build-date }}
-      artifact-prefix: ${{ needs.setup.outputs.ratel_ledger_electron_artifact_name_prefix }}
+      artifact-prefix: ${{ needs.setup.outputs.honey_ledger_electron_artifact_name_prefix }}
       check-3rd-api: ${{ vars.CHECK_3RD_API }}
       skip-tests: ${{ vars.SKIP_TESTS }}
 
@@ -137,14 +137,14 @@ jobs:
       - name: Download all packaged files
         uses: actions/download-artifact@v4
         with:
-          pattern: ${{ needs.setup.outputs.ratel_ledger_package_artifact_name_prefix }}-*
+          pattern: ${{ needs.setup.outputs.honey_ledger_package_artifact_name_prefix }}-*
           merge-multiple: true
           path: release-files
 
       - name: Download Electron packages
         uses: actions/download-artifact@v4
         with:
-          pattern: ${{ needs.setup.outputs.ratel_ledger_electron_artifact_name_prefix }}-*
+          pattern: ${{ needs.setup.outputs.honey_ledger_electron_artifact_name_prefix }}-*
           merge-multiple: true
           path: release-files
 
@@ -170,7 +170,7 @@ jobs:
               *.minisig) continue ;;
               */minisign.pub) continue ;;
             esac
-            minisign -S -W -s "$key_file" -m "$artifact" -c "Ratel Ledger release artifact"
+            minisign -S -W -s "$key_file" -m "$artifact" -c "Honey Ledger release artifact"
           done
 
           rm -f "$key_file"

@@ -1,6 +1,6 @@
 # Contributing
 
-Guidelines for contributing to Ratel Ledger.
+Guidelines for contributing to Honey Ledger.
 
 ---
 
@@ -24,8 +24,8 @@ Guidelines for contributing to Ratel Ledger.
 1. Fork the repository on GitHub.
 2. Clone your fork:
    ```bash
-   git clone https://github.com/<your-username>/ratel-ledger.git
-   cd ratel-ledger
+   git clone https://github.com/<your-username>/honey-ledger.git
+   cd honey-ledger
    ```
 3. Set up the development environment (see [Development Guide](DEVELOPMENT.md)).
 4. Create a feature branch and make your changes.
@@ -40,7 +40,7 @@ See [docs/DEVELOPMENT.md](DEVELOPMENT.md) for complete setup instructions. Quick
 ```bash
 go mod download
 npm ci
-go build -o ratel-ledger . && ./ratel-ledger server run  # Terminal 1
+go build -o honey-ledger . && ./honey-ledger server run  # Terminal 1
 npm run serve                                           # Terminal 2
 ```
 
@@ -131,7 +131,7 @@ chore: update Go dependencies to latest patch versions
 
 1. **Ensure your code builds** — both backend and frontend must compile without errors:
    ```bash
-   go build -o ratel-ledger .
+   go build -o honey-ledger .
    npx vue-tsc --noEmit
    npm run build
    ```
@@ -278,4 +278,4 @@ are out of scope).
 
 ## License
 
-By contributing to Ratel Ledger, you agree that your contributions will be licensed under the [MIT License](../LICENSE).
+By contributing to Honey Ledger, you agree that your contributions will be licensed under the [MIT License](../LICENSE).

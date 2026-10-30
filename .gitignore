@@ -153,9 +153,9 @@ node_modules/
 __pycache__/
 
 # Binary and build files
-ratel-ledger
-ratel-ledger_bin
-admin/ratel-ledger-admin
+honey-ledger
+honey-ledger_bin
+admin/honey-ledger-admin
 admin/admin
 /package/
 

@@ -36,19 +36,19 @@ runs:
     - name: Package windows-x64 package
       shell: pwsh
       run: |
-        New-Item -ItemType Directory -Path "ratel-ledger"
-        New-Item -ItemType Directory -Path "ratel-ledger\data"
-        New-Item -ItemType Directory -Path "ratel-ledger\storage"
-        New-Item -ItemType Directory -Path "ratel-ledger\log"
-        Copy-Item ${{ runner.temp }}\backend\ratel-ledger.exe -Destination ratel-ledger\
-        Copy-Item -Recurse -Force package\public -Destination ratel-ledger\public
-        Copy-Item -Recurse -Force conf -Destination ratel-ledger\conf
-        Copy-Item -Recurse -Force templates -Destination ratel-ledger\templates
-        Copy-Item .\LICENSE -Destination ratel-ledger\
-        Push-Location ratel-ledger
+        New-Item -ItemType Directory -Path "honey-ledger"
+        New-Item -ItemType Directory -Path "honey-ledger\data"
+        New-Item -ItemType Directory -Path "honey-ledger\storage"
+        New-Item -ItemType Directory -Path "honey-ledger\log"
+        Copy-Item ${{ runner.temp }}\backend\honey-ledger.exe -Destination honey-ledger\
+        Copy-Item -Recurse -Force package\public -Destination honey-ledger\public
+        Copy-Item -Recurse -Force conf -Destination honey-ledger\conf
+        Copy-Item -Recurse -Force templates -Destination honey-ledger\templates
+        Copy-Item .\LICENSE -Destination honey-ledger\
+        Push-Location honey-ledger
         7z a -r -tzip -mx9 ..\${{ inputs.package-file-name-prefix }}-windows-x64.zip *
         Pop-Location
-        Remove-Item -Recurse -Force ratel-ledger
+        Remove-Item -Recurse -Force honey-ledger
 
     - name: Upload windows artifact
       uses: actions/upload-artifact@v4

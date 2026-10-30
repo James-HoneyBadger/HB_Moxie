@@ -1,6 +1,6 @@
 # Security Policy
 
-Ratel Ledger stores personal financial records, so security reports are taken
+Honey Ledger stores personal financial records, so security reports are taken
 seriously and handled privately.
 
 ## Supported Versions
@@ -92,7 +92,7 @@ Reporters are credited in the release notes unless they ask to stay anonymous.
 
 ## Threat Model
 
-Ratel Ledger is a single-user desktop application:
+Honey Ledger is a single-user desktop application:
 
 - The Go backend binds to loopback only and refuses non-loopback bind
   addresses.

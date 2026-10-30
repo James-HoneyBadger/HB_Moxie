@@ -91,7 +91,7 @@ func (a *AdminApp) makeConfigTab() fyne.CanvasObject {
 	// Save button
 	saveBtn := widget.NewButton("Save Configuration", func() {
 		dialog.ShowConfirm("Save Configuration",
-			"Save changes to ratel-ledger.ini?\nA backup will be created before saving.",
+			"Save changes to honey-ledger.ini?\nA backup will be created before saving.",
 			func(ok bool) {
 				if !ok {
 					return
@@ -128,7 +128,7 @@ func (a *AdminApp) makeConfigTab() fyne.CanvasObject {
 				statusLabel.SetText("Saved! Backup: " + backupPath)
 				dialog.ShowInformation("Configuration Saved",
 					"Configuration saved successfully.\nBackup created at:\n"+backupPath+
-						"\n\nRestart Ratel Ledger for changes to take effect.",
+						"\n\nRestart Honey Ledger for changes to take effect.",
 					a.window)
 			}, a.window)
 	})

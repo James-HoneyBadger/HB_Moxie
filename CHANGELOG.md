@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Ratel Ledger are documented here.
+All notable changes to Honey Ledger are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -36,10 +36,22 @@ details.
 - Background update checks for packaged builds: the app downloads a newer
   release and installs it on quit, notifying the user when it is ready. Only
   AppImage and Windows installer builds self-update; set
-  `RATEL_DISABLE_UPDATE_CHECK=1` to skip the check.
+  `HONEY_DISABLE_UPDATE_CHECK=1` to skip the check.
 
 ### Changed
 
+- Renamed the application from Ratel Ledger to **Honey Ledger**. The rename covers
+  the product name, package names, the application id
+  (`com.honeybadger.honeyledger`), installers, exported file names, the config
+  file (`honey-ledger.ini`), the SQLite database (`honey-ledger.db`) and the app
+  icons, and is translated across all 19 locales.
+- Existing installations upgrade in place: the previous data directory
+  (`Ratel Ledger`, and `HB Moxie` before it) is migrated on first launch, the
+  `ratel-ledger.ini`/`hbmoxie.ini` config files are still found and adopted, and
+  the `RATEL_*`/`HBM_*` environment variables and `RATEL_DISABLE_UPDATE_CHECK`
+  remain supported alongside the new `HONEY_*` names.
+- Import mapping files exported before the rename still load through the legacy
+  `ratelLedger…` JSON root fields.
 - Upgrade the admin tool to Fyne 2.8.2 (from 2.5.4). Building it on Linux now
   requires the Wayland development headers in addition to X11.
 - Upgrade the desktop shell to Electron 45.1 (from 33, which reached

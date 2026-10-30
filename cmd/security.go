@@ -12,7 +12,7 @@ import (
 // SecurityUtils represents the security command
 var SecurityUtils = &cli.Command{
 	Name:  "security",
-	Usage: "Ratel Ledger security utilities",
+	Usage: "Honey Ledger security utilities",
 	Commands: []*cli.Command{
 		{
 			Name:   "gen-secret-key",

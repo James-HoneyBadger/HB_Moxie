@@ -1,8 +1,8 @@
 # Configuration Reference
 
-Complete reference for all Ratel Ledger configuration options.
+Complete reference for all Honey Ledger configuration options.
 
-Configuration is read from `conf/ratel-ledger.ini` (INI format). Every setting can be overridden via environment variables.
+Configuration is read from `conf/honey-ledger.ini` (INI format). Every setting can be overridden via environment variables.
 
 ---
 
@@ -34,38 +34,38 @@ Configuration is read from `conf/ratel-ledger.ini` (INI format). Every setting c
 
 ## Environment Variable Overrides
 
-Every configuration key in `ratel-ledger.ini` can be overridden by an environment variable without modifying the file.
+Every configuration key in `honey-ledger.ini` can be overridden by an environment variable without modifying the file.
 
 ### Direct Value Override
 
-Pattern: `RATEL_{SECTION}_{KEY}`
+Pattern: `HONEY_{SECTION}_{KEY}`
 
 ```bash
 # Override [server] http_port
-export RATEL_SERVER_HTTP_PORT=9090
+export HONEY_SERVER_HTTP_PORT=9090
 
 # Override [database] type
-export RATEL_DATABASE_TYPE=mysql
+export HONEY_DATABASE_TYPE=mysql
 ```
 
 ### File-Based Override
 
-Pattern: `RATELCFP_{SECTION}_{KEY}` — the value is read from the file path specified.
+Pattern: `HONEYCFP_{SECTION}_{KEY}` — the value is read from the file path specified.
 
 ```bash
 # Read database password from a file
-export RATELCFP_DATABASE_PASSWD=/run/secrets/db_password
+export HONEYCFP_DATABASE_PASSWD=/run/secrets/db_password
 ```
 
 ### Working Directory Override
 
 ```bash
-export RATEL_WORK_DIR=/opt/ratel-ledger
+export HONEY_WORK_DIR=/opt/honey-ledger
 ```
 
 ### Legacy Compatibility
 
-Installs created before the Ratel Ledger rename are still supported: `HBM_{SECTION}_{KEY}`, `HBMCFP_{SECTION}_{KEY}`, and `HBM_WORK_DIR` are checked as fallbacks, and `conf/hbmoxie.ini` is used if `conf/ratel-ledger.ini` does not exist.
+Installs created before the Honey Ledger rename are still supported: `HBM_{SECTION}_{KEY}`, `HBMCFP_{SECTION}_{KEY}`, and `HBM_WORK_DIR` are checked as fallbacks, and `conf/hbmoxie.ini` is used if `conf/honey-ledger.ini` does not exist.
 
 Section and key names are **uppercase** in the environment variable. Underscores in key names remain underscores.
 
@@ -130,11 +130,11 @@ mcp_allowed_remote_ips =
 [database]
 type = sqlite3
 host = 127.0.0.1:3306
-name = ratel_ledger
+name = honey_ledger
 user = root
 passwd =
 ssl_mode = disable
-db_path = data/ratel-ledger.db
+db_path = data/honey-ledger.db
 max_idle_conn = 2
 max_open_conn = 0
 conn_max_lifetime = 14400
@@ -146,11 +146,11 @@ auto_update_database = true
 |-----|------|---------|-------------|
 | `type` | string | `sqlite3` | `sqlite3`, `mysql`, or `postgres` |
 | `host` | string | `127.0.0.1:3306` | Database host and port (MySQL/PostgreSQL) |
-| `name` | string | `ratel_ledger` | Database name (MySQL/PostgreSQL) |
+| `name` | string | `honey_ledger` | Database name (MySQL/PostgreSQL) |
 | `user` | string | `root` | Database user (MySQL/PostgreSQL) |
 | `passwd` | string | *(empty)* | Database password |
 | `ssl_mode` | string | `disable` | SSL mode for PostgreSQL (`disable`, `require`, `verify-full`) |
-| `db_path` | string | `data/ratel-ledger.db` | SQLite database file path |
+| `db_path` | string | `data/honey-ledger.db` | SQLite database file path |
 | `max_idle_conn` | int | `2` | Maximum idle database connections |
 | `max_open_conn` | int | `0` | Maximum open connections. `0` means unlimited for MySQL/PostgreSQL, but is treated as `1` for SQLite |
 | `conn_max_lifetime` | int | `14400` | Connection max lifetime in seconds |
@@ -188,7 +188,7 @@ from_address =
 [log]
 mode = console file
 level = info
-log_path = log/ratel-ledger.log
+log_path = log/honey-ledger.log
 request_log_path =
 query_log_path =
 log_file_rotate = false
@@ -200,7 +200,7 @@ log_file_max_days = 7
 |-----|------|---------|-------------|
 | `mode` | string | `console file` | Space-separated log modes: `console`, `file` |
 | `level` | string | `info` | `debug`, `info`, `warn`, or `error` |
-| `log_path` | string | `log/ratel-ledger.log` | Main log file path |
+| `log_path` | string | `log/honey-ledger.log` | Main log file path |
 | `request_log_path` | string | *(empty)* | Separate request log file (empty = use main log) |
 | `query_log_path` | string | *(empty)* | Separate database query log file |
 | `log_file_rotate` | bool | `false` | Enable log file rotation |
@@ -378,7 +378,7 @@ max_failures_per_user_per_minute = 5
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `secret_key` | string | *(empty)* | Encrypts 2FA secrets and derives server identifiers. When empty, a random key is generated on first start and persisted with `0600` permissions. Generate manually with `./ratel-ledger security gen-secret-key`. |
+| `secret_key` | string | *(empty)* | Encrypts 2FA secrets and derives server identifiers. When empty, a random key is generated on first start and persisted with `0600` permissions. Generate manually with `./honey-ledger security gen-secret-key`. |
 | `token_expired_time` | int | `2592000` | Session token lifetime in seconds (30 days) |
 | `token_min_refresh_interval` | int | `86400` | Minimum interval between token refreshes (24 hours) |
 | `temporary_token_expired_time` | int | `300` | Temporary token lifetime in seconds (5 minutes) |

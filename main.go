@@ -33,7 +33,7 @@ func main() {
 	core.BuildTime = BuildUnixTime
 
 	cmd := &cli.Command{
-		Name:    "Ratel Ledger",
+		Name:    "Honey Ledger",
 		Usage:   "A lightweight, self-hosted personal finance app with a user-friendly interface and powerful finance management features.",
 		Version: GetFullVersion(),
 		Commands: []*cli.Command{
@@ -59,7 +59,7 @@ func main() {
 	err := cmd.Run(context.Background(), os.Args)
 
 	if err != nil {
-		log.Fatalf("Failed to run Ratel Ledger with %s: %v", os.Args, err)
+		log.Fatalf("Failed to run Honey Ledger with %s: %v", os.Args, err)
 	}
 }
 

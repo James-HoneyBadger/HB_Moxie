@@ -18,16 +18,35 @@ import (
 )
 
 const (
-	ratelWorkDirEnvName                   = "RATEL_WORK_DIR"
-	legacyWorkDirEnvName                  = "HBM_WORK_DIR"
-	ratelConfigItemValueEnvNamePrefix     = "RATEL"
-	legacyConfigItemValueEnvNamePrefix    = "HBM"
-	ratelConfigItemFilePathEnvNamePrefix  = "RATELCFP"
-	legacyConfigItemFilePathEnvNamePrefix = "HBMCFP"
-	defaultConfigPath                     = "/conf/ratel-ledger.ini"
-	legacyConfigPath                      = "/conf/hbmoxie.ini"
-	defaultRootUrl                        = "%(protocol)s://%(domain)s:%(http_port)s/"
-	defaultStaticRootPath                 = "public"
+	defaultConfigPath     = "/conf/honey-ledger.ini"
+	defaultRootUrl        = "%(protocol)s://%(domain)s:%(http_port)s/"
+	defaultStaticRootPath = "public"
+)
+
+// Names used to locate the working directory and to override configuration items
+// through the environment. The first entry is the current name; the others are
+// kept so installations that predate the rename to Honey Ledger keep working.
+var (
+	workDirEnvNames = []string{"HONEY_WORK_DIR", "RATEL_WORK_DIR", "HBM_WORK_DIR"}
+
+	configItemValueEnvNamePrefixes = []string{
+		"HONEY",
+		"RATEL",
+		"HBM",
+	}
+
+	configItemFilePathEnvNamePrefixes = []string{
+		"HONEYCFP",
+		"RATELCFP",
+		"HBMCFP",
+	}
+
+	// Config file paths, from the current name to the oldest one.
+	configPaths = []string{
+		defaultConfigPath,
+		"/conf/ratel-ledger.ini",
+		"/conf/hbmoxie.ini",
+	}
 )
 
 // SystemMode represents running mode of system
@@ -156,7 +175,7 @@ const (
 	defaultDomain   string = "localhost"
 
 	defaultDatabaseHost            string = "127.0.0.1:3306"
-	defaultDatabaseName            string = "ratel_ledger"
+	defaultDatabaseName            string = "honey_ledger"
 	defaultDatabaseMaxIdleConn     uint16 = 2
 	defaultDatabaseMaxOpenConn     uint16 = 0
 	defaultDatabaseConnMaxLifetime uint32 = 14400
@@ -624,19 +643,22 @@ func GetDefaultConfigFilePath() (string, error) {
 		return "", err
 	}
 
-	cfgFilePath := filepath.Join(workingPath, defaultConfigPath)
-	_, err = os.Stat(cfgFilePath)
+	var firstError error
 
-	if err != nil {
-		legacyConfigFilePath := filepath.Join(workingPath, legacyConfigPath)
-		if _, legacyErr := os.Stat(legacyConfigFilePath); legacyErr == nil {
-			return legacyConfigFilePath, nil
+	for _, configPath := range configPaths {
+		cfgFilePath := filepath.Join(workingPath, configPath)
+		_, err := os.Stat(cfgFilePath)
+
+		if err == nil {
+			return cfgFilePath, nil
 		}
 
-		return "", err
+		if firstError == nil {
+			firstError = err
+		}
 	}
 
-	return cfgFilePath, nil
+	return "", firstError
 }
 
 func loadGlobalConfiguration(config *Config, configFile *ini.File, sectionName string) error {
@@ -995,7 +1017,7 @@ func loadSecurityConfiguration(config *Config, configFile *ini.File, sectionName
 	config.SecretKey = getConfigItemStringValue(configFile, sectionName, "secret_key", defaultSecretKey)
 
 	// Generate a random secret key if none was configured
-	if config.SecretKey == "" || config.SecretKey == "ratel_ledger" || config.SecretKey == "hbmoxie" {
+	if config.SecretKey == "" || config.SecretKey == "honey_ledger" || config.SecretKey == "ratel_ledger" || config.SecretKey == "hbmoxie" {
 		randomBytes := make([]byte, 32)
 		if _, err := rand.Read(randomBytes); err != nil {
 			return fmt.Errorf("failed to generate random secret key: %w", err)
@@ -1263,13 +1285,10 @@ func loadExchangeRatesConfiguration(config *Config, configFile *ini.File, sectio
 }
 
 func getWorkingPath() (string, error) {
-	workingPath := os.Getenv(ratelWorkDirEnvName)
-	if workingPath == "" {
-		workingPath = os.Getenv(legacyWorkDirEnvName)
-	}
-
-	if workingPath != "" {
-		return workingPath, nil
+	for _, envName := range workDirEnvNames {
+		if workingPath := os.Getenv(envName); workingPath != "" {
+			return workingPath, nil
+		}
 	}
 
 	execFilePath, err := os.Getwd()
@@ -1463,10 +1482,7 @@ func getConfigItemBoolValue(configFile *ini.File, sectionName string, itemName s
 }
 
 func getConfigItemValueFromEnvironment(sectionName string, itemName string) string {
-	itemFilePath := os.Getenv(getConfigItemFilePathEnvironmentKey(sectionName, itemName))
-	if itemFilePath == "" {
-		itemFilePath = os.Getenv(getLegacyConfigItemFilePathEnvironmentKey(sectionName, itemName))
-	}
+	itemFilePath := lookupEnvironmentValue(configItemFilePathEnvNamePrefixes, sectionName, itemName)
 
 	if itemFilePath != "" {
 		content, err := os.ReadFile(itemFilePath)
@@ -1476,28 +1492,21 @@ func getConfigItemValueFromEnvironment(sectionName string, itemName string) stri
 		}
 	}
 
-	itemValueEnvironmentValue := os.Getenv(getConfigItemValueEnvironmentKey(sectionName, itemName))
-	if itemValueEnvironmentValue == "" {
-		itemValueEnvironmentValue = os.Getenv(getLegacyConfigItemValueEnvironmentKey(sectionName, itemName))
+	return lookupEnvironmentValue(configItemValueEnvNamePrefixes, sectionName, itemName)
+}
+
+// lookupEnvironmentValue returns the first non-empty value found for the item
+// across every known environment variable prefix, newest name first.
+func lookupEnvironmentValue(prefixes []string, sectionName string, itemName string) string {
+	for _, prefix := range prefixes {
+		key := fmt.Sprintf("%s_%s_%s", prefix, strings.ToUpper(sectionName), strings.ToUpper(itemName))
+
+		if value := os.Getenv(key); value != "" {
+			return value
+		}
 	}
 
-	return itemValueEnvironmentValue
-}
-
-func getConfigItemFilePathEnvironmentKey(sectionName string, itemName string) string {
-	return fmt.Sprintf("%s_%s_%s", ratelConfigItemFilePathEnvNamePrefix, strings.ToUpper(sectionName), strings.ToUpper(itemName))
-}
-
-func getConfigItemValueEnvironmentKey(sectionName string, itemName string) string {
-	return fmt.Sprintf("%s_%s_%s", ratelConfigItemValueEnvNamePrefix, strings.ToUpper(sectionName), strings.ToUpper(itemName))
-}
-
-func getLegacyConfigItemFilePathEnvironmentKey(sectionName string, itemName string) string {
-	return fmt.Sprintf("%s_%s_%s", legacyConfigItemFilePathEnvNamePrefix, strings.ToUpper(sectionName), strings.ToUpper(itemName))
-}
-
-func getLegacyConfigItemValueEnvironmentKey(sectionName string, itemName string) string {
-	return fmt.Sprintf("%s_%s_%s", legacyConfigItemValueEnvNamePrefix, strings.ToUpper(sectionName), strings.ToUpper(itemName))
+	return ""
 }
 
 func getLogLevel(logLevelStr string) (Level, error) {

@@ -17,7 +17,7 @@ import (
 // Utilities represents the utilities command
 var Utilities = &cli.Command{
 	Name:  "utility",
-	Usage: "Ratel Ledger utilities",
+	Usage: "Honey Ledger utilities",
 	Commands: []*cli.Command{
 		{
 			Name:   "parse-default-request-id",
@@ -94,7 +94,7 @@ func sendTestMail(c *core.CliContext) error {
 
 	err = mail.Container.SendMail(&mail.MailMessage{
 		To:      toAddress,
-		Subject: "Ratel Ledger test e-mail",
+		Subject: "Honey Ledger test e-mail",
 		Body:    "This is a test e-mail",
 	})
 

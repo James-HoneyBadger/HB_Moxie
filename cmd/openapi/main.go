@@ -125,8 +125,8 @@ func generate(repositoryRoot string) ([]byte, []byte, error) {
 	document := map[string]any{
 		"openapi": "3.1.0",
 		"info": map[string]any{
-			"title":       "Ratel Ledger API",
-			"description": "Self-hosted personal finance API exposed by the local Ratel Ledger backend.",
+			"title":       "Honey Ledger API",
+			"description": "Self-hosted personal finance API exposed by the local Honey Ledger backend.",
 			"version":     version,
 		},
 		"paths": generatedPaths(),

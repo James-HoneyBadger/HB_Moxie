@@ -1,6 +1,6 @@
 # Electron Desktop Application
 
-Guide for building, running, and packaging the Ratel Ledger standalone desktop application.
+Guide for building, running, and packaging the Honey Ledger standalone desktop application.
 
 ---
 
@@ -19,10 +19,10 @@ Guide for building, running, and packaging the Ratel Ledger standalone desktop a
 
 ## Overview
 
-The Electron shell wraps Ratel Ledger into a native desktop application. It:
+The Electron shell wraps Honey Ledger into a native desktop application. It:
 
 - Spawns the Go backend as a child process on a random free port
-- Serves the Vue.js frontend via a custom `app://ratel-ledger` protocol
+- Serves the Vue.js frontend via a custom `app://honey-ledger` protocol
 - Proxies API requests to the Go backend
 - Provides native window management (menu bar, window controls, system tray)
 
@@ -48,7 +48,7 @@ Users get a self-contained application with no browser or terminal needed.
 From the project root:
 
 ```bash
-go build -o ratel-ledger .
+go build -o honey-ledger .
 ```
 
 ### 2. Build the Frontend
@@ -67,9 +67,9 @@ npm start
 
 The Electron app will:
 1. Find a free port
-2. Start `../ratel-ledger server run` as a child process
+2. Start `../honey-ledger server run` as a child process
 3. Wait for the backend TCP port to accept connections
-4. Open the main window pointing to `app://ratel-ledger/desktop.html`
+4. Open the main window pointing to `app://honey-ledger/desktop.html`
 
 ---
 
@@ -80,22 +80,22 @@ The Electron app will:
 ```
 Electron Main Process (main.js)
 │
-├── Child Process: Go Backend (ratel-ledger server run)
+├── Child Process: Go Backend (honey-ledger server run)
 │     └── Listens on 127.0.0.1:<random-port>
 │
-├── Custom Protocol: app://ratel-ledger
+├── Custom Protocol: app://honey-ledger
 │     └── Serves files from dist/ directory
 │
 ├── Request Interception
 │     └── Proxies /api/*, /avatar/*, /pictures/*, etc. to Go backend
 │
 └── BrowserWindow
-      └── Loads app://ratel-ledger/desktop.html
+      └── Loads app://honey-ledger/desktop.html
 ```
 
 ### Custom Protocol
 
-The `app://ratel-ledger` protocol serves frontend files directly from the filesystem without an HTTP server, improving security and performance.
+The `app://honey-ledger` protocol serves frontend files directly from the filesystem without an HTTP server, improving security and performance.
 
 ### API Proxying
 
@@ -118,10 +118,10 @@ These URL paths are intercepted and forwarded to the Go backend:
 `electron/preload.js` exposes a limited API to the renderer:
 
 ```javascript
-window.ratelLedger = {
+window.honeyLedger = {
     platform: process.platform,    // 'linux', 'darwin', 'win32'
     isDesktopApp: true,
-    apiBaseUrl: 'app://ratel-ledger'
+    apiBaseUrl: 'app://honey-ledger'
 };
 ```
 
@@ -142,7 +142,7 @@ window.ratelLedger = {
 
 ### Backend Lifecycle
 
-- **Startup**: The Go binary is spawned with `RATEL_WORK_DIR=<userData>`, `RATEL_SERVER_HTTP_ADDR=127.0.0.1`, and `RATEL_SERVER_HTTP_PORT=<port>`.
+- **Startup**: The Go binary is spawned with `HONEY_WORK_DIR=<userData>`, `HONEY_SERVER_HTTP_ADDR=127.0.0.1`, and `HONEY_SERVER_HTTP_PORT=<port>`.
 - **Readiness**: The main process waits until the backend TCP port accepts connections.
 - **Single instance**: A second launch focuses the existing window instead of starting another backend against the same SQLite file.
 - **Shutdown**: On app quit, `SIGTERM` is sent to the Go process. If it doesn't exit within 3 seconds, `SIGKILL` is sent.
@@ -194,10 +194,10 @@ The `electron/package.json` contains the `electron-builder` configuration:
 ```json
 {
   "build": {
-    "appId": "com.honeybadger.ratelledger",
-    "productName": "Ratel Ledger",
+    "appId": "com.honeybadger.honeyledger",
+    "productName": "Honey Ledger",
     "extraResources": [
-      { "from": "../", "to": "backend/", "filter": ["ratel-ledger", "ratel-ledger.exe"] },
+      { "from": "../", "to": "backend/", "filter": ["honey-ledger", "honey-ledger.exe"] },
       { "from": "../conf", "to": "backend/conf" },
       { "from": "../templates", "to": "backend/templates" },
       { "from": "../dist", "to": "backend/public" }
@@ -214,7 +214,7 @@ Before building a distributable package:
 
 1. Build the Go backend binary for the target platform
 2. Build the frontend (`npm run build` from project root)
-3. Ensure `conf/ratel-ledger.ini` has sensible defaults
+3. Ensure `conf/honey-ledger.ini` has sensible defaults
 4. Run `cd electron && npm run build:<platform>`
 
 ---
@@ -247,7 +247,7 @@ How it fits together:
 To disable the check — for packaging tests or offline verification — set:
 
 ```bash
-RATEL_DISABLE_UPDATE_CHECK=1
+HONEY_DISABLE_UPDATE_CHECK=1
 ```
 
 The tray menu gains a **Check for Updates** entry on platforms where
@@ -257,14 +257,14 @@ self-update is supported.
 
 ## Configuration
 
-The Electron app uses `conf/ratel-ledger.ini` for configuration. On first launch of a packaged build, the template is copied from the read-only application resources into Electron's per-user data directory (`app.getPath('userData')`):
+The Electron app uses `conf/honey-ledger.ini` for configuration. On first launch of a packaged build, the template is copied from the read-only application resources into Electron's per-user data directory (`app.getPath('userData')`):
 
 ```
 <userData>/
-  conf/ratel-ledger.ini
+  conf/honey-ledger.ini
   templates/
-  data/ratel-ledger.db
-  log/ratel-ledger.log
+  data/honey-ledger.db
+  log/honey-ledger.log
   storage/
 ```
 
@@ -276,7 +276,7 @@ Subsequent launches reuse the existing files, so generated secrets and user data
 
 ### Backend Fails to Start
 
-- Check that the backend binary (`ratel-ledger`, or `ratel-ledger.exe` on Windows) exists and is executable.
+- Check that the backend binary (`honey-ledger`, or `honey-ledger.exe` on Windows) exists and is executable.
 - Check the log output in the terminal (when running `npm start`).
 - Ensure no other process is blocking the randomly selected port.
 

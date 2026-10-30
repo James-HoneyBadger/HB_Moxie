@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report a bug in Ratel Ledger
+description: Report a bug in Honey Ledger
 body:
   - type: checkboxes
     id: checkboxes
@@ -31,10 +31,10 @@ body:
       required: true
 
   - type: input
-    id: ratel-ledger-version
+    id: honey-ledger-version
     attributes:
-      label: Ratel Ledger Version
-      description: Ratel Ledger version and commit hash of your instance, e.g. "v1.0.0 (20e2444)"
+      label: Honey Ledger Version
+      description: Honey Ledger version and commit hash of your instance, e.g. "v1.0.0 (20e2444)"
     validations:
       required: true
 
@@ -42,7 +42,7 @@ body:
     id: server-os
     attributes:
       label: Server Operating System
-      description: The operating system information you are using to deploy Ratel Ledger, e.g "Debian GNU/Linux 11 amd64"
+      description: The operating system information you are using to deploy Honey Ledger, e.g "Debian GNU/Linux 11 amd64"
 
   - type: input
     id: server-database
@@ -53,9 +53,9 @@ body:
   - type: dropdown
     id: reproduce-on-demo-site
     attributes:
-      label: Can you reproduce this bug on a fresh Ratel Ledger instance?
+      label: Can you reproduce this bug on a fresh Honey Ledger instance?
       description: |
-        Ratel Ledger repository: https://github.com/James-HoneyBadger/ratel-ledger
+        Honey Ledger repository: https://github.com/James-HoneyBadger/ratel-ledger
       options:
         - "No"
         - "Yes"

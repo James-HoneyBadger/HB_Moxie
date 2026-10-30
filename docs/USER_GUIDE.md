@@ -1,6 +1,6 @@
 # User Guide
 
-A complete guide to using Ratel Ledger for personal finance management.
+A complete guide to using Honey Ledger for personal finance management.
 
 ---
 
@@ -36,7 +36,7 @@ A complete guide to using Ratel Ledger for personal finance management.
 
 ### First Login
 
-1. Launch the Ratel Ledger desktop application.
+1. Launch the Honey Ledger desktop application.
 2. Log in with the default credentials:
    - **Username:** `admin`
    - **Password:** the random password printed to the console on first launch. It is shown once and is deliberately not written to the log file.
@@ -45,7 +45,7 @@ A complete guide to using Ratel Ledger for personal finance management.
    If auto-login is enabled (the default) the login screen is skipped, so no password is needed. If you missed the one-time console output, set a new password from the command line:
 
    ```bash
-   ./ratel-ledger userdata user-modify-password --username admin --password "newpassword"
+   ./honey-ledger userdata user-modify-password --username admin --password "newpassword"
    ```
 
 4. Set your preferred currency, timezone, and language in **Settings → Basic**.
@@ -155,7 +155,7 @@ If enabled by your administrator, you can attach pictures (receipts, invoices) t
 
 ### Draft Auto-Save
 
-Ratel Ledger can automatically save transaction drafts as you type. Enable this in **Settings → Basic → Auto-save transaction draft**.
+Honey Ledger can automatically save transaction drafts as you type. Enable this in **Settings → Basic → Auto-save transaction draft**.
 
 ---
 
@@ -207,7 +207,7 @@ Categories have two levels:
 
 ### Preset Categories
 
-Ratel Ledger includes preset category sets you can import during initial setup:
+Honey Ledger includes preset category sets you can import during initial setup:
 1. Go to **Categories**.
 2. Click **Import Preset**.
 3. Select a preset group and confirm.
@@ -246,7 +246,7 @@ Import transactions from external financial software and bank exports.
 
 | Category | Formats |
 |----------|---------|
-| **Ratel Ledger** | CSV, TSV |
+| **Honey Ledger** | CSV, TSV |
 | **Custom** | CSV/TSV/SSV (configurable), Excel (.xlsx, .xls) |
 | **Quicken** | QFX, QIF (Y/M/D, M/D/Y, D/M/Y date formats), IIF |
 | **Microsoft Money** | OFX |
@@ -270,7 +270,7 @@ Import transactions from external financial software and bank exports.
 For non-standard file formats, you can:
 1. Upload the file.
 2. Use the **Custom Script** tab to write a transformation script.
-3. Map the transformed data to Ratel Ledger's transaction fields.
+3. Map the transformed data to Honey Ledger's transaction fields.
 
 ### Import Tips
 
@@ -401,7 +401,7 @@ totals in different currencies are never mixed.
 
 ## Exchange Rates
 
-Ratel Ledger automatically fetches exchange rates for multi-currency support.
+Honey Ledger automatically fetches exchange rates for multi-currency support.
 
 ### Automatic Updates
 
@@ -532,7 +532,7 @@ If configured by the administrator, you can log in using an external identity pr
 1. Go to **Settings → Security**.
 2. Click **Link** next to the OAuth2 provider.
 3. Authorize the application in the provider's interface.
-4. Your Ratel Ledger account is now linked.
+4. Your Honey Ledger account is now linked.
 
 ### Unlinking
 
@@ -542,7 +542,7 @@ Go to **Settings → Security** and click **Unlink** to disconnect the external 
 
 ## API Tokens
 
-Generate tokens for programmatic access to the Ratel Ledger API.
+Generate tokens for programmatic access to the Honey Ledger API.
 
 ### Generating a Token
 

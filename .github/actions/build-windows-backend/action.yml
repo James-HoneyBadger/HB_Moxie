@@ -81,5 +81,5 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.backend-artifact-name-prefix }}-windows-x64
-        path: ratel-ledger.exe
+        path: honey-ledger.exe
         if-no-files-found: error

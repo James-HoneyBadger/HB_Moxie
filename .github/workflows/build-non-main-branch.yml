@@ -15,9 +15,9 @@ jobs:
     outputs:
       build-unix-time: ${{ steps.variable.outputs.build_unix_time }}
       build-date: ${{ steps.variable.outputs.build_date }}
-      ratel_ledger_package_file_name_prefix: ${{ steps.variable.outputs.ratel_ledger_package_file_name_prefix }}
-      ratel_ledger_package_artifact_name_prefix: ${{ steps.variable.outputs.ratel_ledger_package_artifact_name_prefix }}
-      ratel_ledger_backend_artifact_name_prefix: ${{ steps.variable.outputs.ratel_ledger_backend_artifact_name_prefix }}
+      honey_ledger_package_file_name_prefix: ${{ steps.variable.outputs.honey_ledger_package_file_name_prefix }}
+      honey_ledger_package_artifact_name_prefix: ${{ steps.variable.outputs.honey_ledger_package_artifact_name_prefix }}
+      honey_ledger_backend_artifact_name_prefix: ${{ steps.variable.outputs.honey_ledger_backend_artifact_name_prefix }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -27,9 +27,9 @@ jobs:
         run: |
           echo "build_unix_time=$(date '+%s')" >> "$GITHUB_OUTPUT"
           echo "build_date=$(date '+%Y%m%d')" >> "$GITHUB_OUTPUT"
-          echo "ratel_ledger_package_file_name_prefix=ratel-ledger-dev-package-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
-          echo "ratel_ledger_package_artifact_name_prefix=ratel-ledger-build-dev-package-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
-          echo "ratel_ledger_backend_artifact_name_prefix=ratel-ledger-build-dev-backend-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
+          echo "honey_ledger_package_file_name_prefix=honey-ledger-dev-package-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
+          echo "honey_ledger_package_artifact_name_prefix=honey-ledger-build-dev-package-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
+          echo "honey_ledger_backend_artifact_name_prefix=honey-ledger-build-dev-backend-${{ github.run_id }}" >> "$GITHUB_OUTPUT"
 
   verify-openapi:
     runs-on: ubuntu-latest
@@ -63,8 +63,8 @@ jobs:
           check-3rd-api: ${{ vars.CHECK_3RD_API }}
           skip-tests: ${{ vars.SKIP_TESTS }}
           platform-name: linux-amd64
-          package-file-name-prefix: ${{ needs.setup.outputs.ratel_ledger_package_file_name_prefix }}
-          package-artifact-name-prefix: ${{ needs.setup.outputs.ratel_ledger_package_artifact_name_prefix }}
+          package-file-name-prefix: ${{ needs.setup.outputs.honey_ledger_package_file_name_prefix }}
+          package-artifact-name-prefix: ${{ needs.setup.outputs.honey_ledger_package_artifact_name_prefix }}
 
   build-windows-backend:
     needs:
@@ -80,7 +80,7 @@ jobs:
           build-date: ${{ needs.setup.outputs.build-date }}
           check-3rd-api: ${{ vars.CHECK_3RD_API }}
           skip-tests: ${{ vars.SKIP_TESTS }}
-          backend-artifact-name-prefix: ${{ needs.setup.outputs.ratel_ledger_backend_artifact_name_prefix }}
+          backend-artifact-name-prefix: ${{ needs.setup.outputs.honey_ledger_backend_artifact_name_prefix }}
 
   build-windows-package:
     needs:
@@ -94,6 +94,6 @@ jobs:
 
       - uses: ./.github/actions/build-windows-package
         with:
-          package-file-name-prefix: ${{ needs.setup.outputs.ratel_ledger_package_file_name_prefix }}
-          package-artifact-name-prefix: ${{ needs.setup.outputs.ratel_ledger_package_artifact_name_prefix }}
-          backend-artifact-name-prefix: ${{ needs.setup.outputs.ratel_ledger_backend_artifact_name_prefix }}
+          package-file-name-prefix: ${{ needs.setup.outputs.honey_ledger_package_file_name_prefix }}
+          package-artifact-name-prefix: ${{ needs.setup.outputs.honey_ledger_package_artifact_name_prefix }}
+          backend-artifact-name-prefix: ${{ needs.setup.outputs.honey_ledger_backend_artifact_name_prefix }}

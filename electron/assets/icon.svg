@@ -86,7 +86,7 @@
   </g>
 
   <!-- App name text -->
-  <text x="256" y="390" text-anchor="middle" font-size="48" font-weight="800" fill="url(#gold)" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" letter-spacing="4">RATEL LEDGER</text>
+  <text x="256" y="390" text-anchor="middle" font-size="48" font-weight="800" fill="url(#gold)" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" letter-spacing="4">HONEY LEDGER</text>
 
   <!-- Tagline -->
   <text x="256" y="415" text-anchor="middle" font-size="13" fill="rgba(255,255,255,0.5)" font-family="'Segoe UI', Arial, sans-serif" letter-spacing="4">PERSONAL FINANCE MANAGER</text>

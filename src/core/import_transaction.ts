@@ -37,9 +37,40 @@ export class ImportTransactionColumnType implements TypeAndName {
     }
 }
 
+// Import files exported before the rename to Honey Ledger keep working: the root
+// field is looked up under the current name first, then every legacy name.
+function pickRootField<T>(parsed: Record<string, unknown>, primary: string, legacy: readonly string[]): T | undefined {
+    const candidates: string[] = [primary, ...legacy];
+
+    for (const key of candidates) {
+        const value = parsed[key];
+
+        if (value) {
+            return value as T;
+        }
+    }
+
+    return undefined;
+}
+
+interface ImportDataMappingJsonRoot {
+    includeHeader?: boolean;
+    dataColumnMapping?: Record<number, number>;
+    transactionTypeMapping?: Record<string, TransactionType>;
+    timeFormat?: string;
+    timezoneFormat?: string;
+    amountFormat?: string;
+    geoLocationSeparator?: string;
+    geoLocationOrder?: string;
+    tagSeparator?: string;
+}
+
 export class ImportTransactionDataMapping {
-    private static readonly JSON_ROOT_FIELD = 'ratelLedgerImportTransactionDataMapping';
-    private static readonly LEGACY_JSON_ROOT_FIELD = 'hbmoxieImportTransactionDataMapping';
+    private static readonly JSON_ROOT_FIELD = 'honeyLedgerImportTransactionDataMapping';
+    private static readonly LEGACY_JSON_ROOT_FIELDS: readonly string[] = [
+        'ratelLedgerImportTransactionDataMapping',
+        'hbmoxieImportTransactionDataMapping'
+    ];
     private static readonly DEFAULT_INCLUDE_HEADER = true;
     private static readonly DEFAULT_TIME_FORMAT = '';
     private static readonly DEFAULT_TIMEZONE_FORMAT = '';
@@ -322,7 +353,7 @@ export class ImportTransactionDataMapping {
     public static parseFromJson(json: string): ImportTransactionDataMapping | null {
         try {
             const parsed = JSON.parse(json);
-            const root = parsed[ImportTransactionDataMapping.JSON_ROOT_FIELD] ?? parsed[ImportTransactionDataMapping.LEGACY_JSON_ROOT_FIELD];
+            const root = pickRootField<ImportDataMappingJsonRoot>(parsed, ImportTransactionDataMapping.JSON_ROOT_FIELD, ImportTransactionDataMapping.LEGACY_JSON_ROOT_FIELDS);
 
             if (!root) {
                 return null;
@@ -386,8 +417,11 @@ export class ImportTransactionReplaceRule {
 }
 
 export class ImportTransactionReplaceRules {
-    private static readonly JSON_ROOT_FIELD = 'ratelLedgerImportTransactionReplaceRules';
-    private static readonly LEGACY_JSON_ROOT_FIELD = 'hbmoxieImportTransactionReplaceRules';
+    private static readonly JSON_ROOT_FIELD = 'honeyLedgerImportTransactionReplaceRules';
+    private static readonly LEGACY_JSON_ROOT_FIELDS: readonly string[] = [
+        'ratelLedgerImportTransactionReplaceRules',
+        'hbmoxieImportTransactionReplaceRules'
+    ];
 
     private readonly rules: ImportTransactionReplaceRule[];
 
@@ -418,7 +452,7 @@ export class ImportTransactionReplaceRules {
     public static parseFromJson(json: string): ImportTransactionReplaceRules | null {
         try {
             const parsed = JSON.parse(json);
-            const root = parsed[ImportTransactionReplaceRules.JSON_ROOT_FIELD] ?? parsed[ImportTransactionReplaceRules.LEGACY_JSON_ROOT_FIELD];
+            const root = pickRootField<unknown[]>(parsed, ImportTransactionReplaceRules.JSON_ROOT_FIELD, ImportTransactionReplaceRules.LEGACY_JSON_ROOT_FIELDS);
 
             if (!root || !('length' in root)) {
                 return null;

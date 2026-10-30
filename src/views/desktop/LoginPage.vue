@@ -23,8 +23,8 @@
                 <div class="d-flex align-center justify-center h-100">
                     <v-card variant="flat" class="w-100 mt-0 px-4 pt-12" max-width="500">
                         <v-card-text>
-                            <h4 class="text-h4 mb-2">{{ tt('Welcome to Ratel Ledger') }}</h4>
-                            <p class="mb-0" v-if="isInternalAuthEnabled()">{{ tt('Please log in with your Ratel Ledger account') }}</p>
+                            <h4 class="text-h4 mb-2">{{ tt('Welcome to Honey Ledger') }}</h4>
+                            <p class="mb-0" v-if="isInternalAuthEnabled()">{{ tt('Please log in with your Honey Ledger account') }}</p>
                             <p class="mt-1 mb-0" v-if="tips">{{ tips }}</p>
                         </v-card-text>
 
@@ -148,7 +148,7 @@
 
                                 <v-col cols="12" class="text-center text-sm">
                                     <span>Powered by </span>
-                                    <a href="https://github.com/James-HoneyBadger/ratel-ledger" target="_blank">Ratel Ledger</a>&nbsp;<span>{{ version }}</span>
+                                    <a href="https://github.com/James-HoneyBadger/ratel-ledger" target="_blank">Honey Ledger</a>&nbsp;<span>{{ version }}</span>
                                 </v-col>
                             </v-row>
                         </v-card-text>
@@ -234,7 +234,7 @@ const autoLoggingIn = ref<boolean>(false);
 
 // Attempt auto-login in desktop mode when enabled
 onMounted(() => {
-    if (isDesktopAutoLoginEnabled() && window.ratelLedger?.isDesktopApp) {
+    if (isDesktopAutoLoginEnabled() && window.honeyLedger?.isDesktopApp) {
         autoLoggingIn.value = true;
         rootStore.autoLogin().then(authResponse => {
             doAfterLogin(authResponse);

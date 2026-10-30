@@ -12,7 +12,7 @@ NO_BUILD="0"
 
 usage() {
     cat <<'EOF'
-Ratel Ledger run script
+Honey Ledger run script
 
 Usage:
     ./run.sh [options]
@@ -76,12 +76,12 @@ mkdir -p data log storage
 if [ "$NO_BUILD" = "0" ]; then
     require_command go
 
-    echo "==> Building backend (ratel-ledger)"
-    go build -o ratel-ledger .
+    echo "==> Building backend (honey-ledger)"
+    go build -o honey-ledger .
 fi
 
-if [ ! -x ratel-ledger ]; then
-    echo "Error: backend binary \"ratel-ledger\" is missing. Run without --no-build." >&2
+if [ ! -x honey-ledger ]; then
+    echo "Error: backend binary \"honey-ledger\" is missing. Run without --no-build." >&2
     exit 1
 fi
 
@@ -103,7 +103,7 @@ if [ "$BUILD_ONLY" = "1" ]; then
 fi
 
 if [ "$MODE" = "server" ]; then
-    exec ./ratel-ledger server run
+    exec ./honey-ledger server run
 fi
 
 if [ ! -f dist/desktop.html ]; then

@@ -42,7 +42,7 @@ on:
         description: Prefix for uploaded artifacts
         required: true
         type: string
-        default: ratel-ledger-electron-dev
+        default: honey-ledger-electron-dev
       release-build:
         description: Build as release
         required: false
@@ -138,7 +138,7 @@ jobs:
           COMMIT_HASH="$(git rev-parse --short=7 HEAD)"
           go build -trimpath -tags timetzdata \
             -ldflags "-X main.Version=${VERSION} -X main.CommitHash=${COMMIT_HASH} -X main.BuildUnixTime=${{ inputs.build-unix-time }}" \
-            -o ratel-ledger .
+            -o honey-ledger .
 
       - name: Build frontend
         shell: bash

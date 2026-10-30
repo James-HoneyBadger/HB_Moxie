@@ -1,8 +1,8 @@
-# Ratel Ledger
+# Honey Ledger
 
 A standalone desktop personal finance management application.
 
-Ratel Ledger is a self-contained Electron desktop application for individuals who want full control over their financial data. All data is stored locally on your machine — no cloud, no browser, no external services required.
+Honey Ledger is a self-contained Electron desktop application for individuals who want full control over their financial data. All data is stored locally on your machine — no cloud, no browser, no external services required.
 
 ## Features
 
@@ -44,7 +44,7 @@ The script installs missing frontend/Electron dependencies, builds the Go backen
 To launch Electron manually instead, build both halves first:
 
 ```bash
-go build -o ratel-ledger .
+go build -o honey-ledger .
 npm install && npm run build
 cd electron && npm install && npm start
 ```
@@ -59,7 +59,7 @@ Then extract the archive and run the binary. See [docs/INSTALLATION.md](docs/INS
 
 ## Default Credentials
 
-On first launch with no existing database, Ratel Ledger creates a default administrator account (`admin`) with a random password. The password is printed once to the console on that first start and is never written to the log file. If auto-login is enabled (default), the login screen is skipped entirely; you can set a new password at any time with `ratel-ledger userdata user-modify-password --username admin --password <new-password>`.
+On first launch with no existing database, Honey Ledger creates a default administrator account (`admin`) with a random password. The password is printed once to the console on that first start and is never written to the log file. If auto-login is enabled (default), the login screen is skipped entirely; you can set a new password at any time with `honey-ledger userdata user-modify-password --username admin --password <new-password>`.
 
 ## Keyboard Shortcuts
 

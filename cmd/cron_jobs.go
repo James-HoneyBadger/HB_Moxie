@@ -13,7 +13,7 @@ import (
 // CronJobs represents the cron command
 var CronJobs = &cli.Command{
 	Name:  "cron",
-	Usage: "Ratel Ledger cron job utilities",
+	Usage: "Honey Ledger cron job utilities",
 	Commands: []*cli.Command{
 		{
 			Name:   "list",

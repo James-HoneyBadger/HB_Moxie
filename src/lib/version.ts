@@ -3,9 +3,9 @@ import type { VersionInfo } from '@/core/version.ts';
 import { getBasePath } from './web.ts';
 
 const clientVersionHolder: VersionInfo = {
-    version: __RATEL_LEDGER_VERSION__,
-    commitHash: __RATEL_LEDGER_BUILD_COMMIT_HASH__,
-    buildTime: __RATEL_LEDGER_BUILD_UNIX_TIME__
+    version: __HONEY_LEDGER_VERSION__,
+    commitHash: __HONEY_LEDGER_BUILD_COMMIT_HASH__,
+    buildTime: __HONEY_LEDGER_BUILD_UNIX_TIME__
 };
 
 export function formatDisplayVersion(versionInfo: VersionInfo): string {
@@ -31,7 +31,7 @@ export function formatDisplayVersion(versionInfo: VersionInfo): string {
 }
 
 export function isProduction(): boolean {
-    return __RATEL_LEDGER_IS_PRODUCTION__;
+    return __HONEY_LEDGER_IS_PRODUCTION__;
 }
 
 export function getClientVersionInfo(): VersionInfo {

@@ -1,6 +1,6 @@
 # Development Guide
 
-Instructions for setting up a development environment, building, testing, and debugging Ratel Ledger.
+Instructions for setting up a development environment, building, testing, and debugging Honey Ledger.
 
 ---
 
@@ -57,7 +57,7 @@ brew install go node gcc git
 
 ```bash
 git clone https://github.com/James-HoneyBadger/ratel-ledger.git
-cd ratel-ledger
+cd honey-ledger
 ```
 
 ### Backend Dependencies
@@ -80,7 +80,7 @@ The typical development loop:
 
 1. **Start the backend** in one terminal:
    ```bash
-   go build -o ratel-ledger . && ./ratel-ledger server run
+   go build -o honey-ledger . && ./honey-ledger server run
    ```
 
 2. **Start the frontend dev server** in another terminal:
@@ -156,9 +156,9 @@ pkg/
 ### Configuration Loading
 
 Configuration is loaded in `pkg/settings/setting.go`:
-- Reads from INI file (`conf/ratel-ledger.ini`)
-- Environment variables take precedence (`RATEL_{SECTION}_{KEY}`)
-- File-path variables for secrets (`RATELCFP_{SECTION}_{KEY}`)
+- Reads from INI file (`conf/honey-ledger.ini`)
+- Environment variables take precedence (`HONEY_{SECTION}_{KEY}`)
+- File-path variables for secrets (`HONEYCFP_{SECTION}_{KEY}`)
 
 ### Database Access
 
@@ -267,7 +267,7 @@ This builds the backend, builds the frontend when needed, installs missing depen
 
 ```bash
 # Terminal 1 — Backend
-go build -o ratel-ledger . && ./ratel-ledger server run
+go build -o honey-ledger . && ./honey-ledger server run
 
 # Terminal 2 — Frontend (dev server with HMR)
 npm run serve
@@ -282,7 +282,7 @@ Access at `http://localhost:8081` for frontend development (or run the Electron 
 npm run build
 
 # Build and run backend
-go build -o ratel-ledger . && ./ratel-ledger server run
+go build -o honey-ledger . && ./honey-ledger server run
 ```
 
 Access via the Electron app, or at `http://localhost:8080` for backend-only testing.
@@ -406,7 +406,7 @@ CGO_ENABLED=1 go build \
   -ldflags "-X main.Version=dev \
             -X main.CommitHash=$(git rev-parse --short HEAD) \
             -X main.BuildUnixTime=$(date +%s)" \
-  -o ratel-ledger .
+  -o honey-ledger .
 ```
 
 ### Manual Frontend Build
@@ -424,7 +424,7 @@ Database schema updates are handled automatically by xorm on startup when `auto_
 ### Manual Update
 
 ```bash
-./ratel-ledger database update
+./honey-ledger database update
 ```
 
 ### Tables
@@ -578,7 +578,7 @@ log_query = true
 Or via environment:
 
 ```bash
-RATEL_GLOBAL_MODE=development RATEL_LOG_LEVEL=debug ./ratel-ledger server run
+HONEY_GLOBAL_MODE=development HONEY_LOG_LEVEL=debug ./honey-ledger server run
 ```
 
 ### Frontend Debugging
@@ -592,7 +592,7 @@ Vue DevTools extension is recommended for inspecting component state, Pinia stor
 Every request gets a unique ID. Parse it for debugging:
 
 ```bash
-./ratel-ledger utility parse-default-request-id --id <request-id>
+./honey-ledger utility parse-default-request-id --id <request-id>
 ```
 
 This decodes the server ID, instance, timestamp, sequence, and client IP from the request ID.
@@ -602,5 +602,5 @@ This decodes the server ID, instance, timestamp, sequence, and client IP from th
 Verify SMTP configuration:
 
 ```bash
-./ratel-ledger utility send-test-mail --to user@example.com
+./honey-ledger utility send-test-mail --to user@example.com
 ```

@@ -34,11 +34,11 @@ func GetTransactionDataExporter(fileType string) converter.TransactionDataExport
 
 // GetTransactionDataImporter returns the transaction data importer according to the file type
 func GetTransactionDataImporter(fileType string) (converter.TransactionDataImporter, error) {
-	if fileType == "ratel_ledger_csv" || fileType == "hbmoxie_csv" {
+	if fileType == "honey_ledger_csv" || fileType == "hbmoxie_csv" {
 		return _default.DefaultTransactionDataCSVFileConverter, nil
-	} else if fileType == "ratel_ledger_tsv" || fileType == "hbmoxie_tsv" {
+	} else if fileType == "honey_ledger_tsv" || fileType == "hbmoxie_tsv" {
 		return _default.DefaultTransactionDataTSVFileConverter, nil
-	} else if fileType == "ratel_ledger_json" || fileType == "hbmoxie_json" {
+	} else if fileType == "honey_ledger_json" || fileType == "hbmoxie_json" {
 		return _default.DefaultTransactionDataJsonFileImporter, nil
 	} else if fileType == "ofx" {
 		return ofx.OFXTransactionDataImporter, nil

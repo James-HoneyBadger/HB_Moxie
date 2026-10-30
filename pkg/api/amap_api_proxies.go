@@ -54,7 +54,7 @@ func (p *AmapApiProxy) AmapApiProxyHandler(c *core.WebContext) (*httputil.Revers
 		req.Header.Del("Cookie")
 
 		for i := 0; i < len(oldCookies); i++ {
-			if strings.HasPrefix(oldCookies[i].Name, "ratel_") || strings.HasPrefix(oldCookies[i].Name, "hbm_") {
+			if strings.HasPrefix(oldCookies[i].Name, "honey_") || strings.HasPrefix(oldCookies[i].Name, "ratel_") || strings.HasPrefix(oldCookies[i].Name, "hbm_") {
 				continue
 			}
 

@@ -24,7 +24,7 @@ func TestUserPasswordHashing_NewAndLegacyUpgrade(t *testing.T) {
 		WorkingPath: workingDir,
 		DatabaseConfig: &settings.DatabaseConfig{
 			DatabaseType:      settings.Sqlite3DbType,
-			DatabasePath:      filepath.Join(databaseDir, "ratel-ledger.db"),
+			DatabasePath:      filepath.Join(databaseDir, "honey-ledger.db"),
 			MaxIdleConnection: 1,
 			MaxOpenConnection: 1,
 		},

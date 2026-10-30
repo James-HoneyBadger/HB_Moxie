@@ -75,7 +75,7 @@ func TestGetPostgreSQLConnectionString_UnixSocket(t *testing.T) {
 func TestGetSqlite3ConnectionString_EnablesReliableConcurrencySettings(t *testing.T) {
 	actualValue, err := getSqlite3ConnectionString(&settings.DatabaseConfig{
 		DatabaseType: settings.Sqlite3DbType,
-		DatabasePath: "/tmp/ratel-ledger.db",
+		DatabasePath: "/tmp/honey-ledger.db",
 	})
 
 	assert.Nil(t, err)

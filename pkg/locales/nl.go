@@ -6,7 +6,7 @@ import (
 
 var nl = &LocaleTextItems{
 	GlobalTextItems: &GlobalTextItems{
-		AppName: "Ratel Ledger",
+		AppName: "Honey Ledger",
 	},
 	DefaultTypes: &DefaultTypes{
 		DecimalSeparator:    core.DECIMAL_SEPARATOR_COMMA,

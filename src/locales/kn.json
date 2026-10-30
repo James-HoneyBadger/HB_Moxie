@@ -1,7 +1,7 @@
 {
     "global": {
         "app": {
-            "title": "Ratel Ledger"
+            "title": "Honey Ledger"
         }
     },
     "language": {
@@ -137,20 +137,20 @@
             "clearTransactionsInAccountTip": "ಈ ಕ್ರಿಯೆಯನ್ನು ಹಿಂದಕ್ಕೆ ತರಲು ಸಾಧ್ಯವಿಲ್ಲ. ಇದು {account} ನಲ್ಲಿ ನಿಮ್ಮ ಎಲ್ಲಾ ವಹಿವಾಟುಗಳನ್ನು ಅಳಿಸುತ್ತದೆ. ದೃಢೀಕರಿಸಲು ದಯವಿಟ್ಟು ನಿಮ್ಮ ಪ್ರಸ್ತುತ ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ.",
             "accountActivationAndResendValidationEmailTip": "ಖಾತೆ ಸಕ್ರಿಯಗೊಳಿಸುವ ಲಿಂಕ್ ಅನ್ನು ನಿಮ್ಮ ಈಮೇಲ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ: {email}. ನೀವು ಇಮೇಲ್ ಪಡೆಯದಿದ್ದರೆ, ದಯವಿಟ್ಟು ಪಾಸ್‌ವರ್ಡ್ ಮರು ನಮೂದಿಸಿ ಮತ್ತು ಕೆಳಗಿನ ಬಟನ್ ಒತ್ತಿ ಸರೀಕರಿಸುವ ಇಮೇಲ್ ಮರು ಕಳುಹಿಸಿ.",
             "resendValidationEmailTip": "ನೀವು ಇಮೇಲ್ ಪಡೆಯದಿದ್ದರೆ, ದಯವಿಟ್ಟು ಪಾಸ್‌ವರ್ಡ್ ಮರು ನಮೂದಿಸಿ ಮತ್ತು ಕೆಳಗಿನ ಬಟನ್ ಒತ್ತಿ ಮರು ಸರೀಕರಿಸುವ ಇಮೇಲ್ ಕಳುಹಿಸಲಾಗುವುದು: {email}",
-            "oauth2bindTip": "ನೀವು {providerName} ಬಳಸಿ {userName} ಬಳಕೆದಾರರಾಗಿ ಲಾಗಿನ್ ಆಗುತ್ತಿದ್ದೀರಿ. ದೃಢೀಕರಿಸಲು ದಯವಿಟ್ಟು ನಿಮ್ಮ Ratel Ledger ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ."
+            "oauth2bindTip": "ನೀವು {providerName} ಬಳಸಿ {userName} ಬಳಕೆದಾರರಾಗಿ ಲಾಗಿನ್ ಆಗುತ್ತಿದ್ದೀರಿ. ದೃಢೀಕರಿಸಲು ದಯವಿಟ್ಟು ನಿಮ್ಮ Honey Ledger ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ."
         }
     },
     "dataExport": {
-        "defaultExportFilename": "ratel-ledger_export_data",
-        "exportFilename": "ratel-ledger_{nickname}_export_data",
-        "defaultExportStatisticsFileName": "ratel-ledger_statistics_data",
-        "exportStatisticsFileName": "ratel-ledger_{nickname}_statistics_data",
-        "defaultExportReconciliationStatementsFileName": "ratel-ledger_reconciliation_statements",
-        "exportReconciliationStatementsFileName": "ratel-ledger_{nickname}_reconciliation_statements",
-        "defaultImportDataMappingFileName": "ratel-ledger_import_data_mapping",
-        "defaultImportHandlingScript": "ratel-ledger_handling_script",
-        "defaultImportReplaceRuleFileName": "ratel-ledger_import_replace_rule",
-        "defaultImportCheckResultFileName": "ratel-ledger_import_check_result"
+        "defaultExportFilename": "honey-ledger_export_data",
+        "exportFilename": "honey-ledger_{nickname}_export_data",
+        "defaultExportStatisticsFileName": "honey-ledger_statistics_data",
+        "exportStatisticsFileName": "honey-ledger_{nickname}_statistics_data",
+        "defaultExportReconciliationStatementsFileName": "honey-ledger_reconciliation_statements",
+        "exportReconciliationStatementsFileName": "honey-ledger_{nickname}_reconciliation_statements",
+        "defaultImportDataMappingFileName": "honey-ledger_import_data_mapping",
+        "defaultImportHandlingScript": "honey-ledger_handling_script",
+        "defaultImportReplaceRuleFileName": "honey-ledger_import_replace_rule",
+        "defaultImportCheckResultFileName": "honey-ledger_import_check_result"
     },
     "calendar": {
         "Gregorian": "ಗ್ರೆಗೋರಿಯನ್",
@@ -1643,8 +1643,8 @@
     "Change Language": "ಭಾಷೆ ಬದಲಾಯಿಸಿ",
     "Date is too early": "ದಿನಾಂಕ ಬಹಳ ಬೇಗಿದೆ",
     "User Canceled": "ಬಳಕೆದಾರನು ರದ್ದುಗೊಳಿಸಿದ್ದಾರೆ",
-    "Welcome to Ratel Ledger": "Ratel Ledger ಗೆ ಸ್ವಾಗತ",
-    "Please log in with your Ratel Ledger account": "ದಯವಿಟ್ಟು ನಿಮ್ಮ Ratel Ledger ಖಾತೆಯಿಂದ ಲಾಗಿನ್ ಆಗಿ",
+    "Welcome to Honey Ledger": "Honey Ledger ಗೆ ಸ್ವಾಗತ",
+    "Please log in with your Honey Ledger account": "ದಯವಿಟ್ಟು ನಿಮ್ಮ Honey Ledger ಖಾತೆಯಿಂದ ಲಾಗಿನ್ ಆಗಿ",
     "Unlock Application": "ಅನ್ವಯವನ್ನು ಅನ್‌ಲಾಕ್ ಮಾಡಿ",
     "Please enter your PIN code or use WebAuthn to unlock application": "PIN ನಮೂದಿಸಿ ಅಥವಾ WebAuthn ಬಳಸಿ ಅನ್ವಯವನ್ನು ಅನ್‌ಲಾಕ್ ಮಾಡಿ",
     "Please enter your PIN code to unlock application": "ಅನ್ವಯವನ್ನು ಅನ್‌ಲಾಕ್ ಮಾಡಲು PIN ನಮೂದಿಸಿ",
@@ -2000,13 +2000,13 @@
     "Filter Description": "ಫಿಲ್ಟರ್ ವಿವರಣೆ",
     "How to import this file?": "ಈ ಫೈಲ್ ಅನ್ನು ಹೇಗೆ ಆಮದು ಮಾಡುವುದು?",
     "How to export this file?": "ಈ ಫೈಲ್ ಅನ್ನು ಹೇಗೆ ರಫ್ತು ಮಾಡುವುದು?",
-    "Ratel Ledger File Format": "Ratel Ledger ಫೈಲ್ ರೂಪ",
+    "Honey Ledger File Format": "Honey Ledger ಫೈಲ್ ರೂಪ",
     "Custom File Format": "ಕಸ್ಟಮ್ ಫೈಲ್ ರೂಪ",
     "General Data Exchange Format": "ಸಾಮಾನ್ಯ ಡೇಟಾ ವಿನಿಮಯ ರೂಪ",
     "General Bank Statement Format": "ಸಾಮಾನ್ಯ ಬ್ಯಾಂಕ್ ಸ್ಟೇಟ್ಮೆಂಟ್ ರೂಪ",
     "Other Bank/Payment App Statement File": "ಇತರೆ ಬ್ಯಾಂಕ್/ಪಾವತಿ ಅಪ್ ಸ್ಟೇಟ್ಮೆಂಟ್ ಫೈಲ್",
     "Other Finance App File Format": "ಇತರೆ ಹಣಕಾಸು ಅಪ್ ಫೈಲ್ ರೂಪ",
-    "Ratel Ledger Data Export File": "Ratel Ledger ಡೇಟಾ ರಫ್ತು ಫೈಲ್",
+    "Honey Ledger Data Export File": "Honey Ledger ಡೇಟಾ ರಫ್ತು ಫೈಲ್",
     "Excel Workbook File": "Excel ವರ್ಕ್‌ಬುಕ್ ಫೈಲ್",
     "Excel Workbook File (.xlsx)": "Excel Workbook File (.xlsx)",
     "Excel 97-2003 Workbook File (.xls)": "Excel 97-2003 Workbook File (.xls)",

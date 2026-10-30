@@ -55,13 +55,13 @@ var (
 	}
 )
 
-// ExportDataToRatelLedgerCSVHandler returns exported data in csv format
-func (a *DataManagementsApi) ExportDataToRatelLedgerCSVHandler(c *core.WebContext) ([]byte, string, *errs.Error) {
+// ExportDataToHoneyLedgerCSVHandler returns exported data in csv format
+func (a *DataManagementsApi) ExportDataToHoneyLedgerCSVHandler(c *core.WebContext) ([]byte, string, *errs.Error) {
 	return a.getExportedFileContent(c, "csv")
 }
 
-// ExportDataToRatelLedgerTSVHandler returns exported data in tsv format
-func (a *DataManagementsApi) ExportDataToRatelLedgerTSVHandler(c *core.WebContext) ([]byte, string, *errs.Error) {
+// ExportDataToHoneyLedgerTSVHandler returns exported data in tsv format
+func (a *DataManagementsApi) ExportDataToHoneyLedgerTSVHandler(c *core.WebContext) ([]byte, string, *errs.Error) {
 	return a.getExportedFileContent(c, "tsv")
 }
 

@@ -2,9 +2,9 @@
 
 ## Our Commitment
 
-We are committed to providing a welcoming and inspiring community for all. Ratel Ledger is dedicated to fostering an open, friendly, and collaborative environment that embraces diversity and inclusivity.
+We are committed to providing a welcoming and inspiring community for all. Honey Ledger is dedicated to fostering an open, friendly, and collaborative environment that embraces diversity and inclusivity.
 
-This Code of Conduct outlines expectations for participation in our community and applies to all spaces managed by the Ratel Ledger project, including but not limited to:
+This Code of Conduct outlines expectations for participation in our community and applies to all spaces managed by the Honey Ledger project, including but not limited to:
 - GitHub repositories and discussions
 - Issue trackers and pull requests
 - Community forums and chat channels
@@ -108,7 +108,7 @@ These are excellent resources for building inclusive communities.
 
 ## Diversity and Inclusion
 
-We actively welcome and encourage participation from people of all backgrounds. We believe that diversity of thought, experience, and perspective strengthens our community and makes Ratel Ledger better for everyone.
+We actively welcome and encourage participation from people of all backgrounds. We believe that diversity of thought, experience, and perspective strengthens our community and makes Honey Ledger better for everyone.
 
 We are committed to:
 - Creating accessible documentation

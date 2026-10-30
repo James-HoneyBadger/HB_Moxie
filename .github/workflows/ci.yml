@@ -51,7 +51,7 @@ jobs:
         run: go run ./cmd/openapi --check
 
       - name: Build backend
-        run: go build -trimpath -o /tmp/ratel-ledger .
+        run: go build -trimpath -o /tmp/honey-ledger .
 
       - name: Unit tests
         run: go test -short -race ./...
@@ -85,6 +85,10 @@ jobs:
         run: |
           node --check electron/main.js
           node --check electron/preload.js
+          node --check electron/userDataLayout.js
+
+      - name: Test the user data migration
+        run: node --test electron/userDataLayout.test.js
 
   vulncheck:
     name: Vulnerability scan
@@ -169,7 +173,7 @@ jobs:
 
       - name: Build
         working-directory: admin
-        run: go build -o /tmp/ratel-ledger-admin .
+        run: go build -o /tmp/honey-ledger-admin .
 
       - name: Vulnerability scan
         working-directory: admin

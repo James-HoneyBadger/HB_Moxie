@@ -410,8 +410,8 @@ onBeforeUnmount(() => {
     }
 });
 
-const fileType = ref<string>('ratel_ledger');
-const fileSubType = ref<string>('ratel_ledger_csv');
+const fileType = ref<string>('honey_ledger');
+const fileSubType = ref<string>('honey_ledger_csv');
 const fileEncoding = ref<string>('auto');
 const detectingFileEncoding = ref<boolean>(false);
 const autoDetectedFileEncoding = ref<string | undefined>(undefined);
@@ -614,8 +614,8 @@ function loadInitFileTypeFromSettings(): void {
 }
 
 function open(): Promise<void> {
-    fileType.value = 'ratel_ledger';
-    fileSubType.value = 'ratel_ledger_csv';
+    fileType.value = 'honey_ledger';
+    fileSubType.value = 'honey_ledger_csv';
 
     if (settingsStore.appSettings.rememberLastSelectedFileTypeInImportTransactionDialog && settingsStore.appSettings.lastSelectedFileTypeInImportTransactionDialog) {
         loadInitFileTypeFromSettings();
@@ -863,7 +863,7 @@ function parseData(): void {
                 return;
             }
 
-            type = 'ratel_ledger_json';
+            type = 'honey_ledger_json';
             encoding = undefined;
             uploadFile = KnownFileType.JSON.createFile(executeCustomScriptResult, 'import');
         }

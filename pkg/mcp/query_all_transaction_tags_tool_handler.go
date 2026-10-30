@@ -26,7 +26,7 @@ func (h *mcpQueryAllTransactionTagsToolHandler) Name() string {
 
 // Description returns the description of the MCP tool
 func (h *mcpQueryAllTransactionTagsToolHandler) Description() string {
-	return "Query transaction tags for the current user in Ratel Ledger."
+	return "Query transaction tags for the current user in Honey Ledger."
 }
 
 // InputType returns the input type for the MCP tool request

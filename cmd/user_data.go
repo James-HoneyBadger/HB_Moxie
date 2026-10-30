@@ -17,7 +17,7 @@ import (
 // UserData represents the data command
 var UserData = &cli.Command{
 	Name:  "userdata",
-	Usage: "Ratel Ledger user data maintenance",
+	Usage: "Honey Ledger user data maintenance",
 	Commands: []*cli.Command{
 		{
 			Name:   "user-add",
@@ -360,7 +360,7 @@ var UserData = &cli.Command{
 					Name:     "type",
 					Aliases:  []string{"t"},
 					Required: true,
-					Usage:    "Import file type (supports \"ratel_ledger_csv\", \"ratel_ledger_tsv\"; legacy names \"hbmoxie_csv\", \"hbmoxie_tsv\" are accepted)",
+					Usage:    "Import file type (supports \"honey_ledger_csv\", \"honey_ledger_tsv\"; legacy names \"hbmoxie_csv\", \"hbmoxie_tsv\" are accepted)",
 				},
 			},
 		},
@@ -930,12 +930,12 @@ func importUserTransaction(c *core.CliContext) error {
 	}
 
 	if filetype == "hbmoxie_csv" {
-		filetype = "ratel_ledger_csv"
+		filetype = "honey_ledger_csv"
 	} else if filetype == "hbmoxie_tsv" {
-		filetype = "ratel_ledger_tsv"
+		filetype = "honey_ledger_tsv"
 	}
 
-	if filetype != "ratel_ledger_csv" && filetype != "ratel_ledger_tsv" {
+	if filetype != "honey_ledger_csv" && filetype != "honey_ledger_tsv" {
 		log.CliErrorf(c, "[user_data.importUserTransaction] unknown file type \"%s\"", filetype)
 		return errs.ErrImportFileTypeNotSupported
 	}

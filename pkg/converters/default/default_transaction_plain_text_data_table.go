@@ -8,7 +8,7 @@ import (
 	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
 )
 
-// defaultPlainTextDataTable defines the structure of Ratel Ledger default plain text data table
+// defaultPlainTextDataTable defines the structure of Honey Ledger default plain text data table
 type defaultPlainTextDataTable struct {
 	columnSeparator       string
 	lineSeparator         string
@@ -16,18 +16,18 @@ type defaultPlainTextDataTable struct {
 	headerLineColumnNames []string
 }
 
-// defaultPlainTextDataRow defines the structure of Ratel Ledger default plain text data row
+// defaultPlainTextDataRow defines the structure of Honey Ledger default plain text data row
 type defaultPlainTextDataRow struct {
 	allItems []string
 }
 
-// defaultPlainTextDataRowIterator defines the structure of Ratel Ledger default plain text data row iterator
+// defaultPlainTextDataRowIterator defines the structure of Honey Ledger default plain text data row iterator
 type defaultPlainTextDataRowIterator struct {
 	dataTable    *defaultPlainTextDataTable
 	currentIndex int
 }
 
-// defaultTransactionPlainTextDataTableBuilder defines the structure of Ratel Ledger default transaction plain text data table builder
+// defaultTransactionPlainTextDataTableBuilder defines the structure of Honey Ledger default transaction plain text data table builder
 type defaultTransactionPlainTextDataTableBuilder struct {
 	columnSeparator       string
 	lineSeparator         string

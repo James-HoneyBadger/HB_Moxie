@@ -26,10 +26,10 @@ var allJsonDataSupportedColumns = []datatable.TransactionDataTableColumn{
 	datatable.TRANSACTION_DATA_TABLE_DESCRIPTION,
 }
 
-// defaultTransactionDataJsonImporter defines the structure of Ratel Ledger default json importer for transaction data
+// defaultTransactionDataJsonImporter defines the structure of Honey Ledger default json importer for transaction data
 type defaultTransactionDataJsonImporter struct{}
 
-// Initialize a Ratel Ledger default transaction data json file importer singleton instance
+// Initialize a Honey Ledger default transaction data json file importer singleton instance
 var (
 	DefaultTransactionDataJsonFileImporter = &defaultTransactionDataJsonImporter{}
 )
@@ -49,10 +49,10 @@ func (c *defaultTransactionDataJsonImporter) ParseImportedData(ctx core.Context,
 	}
 
 	dataTableImporter := converter.CreateNewImporterWithTypeNameMapping(
-		ratelLedgerTransactionTypeNameMapping,
-		ratelLedgerGeoLocationSeparator,
-		ratelLedgerGeoLocationOrder,
-		ratelLedgerTagSeparator,
+		honeyLedgerTransactionTypeNameMapping,
+		honeyLedgerGeoLocationSeparator,
+		honeyLedgerGeoLocationOrder,
+		honeyLedgerTagSeparator,
 	)
 
 	return dataTableImporter.ParseImportedData(ctx, user, transactionDataTable, defaultTimezone, additionalOptions, accountMap, expenseCategoryMap, incomeCategoryMap, transferCategoryMap, tagMap)

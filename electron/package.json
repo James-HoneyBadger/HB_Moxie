@@ -1,7 +1,7 @@
 {
-  "name": "ratel-ledger-desktop",
+  "name": "honey-ledger-desktop",
   "version": "1.4.3",
-  "description": "Ratel Ledger — private, local-first personal finance management",
+  "description": "Honey Ledger — private, local-first personal finance management",
   "homepage": "https://github.com/James-HoneyBadger/ratel-ledger",
   "main": "main.js",
   "author": {
@@ -24,16 +24,16 @@
     "electron-builder": "^26.18.0"
   },
   "build": {
-    "appId": "com.honeybadger.ratelledger",
+    "appId": "com.honeybadger.honeyledger",
     "publish": [
       {
         "provider": "github",
         "owner": "James-HoneyBadger",
-        "repo": "ratel-ledger"
+        "repo": "honey-ledger"
       }
     ],
-    "productName": "Ratel Ledger",
-    "artifactName": "ratel-ledger-${version}-${arch}.${ext}",
+    "productName": "Honey Ledger",
+    "artifactName": "honey-ledger-${version}-${arch}.${ext}",
     "directories": {
       "output": "dist"
     },
@@ -47,8 +47,8 @@
         "from": "../",
         "to": "backend/",
         "filter": [
-          "ratel-ledger",
-          "ratel-ledger.exe"
+          "honey-ledger",
+          "honey-ledger.exe"
         ]
       },
       {

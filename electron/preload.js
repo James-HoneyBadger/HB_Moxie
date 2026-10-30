@@ -1,11 +1,11 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('ratelLedger', {
+contextBridge.exposeInMainWorld('honeyLedger', {
     platform: process.platform,
     isDesktopApp: true,
     // The app:// protocol handler proxies API calls transparently,
     // so the Vue app just needs to know the origin for API calls
-    apiBaseUrl: 'app://ratel-ledger',
+    apiBaseUrl: 'app://honey-ledger',
 
     // Desktop notifications — send from renderer to main process
     showNotification: (title, body) => {

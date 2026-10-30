@@ -1,6 +1,6 @@
 # API Reference
 
-Complete REST API documentation for Ratel Ledger.
+Complete REST API documentation for Honey Ledger.
 
 Most API endpoints return JSON. Export and download endpoints return CSV, TSV, or ZIP files instead. Authenticated endpoints require a `Bearer` token in the `Authorization` header or a valid session cookie.
 

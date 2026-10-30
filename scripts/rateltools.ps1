@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 
-# Ratel Ledger API Tools
-# A command-line tool for calling Ratel Ledger APIs
+# Honey Ledger API Tools
+# A command-line tool for calling Honey Ledger APIs
 
 param(
     [Parameter(Position=0)]
@@ -534,7 +534,7 @@ $API_CONFIGS = @(
     }
     @{
         Name = "server-version"
-        Description = "Retrieve Ratel Ledger server version information"
+        Description = "Retrieve Honey Ledger server version information"
         Method = "GET"
         Path = "systems/version.json"
         RequiresTimezone = $false
@@ -1158,16 +1158,16 @@ function Show-Help {
     $exampleTimezoneName = Get-ExampleTimezoneName
     $exampleTimezoneOffset = Get-ExampleTimezoneOffset
 
-    Write-Host "Ratel Ledger API Tools"
+    Write-Host "Honey Ledger API Tools"
     Write-Host ""
-    Write-Host "A command-line tool for calling Ratel Ledger APIs"
+    Write-Host "A command-line tool for calling Honey Ledger APIs"
     Write-Host ""
     Write-Host "Usage:"
-    Write-Host "    rateltools.ps1 [-tzName <name>] [-tzOffset <offset>] [-rawResponse] <command> [command-options]"
+    Write-Host "    honeytools.ps1 [-tzName <name>] [-tzOffset <offset>] [-rawResponse] <command> [command-options]"
     Write-Host ""
     Write-Host "Environment Variables (Required):"
-    Write-Host "    RATELTOOL_SERVER_BASEURL      Ratel Ledger server base URL (e.g., http://localhost:8080)"
-    Write-Host "    RATELTOOL_TOKEN               Ratel Ledger API token"
+    Write-Host "    RATELTOOL_SERVER_BASEURL      Honey Ledger server base URL (e.g., http://localhost:8080)"
+    Write-Host "    RATELTOOL_TOKEN               Honey Ledger API token"
     Write-Host ""
     Write-Host "    You can also set the above environment variables in a '.env' file located in the current directory, parent directory or home directory."
     Write-Host ""
@@ -1187,19 +1187,19 @@ function Show-Help {
     Write-Host "    `$env:RATELTOOL_TOKEN = 'YOUR_TOKEN'"
     Write-Host ""
     Write-Host "    # List all available commands"
-    Write-Host "    rateltools.ps1 list"
+    Write-Host "    honeytools.ps1 list"
     Write-Host ""
     Write-Host "    # Show help for a specific command"
-    Write-Host "    rateltools.ps1 help server-version"
+    Write-Host "    honeytools.ps1 help server-version"
     Write-Host ""
     Write-Host "    # Call server-version API"
-    Write-Host "    rateltools.ps1 server-version"
+    Write-Host "    honeytools.ps1 server-version"
     Write-Host ""
     Write-Host "    # Call API with timezone name"
-    Write-Host "    rateltools.ps1 -tzName $exampleTimezoneName transactions-list -count 10"
+    Write-Host "    honeytools.ps1 -tzName $exampleTimezoneName transactions-list -count 10"
     Write-Host ""
     Write-Host "    # Call API with timezone offset"
-    Write-Host "    rateltools.ps1 -tzOffset $exampleTimezoneOffset transactions-list -count 10"
+    Write-Host "    honeytools.ps1 -tzOffset $exampleTimezoneOffset transactions-list -count 10"
 }
 
 function Show-CommandList {
@@ -1212,7 +1212,7 @@ function Show-CommandList {
     }
 
     Write-Host ""
-    Write-Host "Use 'rateltools.ps1 help <api-command>' to see detailed information about an API command."
+    Write-Host "Use 'honeytools.ps1 help <api-command>' to see detailed information about an API command."
 }
 
 function Show-CommandHelp {
@@ -1223,7 +1223,7 @@ function Show-CommandHelp {
     if (-not $config) {
         Write-Red "Error: Unknown command '$commandName'"
         Write-Host ""
-        Write-Host "Use 'rateltools.ps1 list' to see all available commands."
+        Write-Host "Use 'honeytools.ps1 list' to see all available commands."
         exit 1
     }
 
@@ -1264,13 +1264,13 @@ function Show-CommandHelp {
     $currentTzName = Get-SystemTimezoneName
     $currentTzOffset = Get-SystemTimezoneOffset
     if ($config.RequiresTimezone -and $null -ne $currentTzName) {
-        Write-Host "  rateltools.ps1 -tzName $currentTzName $($config.Name)"
+        Write-Host "  honeytools.ps1 -tzName $currentTzName $($config.Name)"
     } elseif ($config.RequiresTimezone -and $null -ne $currentTzOffset) {
-        Write-Host "  rateltools.ps1 -tzOffset $currentTzOffset $($config.Name)"
+        Write-Host "  honeytools.ps1 -tzOffset $currentTzOffset $($config.Name)"
     } elseif ($config.RequiresTimezone) {
-        Write-Host "  rateltools.ps1 -tzName <name> $($config.Name)"
+        Write-Host "  honeytools.ps1 -tzName <name> $($config.Name)"
     } else {
-        Write-Host "  rateltools.ps1 $($config.Name)"
+        Write-Host "  honeytools.ps1 $($config.Name)"
     }
 }
 
@@ -1366,7 +1366,7 @@ function Invoke-Api {
     if (-not $config) {
         Write-Red "Error: Unknown command '$commandName'"
         Write-Host ""
-        Write-Host "Use 'rateltools.ps1 list' to see all available commands."
+        Write-Host "Use 'honeytools.ps1 list' to see all available commands."
         exit 1
     }
 
@@ -1375,7 +1375,7 @@ function Invoke-Api {
 
     if (-not $serverBaseUrl) {
         Write-Red "Error: Environment variable 'RATELTOOL_SERVER_BASEURL' is not set."
-        Write-Host "Please set it to your Ratel Ledger server base URL (e.g., http://localhost:8080)"
+        Write-Host "Please set it to your Honey Ledger server base URL (e.g., http://localhost:8080)"
         exit 1
     }
 
@@ -1402,8 +1402,8 @@ function Invoke-Api {
         Write-Host "Please provide either '-tzName' or '-tzOffset' parameter."
         Write-Host ""
         Write-Host "Examples:"
-        Write-Host "  rateltools.ps1 -tzName <name> $commandName ..."
-        Write-Host "  rateltools.ps1 -tzOffset <offset> $commandName ..."
+        Write-Host "  honeytools.ps1 -tzName <name> $commandName ..."
+        Write-Host "  honeytools.ps1 -tzOffset <offset> $commandName ..."
         exit 1
     }
 

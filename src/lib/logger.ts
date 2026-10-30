@@ -3,34 +3,34 @@ import { isEnableDebug } from './settings.ts';
 function logDebug(msg: string, obj?: unknown): void {
     if (isEnableDebug()) {
         if (obj) {
-            console.debug('[Ratel Ledger Debug] ' + msg, obj);
+            console.debug('[Honey Ledger Debug] ' + msg, obj);
         } else {
-            console.debug('[Ratel Ledger Debug] ' + msg);
+            console.debug('[Honey Ledger Debug] ' + msg);
         }
     }
 }
 
 function logInfo(msg: string, obj?: unknown): void {
     if (obj) {
-        console.info('[Ratel Ledger Info] ' + msg, obj);
+        console.info('[Honey Ledger Info] ' + msg, obj);
     } else {
-        console.info('[Ratel Ledger Info] ' + msg);
+        console.info('[Honey Ledger Info] ' + msg);
     }
 }
 
 function logWarn(msg: string, obj?: unknown): void {
     if (obj) {
-        console.warn('[Ratel Ledger Warn] ' + msg, obj);
+        console.warn('[Honey Ledger Warn] ' + msg, obj);
     } else {
-        console.warn('[Ratel Ledger Warn] ' + msg);
+        console.warn('[Honey Ledger Warn] ' + msg);
     }
 }
 
 function logError(msg: string, obj?: unknown): void {
     if (obj) {
-        console.error('[Ratel Ledger Error] ' + msg, obj);
+        console.error('[Honey Ledger Error] ' + msg, obj);
     } else {
-        console.error('[Ratel Ledger Error] ' + msg);
+        console.error('[Honey Ledger Error] ' + msg);
     }
 }
 

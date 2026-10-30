@@ -1,6 +1,6 @@
 # Architecture Overview
 
-System design, project structure, and technology decisions for Ratel Ledger.
+System design, project structure, and technology decisions for Honey Ledger.
 
 ---
 
@@ -23,7 +23,7 @@ System design, project structure, and technology decisions for Ratel Ledger.
 
 ## System Overview
 
-Ratel Ledger is a desktop personal finance application built with Electron:
+Honey Ledger is a desktop personal finance application built with Electron:
 
 The Go backend runs as a child process of Electron, which hosts the frontend via a custom `app://` protocol.
 
@@ -180,7 +180,7 @@ Applied in order per request:
 | `datatable` | Internal tabular data type |
 | `custom` | User-defined column mappings |
 | `converter` | Converter registry and factory |
-| `default` | Default Ratel Ledger CSV/TSV format |
+| `default` | Default Honey Ledger CSV/TSV format |
 
 ---
 
@@ -307,14 +307,14 @@ Electron Main Process (electron/main.js)
 
 ### Protocol Scheme
 
-Electron registers a custom `app://ratel-ledger` protocol to serve frontend assets without a local HTTP server for the UI layer. API calls are intercepted and proxied to the Go backend.
+Electron registers a custom `app://honey-ledger` protocol to serve frontend assets without a local HTTP server for the UI layer. API calls are intercepted and proxied to the Go backend.
 
 ### Backend Lifecycle
 
 1. Acquire a single-instance lock (a second launch focuses the existing window)
 2. Find a free TCP port
-3. Seed `conf/ratel-ledger.ini` and `templates/` into Electron's per-user data directory on first launch
-4. Spawn the Go binary with `RATEL_WORK_DIR=<userData>`, `RATEL_SERVER_HTTP_ADDR=127.0.0.1`, and `RATEL_SERVER_HTTP_PORT=<port>`
+3. Seed `conf/honey-ledger.ini` and `templates/` into Electron's per-user data directory on first launch
+4. Spawn the Go binary with `HONEY_WORK_DIR=<userData>`, `HONEY_SERVER_HTTP_ADDR=127.0.0.1`, and `HONEY_SERVER_HTTP_PORT=<port>`
 5. Wait for the backend TCP port to accept connections
 6. Load the frontend in a BrowserWindow
 7. On app quit, send SIGTERM to the Go process (SIGKILL after 3s timeout)
@@ -516,7 +516,7 @@ Source
   └── ./scripts/build.sh package
           │
           └── tar.gz archive:
-              ├── ratel-ledger (binary)
+              ├── honey-ledger (binary)
               ├── public/ (frontend build output)
               ├── conf/ (config template)
               ├── templates/ (email + prompt)
@@ -548,5 +548,5 @@ Source
 The `secret_key` in `[security]` is used to encrypt two-factor secrets and derive server/instance identifiers:
 - It is **not** the JWT signing key; each token has its own random secret in the database
 - If empty, a random key is generated on first start and written back to the config file with `0600` permissions
-- Generate a value explicitly with: `./ratel-ledger security gen-secret-key`
+- Generate a value explicitly with: `./honey-ledger security gen-secret-key`
 - Changing it makes existing two-factor secrets unreadable (users must re-enroll 2FA)

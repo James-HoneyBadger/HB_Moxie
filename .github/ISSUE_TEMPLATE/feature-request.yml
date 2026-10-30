@@ -1,5 +1,5 @@
 name: Feature Request
-description: Request a feature or enhancement for Ratel Ledger
+description: Request a feature or enhancement for Honey Ledger
 body:
   - type: checkboxes
     id: checkboxes

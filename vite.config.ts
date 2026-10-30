@@ -23,12 +23,12 @@ export default defineConfig(() => {
         publicDir: PUBLIC_DIR,
         base: './',
         define: {
-            __RATEL_LEDGER_IS_PRODUCTION__: process.env['NODE_ENV'] === 'production',
-            __RATEL_LEDGER_VERSION__: JSON.stringify(packageFile.version),
-            __RATEL_LEDGER_BUILD_UNIX_TIME__: JSON.stringify(buildUnixTime),
-            __RATEL_LEDGER_BUILD_COMMIT_HASH__: JSON.stringify(git.short()),
-            __RATEL_LEDGER_LICENSE__: JSON.stringify(licenseContent),
-            __RATEL_LEDGER_THIRD_PARTY_LICENSES__: JSON.stringify(thirdPartyLicenseFile)
+            __HONEY_LEDGER_IS_PRODUCTION__: process.env['NODE_ENV'] === 'production',
+            __HONEY_LEDGER_VERSION__: JSON.stringify(packageFile.version),
+            __HONEY_LEDGER_BUILD_UNIX_TIME__: JSON.stringify(buildUnixTime),
+            __HONEY_LEDGER_BUILD_COMMIT_HASH__: JSON.stringify(git.short()),
+            __HONEY_LEDGER_LICENSE__: JSON.stringify(licenseContent),
+            __HONEY_LEDGER_THIRD_PARTY_LICENSES__: JSON.stringify(thirdPartyLicenseFile)
         },
         plugins: [
             vue(),

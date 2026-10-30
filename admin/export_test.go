@@ -13,7 +13,7 @@ import (
 func newTestAdminApp(t *testing.T) *AdminApp {
 	t.Helper()
 
-	dbPath := filepath.Join(t.TempDir(), "ratel-ledger.db")
+	dbPath := filepath.Join(t.TempDir(), "honey-ledger.db")
 
 	db, err := sql.Open("sqlite3", dbPath)
 

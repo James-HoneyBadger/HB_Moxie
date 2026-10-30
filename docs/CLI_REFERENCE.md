@@ -1,6 +1,6 @@
 # CLI Reference
 
-Complete reference for the Ratel Ledger command-line interface.
+Complete reference for the Honey Ledger command-line interface.
 
 ---
 
@@ -13,7 +13,7 @@ Complete reference for the Ratel Ledger command-line interface.
 - [security gen-secret-key](#security-gen-secret-key)
 - [cron Commands](#cron-commands)
 - [utility Commands](#utility-commands)
-- [rateltools API Script](#rateltools-api-script)
+- [honeytools API Script](#honeytools-api-script)
 
 ---
 
@@ -23,13 +23,13 @@ These options apply to all commands:
 
 | Flag | Description | Default |
 |------|-------------|---------|
-| `--conf-path <path>` | Path to configuration file | `conf/ratel-ledger.ini` |
+| `--conf-path <path>` | Path to configuration file | `conf/honey-ledger.ini` |
 | `--no-boot-log` | Suppress startup log messages | `false` |
 
 Example:
 
 ```bash
-./ratel-ledger --conf-path /etc/ratel-ledger/ratel-ledger.ini server run
+./honey-ledger --conf-path /etc/honey-ledger/honey-ledger.ini server run
 ```
 
 ---
@@ -39,7 +39,7 @@ Example:
 Start the HTTP server.
 
 ```bash
-./ratel-ledger server run
+./honey-ledger server run
 ```
 
 The backend binds to the address and port specified in the configuration file (`[server]` section). Default: `127.0.0.1:8080`. In the desktop app, the port is assigned automatically by Electron.
@@ -60,7 +60,7 @@ The backend binds to the address and port specified in the configuration file (`
 Synchronize the database schema with the current application version.
 
 ```bash
-./ratel-ledger database update
+./honey-ledger database update
 ```
 
 This creates or updates all tables:
@@ -97,7 +97,7 @@ User management commands for the CLI. All require `--username` / `-n` to identif
 Create a new user.
 
 ```bash
-./ratel-ledger userdata user-add \
+./honey-ledger userdata user-add \
   --username alice \
   --email alice@example.com \
   --nickname "Alice Smith" \
@@ -118,7 +118,7 @@ Create a new user.
 Display user information.
 
 ```bash
-./ratel-ledger userdata user-get --username alice
+./honey-ledger userdata user-get --username alice
 ```
 
 ### user-modify-password
@@ -126,7 +126,7 @@ Display user information.
 Change a user's password.
 
 ```bash
-./ratel-ledger userdata user-modify-password --username alice --password "newpassword"
+./honey-ledger userdata user-modify-password --username alice --password "newpassword"
 ```
 
 ### user-enable / user-disable
@@ -134,8 +134,8 @@ Change a user's password.
 Enable or disable a user account.
 
 ```bash
-./ratel-ledger userdata user-enable --username alice
-./ratel-ledger userdata user-disable --username alice
+./honey-ledger userdata user-enable --username alice
+./honey-ledger userdata user-disable --username alice
 ```
 
 ### user-set-restrict-features
@@ -143,7 +143,7 @@ Enable or disable a user account.
 Set the complete feature restriction bitmask for a user.
 
 ```bash
-./ratel-ledger userdata user-set-restrict-features --username alice --feature-types "9,10,11"
+./honey-ledger userdata user-set-restrict-features --username alice --feature-types "9,10,11"
 ```
 
 ### user-add-restrict-features
@@ -151,7 +151,7 @@ Set the complete feature restriction bitmask for a user.
 Add restrictions to a user's existing set.
 
 ```bash
-./ratel-ledger userdata user-add-restrict-features --username alice --feature-types "13"
+./honey-ledger userdata user-add-restrict-features --username alice --feature-types "13"
 ```
 
 ### user-remove-restrict-features
@@ -159,7 +159,7 @@ Add restrictions to a user's existing set.
 Remove specific restrictions from a user.
 
 ```bash
-./ratel-ledger userdata user-remove-restrict-features --username alice --feature-types "9,10"
+./honey-ledger userdata user-remove-restrict-features --username alice --feature-types "9,10"
 ```
 
 | Feature Type | Description |
@@ -187,7 +187,7 @@ Remove specific restrictions from a user.
 Resend the email verification message.
 
 ```bash
-./ratel-ledger userdata user-resend-verify-email --username alice
+./honey-ledger userdata user-resend-verify-email --username alice
 ```
 
 ### user-set-email-verified / user-set-email-unverified
@@ -195,8 +195,8 @@ Resend the email verification message.
 Manually set a user's email verification status.
 
 ```bash
-./ratel-ledger userdata user-set-email-verified --username alice
-./ratel-ledger userdata user-set-email-unverified --username alice
+./honey-ledger userdata user-set-email-verified --username alice
+./honey-ledger userdata user-set-email-unverified --username alice
 ```
 
 ### user-delete
@@ -204,7 +204,7 @@ Manually set a user's email verification status.
 Permanently delete a user and all their data.
 
 ```bash
-./ratel-ledger userdata user-delete --username alice
+./honey-ledger userdata user-delete --username alice
 ```
 
 ### user-2fa-disable
@@ -212,7 +212,7 @@ Permanently delete a user and all their data.
 Disable two-factor authentication for a user (admin recovery).
 
 ```bash
-./ratel-ledger userdata user-2fa-disable --username alice
+./honey-ledger userdata user-2fa-disable --username alice
 ```
 
 ### user-session-list
@@ -220,7 +220,7 @@ Disable two-factor authentication for a user (admin recovery).
 List all active sessions for a user.
 
 ```bash
-./ratel-ledger userdata user-session-list --username alice
+./honey-ledger userdata user-session-list --username alice
 ```
 
 ### user-session-new
@@ -228,7 +228,7 @@ List all active sessions for a user.
 Create a new session token for a user (outputs the token).
 
 ```bash
-./ratel-ledger userdata user-session-new --username alice
+./honey-ledger userdata user-session-new --username alice
 ```
 
 ### user-session-revoke
@@ -236,7 +236,7 @@ Create a new session token for a user (outputs the token).
 Revoke a specific session.
 
 ```bash
-./ratel-ledger userdata user-session-revoke --username alice --session-id <id>
+./honey-ledger userdata user-session-revoke --username alice --session-id <id>
 ```
 
 ### user-session-clear
@@ -244,7 +244,7 @@ Revoke a specific session.
 Revoke all sessions for a user.
 
 ```bash
-./ratel-ledger userdata user-session-clear --username alice
+./honey-ledger userdata user-session-clear --username alice
 ```
 
 ### send-password-reset-mail
@@ -252,7 +252,7 @@ Revoke all sessions for a user.
 Send a password reset email to a user.
 
 ```bash
-./ratel-ledger userdata send-password-reset-mail --username alice
+./honey-ledger userdata send-password-reset-mail --username alice
 ```
 
 ### transaction-check
@@ -260,7 +260,7 @@ Send a password reset email to a user.
 Verify transaction and account data integrity for a user.
 
 ```bash
-./ratel-ledger userdata transaction-check --username alice
+./honey-ledger userdata transaction-check --username alice
 ```
 
 ### transaction-tag-index-fix-transaction-time
@@ -268,7 +268,7 @@ Verify transaction and account data integrity for a user.
 Fix transaction time values in the tag index table.
 
 ```bash
-./ratel-ledger userdata transaction-tag-index-fix-transaction-time --username alice
+./honey-ledger userdata transaction-tag-index-fix-transaction-time --username alice
 ```
 
 ### transaction-import
@@ -276,10 +276,10 @@ Fix transaction time values in the tag index table.
 Import transactions from a file via the CLI.
 
 ```bash
-./ratel-ledger userdata transaction-import \
+./honey-ledger userdata transaction-import \
   --username alice \
   --file /path/to/transactions.csv \
-  --type ratel_ledger_csv
+  --type honey_ledger_csv
 ```
 
 | Flag | Short | Required | Description |
@@ -293,7 +293,7 @@ Import transactions from a file via the CLI.
 Export transactions to a file via the CLI.
 
 ```bash
-./ratel-ledger userdata transaction-export \
+./honey-ledger userdata transaction-export \
   --username alice \
   --file /path/to/export.csv \
   --type csv
@@ -306,14 +306,14 @@ Export transactions to a file via the CLI.
 Generate a random secret key for JWT signing.
 
 ```bash
-./ratel-ledger security gen-secret-key
+./honey-ledger security gen-secret-key
 ```
 
 | Flag | Description | Default |
 |------|-------------|---------|
 | `--length` | Key length in bytes | `32` |
 
-Output: A hex-encoded random string. Copy this into `conf/ratel-ledger.ini`:
+Output: A hex-encoded random string. Copy this into `conf/honey-ledger.ini`:
 
 ```ini
 [security]
@@ -329,7 +329,7 @@ secret_key = <generated-key>
 List all registered cron jobs.
 
 ```bash
-./ratel-ledger cron list
+./honey-ledger cron list
 ```
 
 ### cron run
@@ -337,7 +337,7 @@ List all registered cron jobs.
 Manually trigger a cron job.
 
 ```bash
-./ratel-ledger cron run --name <job-name>
+./honey-ledger cron run --name <job-name>
 ```
 
 | Job Name | Description |
@@ -354,7 +354,7 @@ Manually trigger a cron job.
 Decode a request ID into its component parts for debugging.
 
 ```bash
-./ratel-ledger utility parse-default-request-id --id <request-id>
+./honey-ledger utility parse-default-request-id --id <request-id>
 ```
 
 Output includes: server ID, instance ID, timestamp, sequence number, and client IP address.
@@ -364,39 +364,39 @@ Output includes: server ID, instance ID, timestamp, sequence number, and client 
 Send a test email to verify SMTP configuration.
 
 ```bash
-./ratel-ledger utility send-test-mail --to user@example.com
+./honey-ledger utility send-test-mail --to user@example.com
 ```
 
 Requires SMTP to be configured in `[mail]` section.
 
 ---
 
-## rateltools API Script
+## honeytools API Script
 
-`scripts/rateltools.sh` (Linux/macOS) and `scripts/rateltools.ps1` (Windows) provide a CLI tool for calling Ratel Ledger API endpoints from the terminal or AI agents.
+`scripts/honeytools.sh` (Linux/macOS) and `scripts/honeytools.ps1` (Windows) provide a CLI tool for calling Honey Ledger API endpoints from the terminal or AI agents.
 
 ### Environment Variables
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `RATELTOOL_SERVER_BASEURL` | Yes | Server URL (e.g., `http://localhost:8080`) |
-| `RATELTOOL_TOKEN` | Yes | API or session token |
+| `HONEYTOOL_SERVER_BASEURL` | Yes | Server URL (e.g., `http://localhost:8080`) |
+| `HONEYTOOL_TOKEN` | Yes | API or session token |
 
 ### Usage
 
 ```bash
-export RATELTOOL_SERVER_BASEURL="http://localhost:8080"
-export RATELTOOL_TOKEN="your-api-token"
+export HONEYTOOL_SERVER_BASEURL="http://localhost:8080"
+export HONEYTOOL_TOKEN="your-api-token"
 
 # List available commands
-./scripts/rateltools.sh list
+./scripts/honeytools.sh list
 
 # Get help for a command
-./scripts/rateltools.sh help accounts-list
+./scripts/honeytools.sh help accounts-list
 
 # Run a command
-./scripts/rateltools.sh accounts-list
-./scripts/rateltools.sh transactions-list --count 10
+./scripts/honeytools.sh accounts-list
+./scripts/honeytools.sh transactions-list --count 10
 ```
 
 ### Available Commands
@@ -415,11 +415,11 @@ The script provides CLI wrappers for the most common API operations:
 | `tags-list` | `GET /api/v1/transaction/tags/list.json` |
 | `exchange-rates-latest` | `GET /api/v1/exchange_rates/latest.json` |
 
-Run `./scripts/rateltools.sh list` for the full list of available commands and `help <command>` for detailed parameter information.
+Run `./scripts/honeytools.sh list` for the full list of available commands and `help <command>` for detailed parameter information.
 
 ### MCP / AI Agent Integration
 
-The rateltools script is designed for use as an AI skill. AI agents can use it to:
+The honeytools script is designed for use as an AI skill. AI agents can use it to:
 
 - Read financial data (accounts, transactions, balances)
 - Create transactions

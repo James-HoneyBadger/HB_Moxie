@@ -29,7 +29,7 @@ function Check-Dependency {
 }
 
 function Show-Help {
-    Write-Host "Ratel Ledger build script for Windows PowerShell"
+    Write-Host "Honey Ledger build script for Windows PowerShell"
     Write-Host ""
     Write-Host "Usage:"
     Write-Host "    build.ps1 type [options]"
@@ -129,7 +129,7 @@ function Build-Backend {
     Write-Host "Building backend binary file ($ReleaseType)..."
 
     $env:CGO_ENABLED = 1
-    go build -a -v -trimpath -tags timetzdata -ldflags "-w -s -linkmode external -extldflags '-static' $backend_build_extra_arguments" -o ratel-ledger.exe .
+    go build -a -v -trimpath -tags timetzdata -ldflags "-w -s -linkmode external -extldflags '-static' $backend_build_extra_arguments" -o honey-ledger.exe .
 
     Remove-Item Env:\CGO_ENABLED -ErrorAction SilentlyContinue
 }
@@ -171,7 +171,7 @@ function Build-Frontend {
 }
 
 function Build-Package {
-    $packageFileName = "ratel-ledger-$Version"
+    $packageFileName = "honey-ledger-$Version"
 
     if (-not $Release) {
         $packageFileName = "$packageFileName-$BuildDate"
@@ -194,7 +194,7 @@ function Build-Package {
     New-Item -ItemType Directory -Path "package\storage"
     New-Item -ItemType Directory -Path "package\log"
 
-    Copy-Item ratel-ledger.exe package\
+    Copy-Item honey-ledger.exe package\
     Copy-Item dist package\public -Recurse
     Copy-Item conf package\conf -Recurse
     Copy-Item templates package\templates -Recurse

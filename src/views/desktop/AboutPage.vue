@@ -108,7 +108,7 @@
                                 <span>Copyright © 2020–2026 Honey Badger Universe</span>
                             </p>
                             <p class="mt-4 mb-4">
-                                <span>Ratel Ledger also contains additional third party software and illustration.</span><br/>
+                                <span>Honey Ledger also contains additional third party software and illustration.</span><br/>
                                 <span>All the third party software / illustration included or linked is redistributed under the terms and conditions of their original licenses.</span>
                             </p>
                             <p :key="licenseInfo.name" v-for="licenseInfo in thirdPartyLicenses">

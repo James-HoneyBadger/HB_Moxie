@@ -1,6 +1,6 @@
 # Installation Guide
 
-Complete instructions for installing and running Ratel Ledger as a desktop application.
+Complete instructions for installing and running Honey Ledger as a desktop application.
 
 ---
 
@@ -38,17 +38,17 @@ Download the latest desktop installer for your platform from the [Releases](http
 | macOS | `.dmg` |
 | Linux | `.AppImage`, `.deb` |
 
-Run the installer and launch Ratel Ledger from your applications menu.
+Run the installer and launch Honey Ledger from your applications menu.
 
 ### Run from Source (Development)
 
 ```bash
 # Clone the repository
 git clone https://github.com/James-HoneyBadger/ratel-ledger.git
-cd ratel-ledger
+cd honey-ledger
 
 # Build the Go backend
-go build -o ratel-ledger -tags timetzdata .
+go build -o honey-ledger -tags timetzdata .
 
 # Build the frontend
 npm install
@@ -77,7 +77,7 @@ See [ELECTRON.md](ELECTRON.md) for full Electron build and packaging details.
 
 ```bash
 git clone https://github.com/James-HoneyBadger/ratel-ledger.git
-cd ratel-ledger
+cd honey-ledger
 ./scripts/build.sh package
 ```
 
@@ -89,7 +89,7 @@ This produces a `.tar.gz` archive containing the binary, frontend assets, config
 ./scripts/build.sh backend
 ```
 
-Produces the `ratel-ledger` binary in the project root.
+Produces the `honey-ledger` binary in the project root.
 
 ### Frontend Only
 
@@ -115,7 +115,7 @@ If you prefer not to use `scripts/build.sh`:
 ```bash
 # Backend
 go mod download
-go build -o ratel-ledger \
+go build -o honey-ledger \
   -tags timetzdata \
   -ldflags "-X main.Version=dev -X main.CommitHash=$(git rev-parse HEAD)" \
   .
@@ -147,16 +147,16 @@ npm run build    # or: npx electron-builder --linux --mac --win
 
 ### Windows
 
-Use **Settings → Apps & features** or **Control Panel → Programs** to uninstall Ratel Ledger.
+Use **Settings → Apps & features** or **Control Panel → Programs** to uninstall Honey Ledger.
 
 ### macOS
 
-Drag Ratel Ledger from `/Applications` to the Trash.
+Drag Honey Ledger from `/Applications` to the Trash.
 
 ### Linux
 
 - **AppImage:** Delete the `.AppImage` file.
-- **Deb package:** `sudo apt remove ratel-ledger`
+- **Deb package:** `sudo apt remove honey-ledger`
 - **Manual:** Remove the application directory.
 
 ### Data Cleanup
@@ -165,6 +165,6 @@ After uninstalling, optionally remove application data:
 
 | Platform | Data Location |
 |----------|---------------|
-| Windows | `%APPDATA%/Ratel Ledger/` |
-| macOS | `~/Library/Application Support/Ratel Ledger/` |
-| Linux | `~/.config/Ratel Ledger/` |
+| Windows | `%APPDATA%/Honey Ledger/` |
+| macOS | `~/Library/Application Support/Honey Ledger/` |
+| Linux | `~/.config/Honey Ledger/` |

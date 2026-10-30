@@ -98,20 +98,20 @@ export const CHARDET_ENCODING_NAME_MAPPING: Record<string, string> = {
 
 export const SUPPORTED_IMPORT_FILE_CATEGORY_AND_TYPES: ImportFileCategoryAndTypes[] = [
     {
-        categoryName: 'Ratel Ledger File Format',
+        categoryName: 'Honey Ledger File Format',
         fileTypes: [
             {
-                type: 'ratel_ledger',
-                name: 'Ratel Ledger Data Export File',
+                type: 'honey_ledger',
+                name: 'Honey Ledger Data Export File',
                 extensions: '.csv,.tsv',
                 subTypes: [
                     {
-                        type: 'ratel_ledger_csv',
+                        type: 'honey_ledger_csv',
                         name: 'CSV (Comma-separated values) File',
                         extensions: '.csv',
                     },
                     {
-                        type: 'ratel_ledger_tsv',
+                        type: 'honey_ledger_tsv',
                         name: 'TSV (Tab-separated values) File',
                         extensions: '.tsv',
                     }

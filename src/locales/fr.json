@@ -1,7 +1,7 @@
 {
     "global": {
         "app": {
-            "title": "Ratel Ledger"
+            "title": "Honey Ledger"
         }
     },
     "language": {
@@ -137,20 +137,20 @@
             "clearTransactionsInAccountTip": "You CANNOT undo this action. This will clear your transactions data in {account}. Please enter your current password to confirm.",
             "accountActivationAndResendValidationEmailTip": "Le lien d'activation du compte a été envoyé à votre adresse e-mail : {email}, Si vous ne recevez pas le mail, veuillez remplir à nouveau le mot de passe et cliquer sur le bouton ci-dessous pour renvoyer l'e-mail de validation.",
             "resendValidationEmailTip": "Si vous ne recevez pas le mail, veuillez remplir à nouveau le mot de passe et cliquer sur le bouton ci-dessous pour renvoyer l'e-mail de validation à : {email}",
-            "oauth2bindTip": "You're signing in to the {userName} user using {providerName}. Please enter your Ratel Ledger password to verify."
+            "oauth2bindTip": "You're signing in to the {userName} user using {providerName}. Please enter your Honey Ledger password to verify."
         }
     },
     "dataExport": {
-        "defaultExportFilename": "ratel-ledger_export_data",
-        "exportFilename": "ratel-ledger_{nickname}_export_data",
-        "defaultExportStatisticsFileName": "ratel-ledger_statistics_data",
-        "exportStatisticsFileName": "ratel-ledger_{nickname}_statistics_data",
-        "defaultExportReconciliationStatementsFileName": "ratel-ledger_reconciliation_statements",
-        "exportReconciliationStatementsFileName": "ratel-ledger_{nickname}_reconciliation_statements",
-        "defaultImportDataMappingFileName": "ratel-ledger_import_data_mapping",
-        "defaultImportHandlingScript": "ratel-ledger_handling_script",
-        "defaultImportReplaceRuleFileName": "ratel-ledger_import_replace_rule",
-        "defaultImportCheckResultFileName": "ratel-ledger_import_check_result"
+        "defaultExportFilename": "honey-ledger_export_data",
+        "exportFilename": "honey-ledger_{nickname}_export_data",
+        "defaultExportStatisticsFileName": "honey-ledger_statistics_data",
+        "exportStatisticsFileName": "honey-ledger_{nickname}_statistics_data",
+        "defaultExportReconciliationStatementsFileName": "honey-ledger_reconciliation_statements",
+        "exportReconciliationStatementsFileName": "honey-ledger_{nickname}_reconciliation_statements",
+        "defaultImportDataMappingFileName": "honey-ledger_import_data_mapping",
+        "defaultImportHandlingScript": "honey-ledger_handling_script",
+        "defaultImportReplaceRuleFileName": "honey-ledger_import_replace_rule",
+        "defaultImportCheckResultFileName": "honey-ledger_import_check_result"
     },
     "calendar": {
         "Gregorian": "Grégorien",
@@ -1643,8 +1643,8 @@
     "Change Language": "Changer de langue",
     "Date is too early": "La date est trop ancienne",
     "User Canceled": "User Canceled",
-    "Welcome to Ratel Ledger": "Bienvenue dans Ratel Ledger",
-    "Please log in with your Ratel Ledger account": "Veuillez vous connecter avec votre compte Ratel Ledger",
+    "Welcome to Honey Ledger": "Bienvenue dans Honey Ledger",
+    "Please log in with your Honey Ledger account": "Veuillez vous connecter avec votre compte Honey Ledger",
     "Unlock Application": "Déverrouiller l'application",
     "Please enter your PIN code or use WebAuthn to unlock application": "Veuillez entrer votre code PIN ou utiliser WebAuthn pour déverrouiller l'application",
     "Please enter your PIN code to unlock application": "Veuillez entrer votre code PIN pour déverrouiller l'application",
@@ -2000,13 +2000,13 @@
     "Filter Description": "Description du filtre",
     "How to import this file?": "Comment importer ce fichier ?",
     "How to export this file?": "Comment exporter ce fichier ?",
-    "Ratel Ledger File Format": "Format de fichier Ratel Ledger",
+    "Honey Ledger File Format": "Format de fichier Honey Ledger",
     "Custom File Format": "Format de fichier personnalisé",
     "General Data Exchange Format": "Format d'échange de données général",
     "General Bank Statement Format": "Format de relevé bancaire général",
     "Other Bank/Payment App Statement File": "Fichier de relevé d'autre banque/app de paiement",
     "Other Finance App File Format": "Format de fichier d'autre app financière",
-    "Ratel Ledger Data Export File": "Fichier d'exportation de données Ratel Ledger",
+    "Honey Ledger Data Export File": "Fichier d'exportation de données Honey Ledger",
     "Excel Workbook File": "Fichier de classeur Excel",
     "Excel Workbook File (.xlsx)": "Excel Workbook File (.xlsx)",
     "Excel 97-2003 Workbook File (.xls)": "Excel 97-2003 Workbook File (.xls)",

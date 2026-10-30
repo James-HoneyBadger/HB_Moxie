@@ -347,7 +347,7 @@ func (a *AdminApp) makeDatabaseTab() fyne.CanvasObject {
 				"Database exported successfully to:\n"+exportPath,
 				a.window)
 		}, a.window)
-		d.SetFileName(fmt.Sprintf("ratel_ledger_export_%s.sql", ""))
+		d.SetFileName(fmt.Sprintf("honey_ledger_export_%s.sql", ""))
 		d.Show()
 	})
 	exportBtn.Importance = widget.HighImportance

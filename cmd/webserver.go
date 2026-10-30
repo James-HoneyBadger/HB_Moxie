@@ -39,11 +39,11 @@ const webServerShutdownTimeout = 10 * time.Second
 // WebServer represents the server command
 var WebServer = &cli.Command{
 	Name:  "server",
-	Usage: "Ratel Ledger web server operation",
+	Usage: "Honey Ledger web server operation",
 	Commands: []*cli.Command{
 		{
 			Name:   "run",
-			Usage:  "Run Ratel Ledger web server",
+			Usage:  "Run Honey Ledger web server",
 			Action: bindAction(startWebServer),
 		},
 	},
@@ -312,8 +312,8 @@ func startWebServer(c *core.CliContext) error {
 			apiV1Route.POST("/data/clear/transactions/by_account.json", bindApi(api.DataManagements.ClearAllTransactionsByAccountHandler))
 
 			if config.EnableDataExport {
-				apiV1Route.GET("/data/export.csv", bindCsv(api.DataManagements.ExportDataToRatelLedgerCSVHandler))
-				apiV1Route.GET("/data/export.tsv", bindTsv(api.DataManagements.ExportDataToRatelLedgerTSVHandler))
+				apiV1Route.GET("/data/export.csv", bindCsv(api.DataManagements.ExportDataToHoneyLedgerCSVHandler))
+				apiV1Route.GET("/data/export.tsv", bindTsv(api.DataManagements.ExportDataToHoneyLedgerTSVHandler))
 			}
 
 			// Backups & Archives

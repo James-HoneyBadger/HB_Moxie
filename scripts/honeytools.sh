@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-# Ratel Ledger API Tools
-# A command-line tool for calling Ratel Ledger APIs
+# Honey Ledger API Tools
+# A command-line tool for calling Honey Ledger APIs
 
 # API Configuration Structure
 API_CONFIGS='[
@@ -514,7 +514,7 @@ API_CONFIGS='[
   },
   {
     "Name": "server-version",
-    "Description": "Retrieve Ratel Ledger server version information",
+    "Description": "Retrieve Honey Ledger server version information",
     "Method": "GET",
     "Path": "systems/version.json",
     "RequiresTimezone": false,
@@ -531,8 +531,8 @@ API_CONFIGS='[
   }
 ]'
 
-RATELTOOL_SERVER_BASEURL="${RATELTOOL_SERVER_BASEURL}"
-RATELTOOL_TOKEN="${RATELTOOL_TOKEN}"
+HONEYTOOL_SERVER_BASEURL="${HONEYTOOL_SERVER_BASEURL}"
+HONEYTOOL_TOKEN="${HONEYTOOL_TOKEN}"
 TIMEZONE_NAME=""
 TIMEZONE_OFFSET=""
 RAW_RESPONSE="false"
@@ -578,7 +578,7 @@ load_env_file() {
         value="$(echo "$value" | sed -e 's/^["'"'"']//' -e 's/["'"'"']$//')"
 
         case "$key" in
-            RATELTOOL_SERVER_BASEURL|RATELTOOL_TOKEN)
+            HONEYTOOL_SERVER_BASEURL|HONEYTOOL_TOKEN)
                 eval "$key=\"\$value\""
                 ;;
         esac
@@ -588,7 +588,7 @@ load_env_file() {
 }
 
 load_env_from_paths() {
-    if [ -n "$RATELTOOL_SERVER_BASEURL" ] && [ -n "$RATELTOOL_TOKEN" ]; then
+    if [ -n "$HONEYTOOL_SERVER_BASEURL" ] && [ -n "$HONEYTOOL_TOKEN" ]; then
         return 0
     fi
 
@@ -596,25 +596,25 @@ load_env_from_paths() {
     parent_dir="$(dirname "$current_dir")"
     home_dir="$HOME"
 
-    if [ -z "$RATELTOOL_SERVER_BASEURL" ] || [ -z "$RATELTOOL_TOKEN" ]; then
+    if [ -z "$HONEYTOOL_SERVER_BASEURL" ] || [ -z "$HONEYTOOL_TOKEN" ]; then
         if load_env_file "$current_dir/.env"; then
-            if [ -n "$RATELTOOL_SERVER_BASEURL" ] && [ -n "$RATELTOOL_TOKEN" ]; then
+            if [ -n "$HONEYTOOL_SERVER_BASEURL" ] && [ -n "$HONEYTOOL_TOKEN" ]; then
                 return 0
             fi
         fi
     fi
 
-    if [ -z "$RATELTOOL_SERVER_BASEURL" ] || [ -z "$RATELTOOL_TOKEN" ]; then
+    if [ -z "$HONEYTOOL_SERVER_BASEURL" ] || [ -z "$HONEYTOOL_TOKEN" ]; then
         if load_env_file "$parent_dir/.env"; then
-            if [ -n "$RATELTOOL_SERVER_BASEURL" ] && [ -n "$RATELTOOL_TOKEN" ]; then
+            if [ -n "$HONEYTOOL_SERVER_BASEURL" ] && [ -n "$HONEYTOOL_TOKEN" ]; then
                 return 0
             fi
         fi
     fi
 
-    if [ -z "$RATELTOOL_SERVER_BASEURL" ] || [ -z "$RATELTOOL_TOKEN" ]; then
+    if [ -z "$HONEYTOOL_SERVER_BASEURL" ] || [ -z "$HONEYTOOL_TOKEN" ]; then
         if load_env_file "$home_dir/.env"; then
-            if [ -n "$RATELTOOL_SERVER_BASEURL" ] && [ -n "$RATELTOOL_TOKEN" ]; then
+            if [ -n "$HONEYTOOL_SERVER_BASEURL" ] && [ -n "$HONEYTOOL_TOKEN" ]; then
                 return 0
             fi
         fi
@@ -806,16 +806,16 @@ show_help() {
     example_timezone_offset="$(get_example_timezone_offset)"
 
     cat <<-EOF
-Ratel Ledger API Tools
+Honey Ledger API Tools
 
-A command-line tool for calling Ratel Ledger APIs
+A command-line tool for calling Honey Ledger APIs
 
 Usage:
-    rateltools.sh [--tz-name <name>] [--tz-offset <offset>] [--raw-response] <command> [command-options]
+    honeytools.sh [--tz-name <name>] [--tz-offset <offset>] [--raw-response] <command> [command-options]
 
 Environment Variables (Required):
-    RATELTOOL_SERVER_BASEURL      Ratel Ledger server base URL (e.g., http://localhost:8080)
-    RATELTOOL_TOKEN               Ratel Ledger API token
+    HONEYTOOL_SERVER_BASEURL      Honey Ledger server base URL (e.g., http://localhost:8080)
+    HONEYTOOL_TOKEN               Honey Ledger API token
 
     You can also set the above environment variables in a '.env' file located in the current directory, parent directory or home directory.
 
@@ -831,23 +831,23 @@ Commands:
 
 Examples:
     # Set environment variables
-    export RATELTOOL_SERVER_BASEURL="http://localhost:8080"
-    export RATELTOOL_TOKEN="YOUR_TOKEN"
+    export HONEYTOOL_SERVER_BASEURL="http://localhost:8080"
+    export HONEYTOOL_TOKEN="YOUR_TOKEN"
 
     # List all available commands
-    rateltools.sh list
+    honeytools.sh list
 
     # Show help for a specific command
-    rateltools.sh help server-version
+    honeytools.sh help server-version
 
     # Call server-version API
-    rateltools.sh server-version
+    honeytools.sh server-version
 
     # Call API with timezone name
-    rateltools.sh --tz-name ${example_timezone_name} transactions-list --count 10
+    honeytools.sh --tz-name ${example_timezone_name} transactions-list --count 10
 
     # Call API with timezone offset
-    rateltools.sh --tz-offset ${example_timezone_offset} transactions-list --count 10
+    honeytools.sh --tz-offset ${example_timezone_offset} transactions-list --count 10
 EOF
 }
 
@@ -860,7 +860,7 @@ list_commands() {
     done
 
     echo ""
-    echo "Use 'rateltools.sh help <api-command>' to see detailed information about an API command."
+    echo "Use 'honeytools.sh help <api-command>' to see detailed information about an API command."
 }
 
 show_command_help() {
@@ -870,7 +870,7 @@ show_command_help() {
     if [ -z "$config" ]; then
         echo_red "Error: Unknown command '$command_name'"
         echo ""
-        echo "Use 'rateltools.sh list' to see all available commands."
+        echo "Use 'honeytools.sh list' to see all available commands."
         exit 1
     fi
 
@@ -922,13 +922,13 @@ show_command_help() {
     current_tz_name="$(get_system_timezone_name)"
     current_tz_offset="$(get_system_timezone_offset)"
     if [ "$requires_timezone" = "true" ] && [ -n "$current_tz_name" ]; then
-        echo "  rateltools.sh --tz-name ${current_tz_name} $name"
+        echo "  honeytools.sh --tz-name ${current_tz_name} $name"
     elif [ "$requires_timezone" = "true" ] && [ -n "$current_tz_offset" ]; then
-        echo "  rateltools.sh --tz-offset ${current_tz_offset} $name"
+        echo "  honeytools.sh --tz-offset ${current_tz_offset} $name"
     elif [ "$requires_timezone" = "true" ]; then
-        echo "  rateltools.sh --tz-name <name> $name"
+        echo "  honeytools.sh --tz-name <name> $name"
     else
-        echo "  rateltools.sh $name"
+        echo "  honeytools.sh $name"
     fi
 }
 
@@ -941,21 +941,21 @@ call_api() {
     if [ -z "$config" ]; then
         echo_red "Error: Unknown command '$command_name'"
         echo ""
-        echo "Use 'rateltools.sh list' to see all available commands."
+        echo "Use 'honeytools.sh list' to see all available commands."
         exit 1
     fi
 
-    serverBaseUrl="$RATELTOOL_SERVER_BASEURL"
-    authToken="$RATELTOOL_TOKEN"
+    serverBaseUrl="$HONEYTOOL_SERVER_BASEURL"
+    authToken="$HONEYTOOL_TOKEN"
 
     if [ -z "$serverBaseUrl" ]; then
-        echo_red "Error: Environment variable 'RATELTOOL_SERVER_BASEURL' is not set."
-        echo "Please set it to your Ratel Ledger server base URL (e.g., http://localhost:8080)"
+        echo_red "Error: Environment variable 'HONEYTOOL_SERVER_BASEURL' is not set."
+        echo "Please set it to your Honey Ledger server base URL (e.g., http://localhost:8080)"
         exit 1
     fi
 
     if [ -z "$authToken" ]; then
-        echo_red "Error: Environment variable 'RATELTOOL_TOKEN' is not set."
+        echo_red "Error: Environment variable 'HONEYTOOL_TOKEN' is not set."
         echo "Please set it to your API token."
         exit 1
     fi
@@ -978,8 +978,8 @@ call_api() {
         echo "Please provide either '--tz-name' or '--tz-offset' parameter."
         echo ""
         echo "Examples:"
-        echo "  rateltools.sh --tz-name <name> $command_name ..."
-        echo "  rateltools.sh --tz-offset <offset> $command_name ..."
+        echo "  honeytools.sh --tz-name <name> $command_name ..."
+        echo "  honeytools.sh --tz-offset <offset> $command_name ..."
         exit 1
     fi
 
@@ -1124,7 +1124,7 @@ call_api() {
         if [ "$json_params" != "{}" ]; then
             if [ -n "$timezone_headers" ]; then
                 response="$(curl -s -X "POST" \
-                    -H "Authorization: Bearer $RATELTOOL_TOKEN" \
+                    -H "Authorization: Bearer $HONEYTOOL_TOKEN" \
                     -H "Content-Type: application/json" \
                     -H "$timezone_headers" \
                     -d "$json_params" \
@@ -1132,7 +1132,7 @@ call_api() {
                 curl_exit_code=$?
             else
                 response="$(curl -s -X "POST" \
-                    -H "Authorization: Bearer $RATELTOOL_TOKEN" \
+                    -H "Authorization: Bearer $HONEYTOOL_TOKEN" \
                     -H "Content-Type: application/json" \
                     -d "$json_params" \
                     "$url")"
@@ -1141,13 +1141,13 @@ call_api() {
         else
             if [ -n "$timezone_headers" ]; then
                 response="$(curl -s -X "POST" \
-                    -H "Authorization: Bearer $RATELTOOL_TOKEN" \
+                    -H "Authorization: Bearer $HONEYTOOL_TOKEN" \
                     -H "$timezone_headers" \
                     "$url")"
                 curl_exit_code=$?
             else
                 response="$(curl -s -X "POST" \
-                    -H "Authorization: Bearer $RATELTOOL_TOKEN" \
+                    -H "Authorization: Bearer $HONEYTOOL_TOKEN" \
                     "$url")"
                 curl_exit_code=$?
             fi
@@ -1162,12 +1162,12 @@ call_api() {
 
         if [ -n "$timezone_headers" ]; then
             response="$(curl -s -X "$method" \
-                -H "Authorization: Bearer $RATELTOOL_TOKEN" \
+                -H "Authorization: Bearer $HONEYTOOL_TOKEN" \
                 -H "$timezone_headers" \
                 "$url")"
         else
             response="$(curl -s -X "$method" \
-                -H "Authorization: Bearer $RATELTOOL_TOKEN" \
+                -H "Authorization: Bearer $HONEYTOOL_TOKEN" \
                 "$url")"
         fi
         curl_exit_code=$?

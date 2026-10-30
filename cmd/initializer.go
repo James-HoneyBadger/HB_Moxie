@@ -217,8 +217,8 @@ func ensureDefaultUser(c *core.CliContext, isDisableBootLog bool) error {
 
 	defaultUser := &models.User{
 		Username:             "admin",
-		Email:                "admin@ratel.local",
-		Nickname:             "Ratel Ledger User",
+		Email:                "admin@honey.local",
+		Nickname:             "Honey Ledger User",
 		Password:             generatedPassword,
 		DefaultCurrency:      "USD",
 		FirstDayOfWeek:       core.WEEKDAY_SUNDAY,
@@ -244,9 +244,9 @@ func ensureDefaultUser(c *core.CliContext, isDisableBootLog bool) error {
 }
 
 func printDefaultUserPassword(w io.Writer, username string, password string) {
-	fmt.Fprintf(w, "[Ratel Ledger] IMPORTANT: default user \"%s\" was created with password \"%s\"\n", username, password)
-	fmt.Fprintf(w, "[Ratel Ledger] This password is shown once and is not written to the log file.\n")
-	fmt.Fprintf(w, "[Ratel Ledger] Change it in the app, or reset it with: ratel-ledger userdata user-modify-password --username %s --password <new-password>\n", username)
+	fmt.Fprintf(w, "[Honey Ledger] IMPORTANT: default user \"%s\" was created with password \"%s\"\n", username, password)
+	fmt.Fprintf(w, "[Honey Ledger] This password is shown once and is not written to the log file.\n")
+	fmt.Fprintf(w, "[Honey Ledger] Change it in the app, or reset it with: honey-ledger userdata user-modify-password --username %s --password <new-password>\n", username)
 }
 
 func getConfigWithoutSensitiveData(config *settings.Config) *settings.Config {

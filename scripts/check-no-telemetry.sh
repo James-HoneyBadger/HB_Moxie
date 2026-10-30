@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 # Fails when analytics, crash-reporting, or telemetry endpoints appear in the
-# code that ships to users. Ratel Ledger is local-first: it must not phone home.
+# code that ships to users. Honey Ledger is local-first: it must not phone home.
 
 set -eu
 
@@ -35,7 +35,7 @@ if [ -n "$matches" ]; then
     echo ""
     echo "$matches"
     echo ""
-    echo "Ratel Ledger is local-first and must not report usage data. Remove the"
+    echo "Honey Ledger is local-first and must not report usage data. Remove the"
     echo "reference, or extend scripts/check-no-telemetry.sh if it is a false"
     echo "positive (for example a user-configured provider)."
     exit 1

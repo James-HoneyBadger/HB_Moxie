@@ -10,7 +10,7 @@ export function getBasePath(): string {
 }
 
 export function navigateToHomePage(): void {
-    if (__RATEL_LEDGER_IS_PRODUCTION__) {
+    if (__HONEY_LEDGER_IS_PRODUCTION__) {
         window.location.replace(`desktop#/`);
     } else {
         window.location.replace(`desktop.html#/`);
