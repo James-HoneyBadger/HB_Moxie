@@ -192,6 +192,17 @@ func updateAllDatabaseTablesStructure(c *core.CliContext) error {
 
 	log.BootInfof(c, "[database.updateAllDatabaseTablesStructure] insights explorer table maintained successfully")
 
+	appliedMigrations, err := datastore.Container.RunMigrations(c)
+
+	if err != nil {
+		log.BootErrorf(c, "[database.updateAllDatabaseTablesStructure] database migrations failed, because %s", err.Error())
+		return err
+	}
+
+	for _, migrationId := range appliedMigrations {
+		log.BootInfof(c, "[database.updateAllDatabaseTablesStructure] applied database migration \"%s\"", migrationId)
+	}
+
 	return nil
 }
 
