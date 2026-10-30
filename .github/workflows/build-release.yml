@@ -24,7 +24,7 @@ jobs:
       ratel_ledger_electron_artifact_name_prefix: ${{ steps.variable.outputs.ratel_ledger_electron_artifact_name_prefix }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Set up variables
         id: variable
@@ -42,7 +42,7 @@ jobs:
       - setup
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - uses: ./.github/actions/build-linux-package
         with:
@@ -61,7 +61,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - uses: ./.github/actions/build-windows-backend
         with:
@@ -80,7 +80,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - uses: ./.github/actions/build-windows-package
         with:
@@ -92,10 +92,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Set up Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
 
@@ -135,14 +135,14 @@ jobs:
       MINISIGN_SECRET_KEY: ${{ secrets.MINISIGN_SECRET_KEY }}
     steps:
       - name: Download all packaged files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: ${{ needs.setup.outputs.ratel_ledger_package_artifact_name_prefix }}-*
           merge-multiple: true
           path: release-files
 
       - name: Download Electron packages
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: ${{ needs.setup.outputs.ratel_ledger_electron_artifact_name_prefix }}-*
           merge-multiple: true
@@ -176,12 +176,12 @@ jobs:
           rm -f "$key_file"
 
       - name: Attest build provenance
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: release-files/*
 
       - name: Publish Release ${{ github.ref_name }}
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: ${{ github.ref_name }}
           tag_name: ${{ github.ref_name }}
