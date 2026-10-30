@@ -149,7 +149,7 @@ chore: update Go dependencies to latest patch versions
    npm run lint        # check only; use `npm run lint:fix` to apply fixes
    ```
 
-   CI runs the same checks on every pull request: `gofmt`, `go vet`, `go test -short -race`, generated OpenAPI verification, a `govulncheck` vulnerability scan, `npm run lint`, `npm test`, and a frontend build. Run them locally before opening the PR to avoid a round trip.
+   CI runs the same checks on every pull request: `gofmt`, `go vet`, `go test -short -race`, generated OpenAPI verification, a `govulncheck` vulnerability scan, the repository hygiene checks, `npm run lint`, `npm test`, and a frontend build. Run them locally before opening the PR to avoid a round trip.
 
    Run the vulnerability scan locally with `govulncheck ./...`; it exits non-zero when your code reaches a known vulnerability.
 
@@ -233,6 +233,31 @@ Describe:
 - The use case or problem being solved
 - Proposed solution (if you have one)
 - Impact on existing functionality
+
+### Security Issues
+
+Never report a vulnerability in a public issue. Follow the process in
+[SECURITY.md](../SECURITY.md): open a private advisory or email
+<james@honey-badger.org>.
+
+---
+
+## Repository Hygiene Checks
+
+Two checks guard the project's local-first guarantees. CI runs both; run them
+before pushing:
+
+```bash
+node scripts/check-brand.mjs        # product identity matches across manifests
+./scripts/check-no-telemetry.sh     # no analytics or crash-reporting endpoints
+```
+
+`check-brand.mjs` keeps the Electron `appId`, the admin tool's Fyne application
+ID, both `package.json` versions, and the copyright holder in agreement.
+`check-no-telemetry.sh` fails if an analytics or crash-reporting host appears in
+`src/`, `electron/`, `pkg/`, or `cmd/`. Extend its pattern list only for
+services the user configures themselves (LLM, map, mail, and storage providers
+are out of scope).
 
 ---
 

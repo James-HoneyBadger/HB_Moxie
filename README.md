@@ -88,6 +88,8 @@ go run .
 | [Electron Desktop App](docs/ELECTRON.md) | Desktop application build, packaging, and usage |
 | [CLI Reference](docs/CLI_REFERENCE.md) | Command-line interface for server, database, and user management |
 | [Contributing](docs/CONTRIBUTING.md) | Contribution guidelines, code style, and workflow |
+| [Security Policy](SECURITY.md) | Supported versions, threat model, and private vulnerability reporting |
+| [Changelog](CHANGELOG.md) | Release history |
 
 ## Technology Stack
 
