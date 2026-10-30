@@ -54,6 +54,15 @@ func (c *CronJobSchedulerContainer) GetAllJobs() []*CronJob {
 	return c.allJobs
 }
 
+// Shutdown stops the cron job scheduler and waits for running jobs to finish
+func (c *CronJobSchedulerContainer) Shutdown() error {
+	if c.scheduler == nil {
+		return nil
+	}
+
+	return c.scheduler.Shutdown()
+}
+
 // SyncRunJobNow runs the specified cron job synchronously now
 func (c *CronJobSchedulerContainer) SyncRunJobNow(jobName string) error {
 	if jobName == "" {

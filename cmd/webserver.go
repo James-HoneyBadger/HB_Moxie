@@ -1,10 +1,15 @@
 package cmd
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"net"
 	"net/http"
+	"os"
+	"os/signal"
 	"strconv"
+	"syscall"
 	"time"
 
 	"github.com/gin-contrib/cache"
@@ -18,6 +23,7 @@ import (
 	"github.com/James-HoneyBadger/ratel-ledger/pkg/auth/oauth2"
 	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
 	"github.com/James-HoneyBadger/ratel-ledger/pkg/cron"
+	"github.com/James-HoneyBadger/ratel-ledger/pkg/datastore"
 	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
 	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
 	"github.com/James-HoneyBadger/ratel-ledger/pkg/mcp"
@@ -27,6 +33,8 @@ import (
 	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
 	"github.com/James-HoneyBadger/ratel-ledger/pkg/validators"
 )
+
+const webServerShutdownTimeout = 10 * time.Second
 
 // WebServer represents the server command
 var WebServer = &cli.Command{
@@ -431,14 +439,66 @@ func startWebServer(c *core.CliContext) error {
 	listenAddr := net.JoinHostPort(httpAddr, strconv.Itoa(int(config.HttpPort)))
 
 	log.BootInfof(c, "[webserver.startWebServer] will run at http://%s", listenAddr)
-	err = router.Run(listenAddr)
+
+	server := &http.Server{
+		Addr:              listenAddr,
+		Handler:           router,
+		ReadHeaderTimeout: 10 * time.Second,
+	}
+
+	listener, err := net.Listen("tcp", listenAddr)
 
 	if err != nil {
 		log.BootErrorf(c, "[webserver.startWebServer] cannot start, because %s", err)
 		return err
 	}
 
+	serveErrChan := make(chan error, 1)
+
+	go func() {
+		serveErrChan <- server.Serve(listener)
+	}()
+
+	signalChan := make(chan os.Signal, 1)
+	// SIGTERM is delivered by the Electron shell (and service managers) on Unix.
+	// Windows terminates child processes directly; SQLite's journal keeps the
+	// database consistent in that case.
+	signal.Notify(signalChan, os.Interrupt, syscall.SIGTERM)
+	defer signal.Stop(signalChan)
+
+	select {
+	case err = <-serveErrChan:
+		if err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.BootErrorf(c, "[webserver.startWebServer] cannot start, because %s", err)
+			return err
+		}
+	case sig := <-signalChan:
+		log.BootInfof(c, "[webserver.startWebServer] received signal \"%s\", shutting down", sig.String())
+	}
+
+	shutdownContext, cancel := context.WithTimeout(context.Background(), webServerShutdownTimeout)
+	defer cancel()
+
+	if err = server.Shutdown(shutdownContext); err != nil {
+		log.BootWarnf(c, "[webserver.startWebServer] failed to shutdown http server gracefully, because %s", err.Error())
+	}
+
+	shutdownServices(c)
+
 	return nil
+}
+
+// shutdownServices stops background jobs and releases database connections.
+func shutdownServices(c *core.CliContext) {
+	if err := cron.Container.Shutdown(); err != nil {
+		log.BootWarnf(c, "[webserver.shutdownServices] failed to shutdown cron job scheduler, because %s", err.Error())
+	}
+
+	if err := datastore.Container.Close(); err != nil {
+		log.BootWarnf(c, "[webserver.shutdownServices] failed to close database, because %s", err.Error())
+	}
+
+	log.BootInfof(c, "[webserver.shutdownServices] server stopped")
 }
 
 func bindMiddleware(fn core.MiddlewareHandlerFunc) gin.HandlerFunc {

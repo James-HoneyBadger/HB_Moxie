@@ -137,3 +137,22 @@ func TestCronJobSchedulerContainerRepeatRun(t *testing.T) {
 	err = container.scheduler.Shutdown()
 	assert.Nil(t, err)
 }
+
+func TestCronJobSchedulerContainerShutdown(t *testing.T) {
+	emptyContainer := &CronJobSchedulerContainer{}
+	assert.Nil(t, emptyContainer.Shutdown())
+
+	container := &CronJobSchedulerContainer{
+		allJobsMap:       make(map[string]*CronJob),
+		allGocronJobsMap: make(map[string]gocron.Job),
+	}
+
+	scheduler, err := gocron.NewScheduler(
+		gocron.WithLocation(time.Local),
+		gocron.WithLogger(NewGocronLoggerAdapter()),
+	)
+	assert.Nil(t, err)
+
+	container.scheduler = scheduler
+	assert.Nil(t, container.Shutdown())
+}

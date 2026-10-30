@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -66,4 +67,15 @@ func TestGetConfigWithoutSensitiveData_RedactsCredentials(t *testing.T) {
 
 func TestGetConfigWithoutSensitiveData_NilConfig(t *testing.T) {
 	assert.Nil(t, getConfigWithoutSensitiveData(nil))
+}
+
+func TestPrintDefaultUserPassword(t *testing.T) {
+	var buffer bytes.Buffer
+
+	printDefaultUserPassword(&buffer, "admin", "GeneratedPassword123")
+
+	output := buffer.String()
+	assert.Contains(t, output, `default user "admin" was created with password "GeneratedPassword123"`)
+	assert.Contains(t, output, "not written to the log file")
+	assert.Contains(t, output, "userdata user-modify-password --username admin")
 }

@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"encoding/json"
+	"fmt"
+	"io"
 	"os"
 
 	"github.com/James-HoneyBadger/ratel-ledger/pkg/avatars"
@@ -232,10 +234,19 @@ func ensureDefaultUser(c *core.CliContext, isDisableBootLog bool) error {
 
 	if !isDisableBootLog {
 		log.BootInfof(c, "[initializer.ensureDefaultUser] created default user \"%s\" (uid:%d)", defaultUser.Username, defaultUser.Uid)
-		log.BootWarnf(c, "[initializer.ensureDefaultUser] IMPORTANT: default password is \"%s\" — please change it immediately", generatedPassword)
+
+		// The password is printed to the console only. Routing it through the
+		// logger would also persist it in the log file on disk.
+		printDefaultUserPassword(os.Stdout, defaultUser.Username, generatedPassword)
 	}
 
 	return nil
+}
+
+func printDefaultUserPassword(w io.Writer, username string, password string) {
+	fmt.Fprintf(w, "[Ratel Ledger] IMPORTANT: default user \"%s\" was created with password \"%s\"\n", username, password)
+	fmt.Fprintf(w, "[Ratel Ledger] This password is shown once and is not written to the log file.\n")
+	fmt.Fprintf(w, "[Ratel Ledger] Change it in the app, or reset it with: ratel-ledger userdata user-modify-password --username %s --password <new-password>\n", username)
 }
 
 func getConfigWithoutSensitiveData(config *settings.Config) *settings.Config {
