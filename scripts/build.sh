@@ -121,8 +121,8 @@ set_build_parameters() {
 }
 
 build_backend() {
-    echo "Pulling backend dependencies..."
-    go get .
+    echo "Downloading backend dependencies..."
+    go mod download
 
     if [ "$NO_LINT" = "0" ]; then
         echo "Executing backend lint checking..."
@@ -136,7 +136,6 @@ build_backend() {
 
     if [ "$NO_TEST" = "0" ]; then
         echo "Executing backend unit testing..."
-        go clean -cache
 
         if [ -z "$SKIP_TESTS" ]; then
             go test ./... -v
@@ -165,8 +164,8 @@ build_backend() {
 }
 
 build_frontend() {
-    echo "Pulling frontend dependencies..."
-    npm install
+    echo "Installing frontend dependencies..."
+    npm ci --no-audit --no-fund
 
     if [ "$NO_LINT" = "0" ]; then
         echo "Executing frontend lint checking..."

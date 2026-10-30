@@ -90,8 +90,8 @@ function Set-Build-Parameters {
 }
 
 function Build-Backend {
-    Write-Host "Pulling backend dependencies..."
-    go get .
+    Write-Host "Downloading backend dependencies..."
+    go mod download
 
     if (-not $NoLint) {
         Write-Host "Executing backend lint checking..."
@@ -105,7 +105,6 @@ function Build-Backend {
 
     if (-not $NoTest) {
         Write-Host "Executing backend unit testing..."
-        go clean -cache
 
         if (-not $SkipTests) {
             go test .\... -v
@@ -136,8 +135,8 @@ function Build-Backend {
 }
 
 function Build-Frontend {
-    Write-Host "Pulling frontend dependencies..."
-    npm install
+    Write-Host "Installing frontend dependencies..."
+    npm ci --no-audit --no-fund
 
     if (-not $NoLint) {
         Write-Host "Executing frontend lint checking..."
