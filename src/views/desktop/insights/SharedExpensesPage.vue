@@ -6,7 +6,7 @@
                     <div class="d-flex align-center flex-wrap">
                         <span>{{ tt('Shared Expenses') }}</span>
                         <v-spacer />
-                        <v-btn class="me-2" color="primary" :disabled="loading || submitting" @click="openNewSplit">
+                        <v-btn class="me-2" color="primary" :disabled="loading" @click="openNewSplit">
                             <v-icon :icon="mdiAccountPlusOutline" start />
                             {{ tt('Split an Expense') }}
                         </v-btn>
@@ -96,8 +96,6 @@
                 <v-progress-linear v-if="personEntriesLoading" indeterminate />
 
                 <v-card-text>
-                    <v-alert v-if="submitErrorMessage" type="error" variant="tonal" class="mb-4">{{ submitErrorMessage }}</v-alert>
-
                     <div v-if="!personEntriesLoading && personEntries.length < 1" class="text-body-2 text-medium-emphasis">
                         {{ tt('No shared expenses recorded yet') }}
                     </div>
@@ -121,10 +119,10 @@
                             <td class="text-end">{{ formatAmountInCurrency(entry.splitAmount, entry.currency) }}</td>
                             <td class="text-truncate">{{ entry.comment }}</td>
                             <td class="text-end text-no-wrap">
-                                <v-btn size="small" variant="text" :disabled="submitting" @click="openEditSplit(entry)">
+                                <v-btn size="small" variant="text" :disabled="clearing" @click="openEditSplit(entry)">
                                     {{ tt('Edit') }}
                                 </v-btn>
-                                <v-btn size="small" variant="text" color="error" :disabled="submitting" @click="clearSplit(entry)">
+                                <v-btn size="small" variant="text" color="error" :disabled="clearing" @click="clearSplit(entry)">
                                     {{ tt('Clear') }}
                                 </v-btn>
                             </td>
@@ -136,96 +134,22 @@
         </v-col>
     </v-row>
 
-    <v-dialog width="640" :persistent="submitting" v-model="showSplitDialog" @after-leave="onDialogClosed">
-        <v-card>
-            <template #title>
-                <div class="d-flex align-center">
-                    <v-icon :icon="mdiAccountMultipleCheckOutline" start />
-                    <span>{{ editingExistingSplits ? tt('Edit Split') : tt('Split an Expense') }}</span>
-                </div>
-            </template>
-
-            <v-card-text>
-                <v-alert v-if="submitErrorMessage" type="error" variant="tonal" class="mb-4">{{ submitErrorMessage }}</v-alert>
-
-                <v-autocomplete v-if="!editableTransactionId"
-                                class="mb-2"
-                                density="compact" variant="outlined"
-                                :items="expenseItems" item-title="title" item-value="id"
-                                :loading="expensesLoading"
-                                :label="tt('Transaction')"
-                                :placeholder="tt('Select an expense transaction')"
-                                :no-data-text="tt('No data')"
-                                v-model="selectedTransactionId" />
-
-                <div class="d-flex align-center flex-wrap mb-3" v-if="editableTransactionAmount > 0">
-                    <span class="text-body-2">{{ tt('Transaction Amount') }}:</span>
-                    <span class="text-body-2 font-weight-bold ms-1">{{ formatAmountInCurrency(editableTransactionAmount, editableCurrency) }}</span>
-                    <v-spacer />
-                    <span class="text-body-2" :class="{ 'text-error': remainingAmount < 0 }">
-                        {{ tt('Unallocated') }}: {{ formatAmountInCurrency(remainingAmount, editableCurrency) }}
-                    </span>
-                </div>
-
-                <v-row class="align-center" :key="row.key" v-for="row in formRows">
-                    <v-col cols="12" md="5">
-                        <v-text-field density="compact" variant="outlined"
-                                      :label="tt('Person Name')"
-                                      :disabled="submitting"
-                                      v-model="row.personName" />
-                    </v-col>
-                    <v-col cols="12" md="5">
-                        <amount-input :currency="editableCurrency"
-                                      :show-currency="!!editableCurrency"
-                                      :label="tt('Amount Owed')"
-                                      :placeholder="tt('Amount')"
-                                      :disabled="submitting"
-                                      v-model="row.amount" />
-                    </v-col>
-                    <v-col cols="12" md="2" class="text-end">
-                        <v-btn density="comfortable" icon variant="text" color="error"
-                               :disabled="submitting || formRows.length <= 1"
-                               @click="removeFormRow(row.key)">
-                            <v-icon :icon="mdiTrashCanOutline" />
-                        </v-btn>
-                    </v-col>
-                </v-row>
-
-                <v-btn class="mt-2" variant="text" size="small"
-                       :disabled="submitting || formRows.length >= maxSplitCount"
-                       @click="addFormRow">
-                    <v-icon :icon="mdiPlus" start />
-                    {{ tt('Add Person') }}
-                </v-btn>
-            </v-card-text>
-
-            <v-card-actions>
-                <v-spacer />
-                <v-btn color="default" variant="text" :disabled="submitting" @click="showSplitDialog = false">
-                    {{ tt('Cancel') }}
-                </v-btn>
-                <v-btn color="primary" :loading="submitting" :disabled="!canSubmit" @click="submitAndClose">
-                    {{ tt('Save') }}
-                </v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
+    <split-expense-dialog ref="splitDialog" @saved="loadSummary" />
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { useTemplateRef } from 'vue';
 
 import {
     mdiAccountGroupOutline,
-    mdiAccountMultipleCheckOutline,
     mdiAccountPlusOutline,
     mdiChevronDown,
     mdiChevronUp,
     mdiFormatListBulleted,
-    mdiPlus,
-    mdiRefresh,
-    mdiTrashCanOutline
+    mdiRefresh
 } from '@mdi/js';
+
+import SplitExpenseDialog from './dialogs/SplitExpenseDialog.vue';
 
 import type { SharedExpenseEntry } from '@/models/transaction_split.ts';
 
@@ -234,7 +158,6 @@ import { useSharedExpensesPageBase } from '@/views/base/insights/SharedExpensesP
 
 const { tt } = useI18n();
 const {
-    maxSplitCount,
     loading,
     errorMessage,
     summary,
@@ -242,66 +165,32 @@ const {
     selectedCurrency,
     personEntries,
     personEntriesLoading,
-    editingExistingSplits,
-    editableTransactionId,
-    editableTransactionAmount,
-    editableCurrency,
-    formRows,
-    submitting,
-    submitErrorMessage,
-    expensesLoading,
+    clearing,
     totalOwedByCurrency,
     hasSummary,
-    remainingAmount,
-    canSubmit,
-    expenseItems,
     categoryName,
     formatAmountInCurrency,
     formatTime,
     isPersonSelected,
     selectPerson,
     loadSummary,
-    resetSplitEditor,
-    startNewSplit,
-    startEditSplit,
-    selectTransaction,
-    addFormRow,
-    removeFormRow,
-    submit,
     clearSplit,
     init
 } = useSharedExpensesPageBase();
 
-const showSplitDialog = ref<boolean>(false);
-const selectedTransactionId = ref<string>('');
-
-watch(selectedTransactionId, (transactionId: string) => {
-    if (transactionId) {
-        selectTransaction(transactionId);
-    }
-});
+const splitDialog = useTemplateRef<InstanceType<typeof SplitExpenseDialog>>('splitDialog');
 
 function openNewSplit(): void {
-    selectedTransactionId.value = '';
-    startNewSplit();
-    showSplitDialog.value = true;
+    splitDialog.value?.open({ defaultPersonName: selectedPerson.value });
 }
 
 function openEditSplit(entry: SharedExpenseEntry): void {
-    selectedTransactionId.value = '';
-    startEditSplit(entry);
-    showSplitDialog.value = true;
-}
-
-function onDialogClosed(): void {
-    selectedTransactionId.value = '';
-    resetSplitEditor();
-}
-
-async function submitAndClose(): Promise<void> {
-    if (await submit()) {
-        showSplitDialog.value = false;
-    }
+    splitDialog.value?.open({
+        transactionId: entry.transactionId,
+        transactionAmount: entry.transactionAmount,
+        currency: entry.currency,
+        defaultPersonName: selectedPerson.value
+    });
 }
 
 init();

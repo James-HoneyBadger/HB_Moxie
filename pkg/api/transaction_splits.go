@@ -77,6 +77,22 @@ func (a *TransactionSplitsApi) SharedExpenseSummaryHandler(c *core.WebContext) (
 	return summary, nil
 }
 
+// TransactionSplitIndexHandler returns the split state of the transactions in a time range.
+func (a *TransactionSplitsApi) TransactionSplitIndexHandler(c *core.WebContext) (any, *errs.Error) {
+	minTime, _ := utils.StringToInt64(c.Query("min_time"))
+	maxTime, _ := utils.StringToInt64(c.Query("max_time"))
+
+	uid := c.GetCurrentUid()
+	index, err := a.splits.GetTransactionSplitIndex(c, uid, minTime, maxTime)
+
+	if err != nil {
+		log.Errorf(c, "[transaction_splits.TransactionSplitIndexHandler] failed to get split index for user uid:%d, because %s", uid, err.Error())
+		return nil, errs.Or(err, errs.ErrOperationFailed)
+	}
+
+	return index, nil
+}
+
 // SharedExpensePersonHandler returns the individual shared expenses owed by one person.
 func (a *TransactionSplitsApi) SharedExpensePersonHandler(c *core.WebContext) (any, *errs.Error) {
 	personName := strings.TrimSpace(c.Query("personName"))

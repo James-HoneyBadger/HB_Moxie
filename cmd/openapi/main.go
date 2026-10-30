@@ -50,6 +50,7 @@ type apiSchemaTypes struct {
 
 	TransactionSplitUpdateRequest models.TransactionSplitUpdateRequest
 	TransactionSplitsResponse     models.TransactionSplitsResponse
+	TransactionSplitIndexItem     models.TransactionSplitIndexItem
 	SharedExpenseSummaryItem      models.SharedExpenseSummaryItem
 	SharedExpenseEntryResponse    models.SharedExpenseEntryResponse
 }
@@ -173,6 +174,13 @@ func generatedPaths() map[string]any {
 		"/api/v1/tokens/generate/mcp.json": map[string]any{
 			"post": jsonOperation("generateMcpToken", "Generate an MCP token", "TokenGenerateMCPRequest", "TokenGenerateMCPResponse"),
 		},
+		"/api/v1/transactions/splits/index.json": map[string]any{
+			"get": withParameters(
+				responseOperation("getTransactionSplitIndex", "List the split state of the transactions in a time range", arraySchema("TransactionSplitIndexItem")),
+				optionalQueryParameter("min_time", "Minimum transaction time in milliseconds"),
+				optionalQueryParameter("max_time", "Maximum transaction time in milliseconds, 0 for no upper bound"),
+			),
+		},
 		"/api/v1/transactions/splits/list.json": map[string]any{
 			"get": withParameters(
 				responseOperation("listTransactionSplits", "List the shares of a transaction owed by other people", referenceSchema("TransactionSplitsResponse")),
@@ -204,6 +212,16 @@ func queryParameter(name string, description string) map[string]any {
 		"name":        name,
 		"in":          "query",
 		"required":    true,
+		"description": description,
+		"schema":      map[string]any{"type": "string"},
+	}
+}
+
+func optionalQueryParameter(name string, description string) map[string]any {
+	return map[string]any{
+		"name":        name,
+		"in":          "query",
+		"required":    false,
 		"description": description,
 		"schema":      map[string]any{"type": "string"},
 	}

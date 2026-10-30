@@ -588,8 +588,24 @@
                                                             :text="tt('None')"
                                                             v-if="!transaction.tagIds || !transaction.tagIds.length"/>
                                                 </td>
-                                                <td class="transaction-table-column-description text-truncate">
-                                                    {{ transaction.comment }}
+                                                <td class="transaction-table-column-description">
+                                                    <div class="d-flex align-center">
+                                                        <span class="text-truncate">{{ transaction.comment }}</span>
+                                                        <v-chip v-if="splitInfoOf(transaction)"
+                                                                class="ms-2 transaction-split-chip"
+                                                                color="primary" size="small" variant="tonal"
+                                                                :prepend-icon="mdiAccountMultiple"
+                                                                @click.stop="openSplitDialog(transaction)">
+                                                            {{ formatSplitTotal(splitInfoOf(transaction)) }}
+                                                            <v-tooltip activator="parent">{{ tt('Shared Expenses') }}</v-tooltip>
+                                                        </v-chip>
+                                                        <v-btn v-else-if="transaction.type === TransactionType.Expense"
+                                                               class="ms-2" size="x-small" density="comfortable" variant="text"
+                                                               color="primary" :icon="mdiAccountMultiplePlusOutline"
+                                                               @click.stop="openSplitDialog(transaction)">
+                                                            <v-tooltip activator="parent">{{ tt('Split an Expense') }}</v-tooltip>
+                                                        </v-btn>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -622,6 +638,7 @@
                             @error="onShowDateRangeError" />
 
     <edit-dialog ref="editDialog" :type="TransactionEditPageType.Transaction" />
+    <split-expense-dialog ref="splitDialog" @saved="reload(false, false)" />
     <a-i-image-recognition-dialog ref="aiImageRecognitionDialog" />
     <import-dialog ref="importDialog" :persistent="true" />
 
@@ -650,12 +667,14 @@ import PaginationButtons from '@/components/desktop/PaginationButtons.vue';
 import ConfirmDialog from '@/components/desktop/ConfirmDialog.vue';
 import SnackBar from '@/components/desktop/SnackBar.vue';
 import EditDialog from './list/dialogs/EditDialog.vue';
+import SplitExpenseDialog from '@/views/desktop/insights/dialogs/SplitExpenseDialog.vue';
 import AIImageRecognitionDialog from './list/dialogs/AIImageRecognitionDialog.vue';
 import ImportDialog from './import/ImportDialog.vue';
 import AccountFilterSettingsCard from '@/views/desktop/common/cards/AccountFilterSettingsCard.vue';
 import CategoryFilterSettingsCard from '@/views/desktop/common/cards/CategoryFilterSettingsCard.vue';
 import TransactionTagFilterSettingsCard from '@/views/desktop/common/cards/TransactionTagFilterSettingsCard.vue';
 import { TransactionEditPageType } from '@/views/base/transactions/TransactionEditPageBase.ts';
+import type { TransactionSplitIndexItem } from '@/models/transaction_split.ts';
 
 import { ref, computed, useTemplateRef, watch, nextTick } from 'vue';
 import { useRouter, onBeforeRouteUpdate } from 'vue-router';
@@ -721,6 +740,7 @@ import {
 } from '@/lib/category.ts';
 import { isDataExportingEnabled, isDataImportingEnabled, isTransactionFromAIImageRecognitionEnabled } from '@/lib/server_settings.ts';
 import { scrollToSelectedItem, startDownloadFile } from '@/lib/ui/common.ts';
+import services from '@/lib/services.ts';
 import logger from '@/lib/logger.ts';
 
 import {
@@ -738,7 +758,9 @@ import {
     mdiArrowRight,
     mdiPound,
     mdiMagicStaff,
-    mdiTextBoxOutline
+    mdiTextBoxOutline,
+    mdiAccountMultiple,
+    mdiAccountMultiplePlusOutline
 } from '@mdi/js';
 
 interface TransactionListProps {
@@ -775,7 +797,8 @@ const {
     tt,
     getAllRecentMonthDateRanges,
     getWeekdayLongName,
-    getCurrentNumeralSystemType
+    getCurrentNumeralSystemType,
+    formatAmountToLocalizedNumeralsWithCurrency
 } = useI18n();
 
 const {
@@ -851,6 +874,7 @@ const snackbar = useTemplateRef<SnackBarType>('snackbar');
 const editDialog = useTemplateRef<EditDialogType>('editDialog');
 const aiImageRecognitionDialog = useTemplateRef<AIImageRecognitionDialogType>('aiImageRecognitionDialog');
 const importDialog = useTemplateRef<ImportDialogType>('importDialog');
+const splitDialog = useTemplateRef<InstanceType<typeof SplitExpenseDialog>>('splitDialog');
 
 const activeTab = ref<string>('transactionPage');
 const currentPage = ref<number>(1);
@@ -861,6 +885,7 @@ const currentAmountFilterType = ref<string>('');
 const currentAmountFilterValue1 = ref<number>(0);
 const currentAmountFilterValue2 = ref<number>(0);
 const currentPageTransactions = ref<Transaction[]>([]);
+const transactionSplitIndex = ref<Record<string, TransactionSplitIndexItem>>({});
 const categoryMenuState = ref<boolean>(false);
 const amountMenuState = ref<boolean>(false);
 const exportingData = ref<boolean>(false);
@@ -1163,6 +1188,44 @@ function init(initProps: TransactionListProps): void {
     });
 }
 
+function splitInfoOf(transaction: Transaction): TransactionSplitIndexItem | undefined {
+    return transactionSplitIndex.value[transaction.id];
+}
+
+function formatSplitTotal(split: TransactionSplitIndexItem | undefined): string {
+    if (!split) {
+        return '';
+    }
+
+    return formatAmountToLocalizedNumeralsWithCurrency(split.total, split.currency);
+}
+
+function loadTransactionSplitIndex(): void {
+    services.getTransactionSplitIndex({
+        minTime: query.value.minTime * 1000,
+        maxTime: query.value.maxTime * 1000
+    }).then(response => {
+        const index: Record<string, TransactionSplitIndexItem> = {};
+
+        for (const item of response.data.result ?? []) {
+            index[item.transactionId] = item;
+        }
+
+        transactionSplitIndex.value = index;
+    }).catch(error => {
+        logger.error('failed to load transaction split index', error);
+        transactionSplitIndex.value = {};
+    });
+}
+
+function openSplitDialog(transaction: Transaction): void {
+    splitDialog.value?.open({
+        transactionId: transaction.id,
+        transactionAmount: transaction.sourceAmount,
+        currency: transaction.sourceAccount?.currency ?? ''
+    });
+}
+
 function reload(force: boolean, init: boolean): void {
     loading.value = true;
 
@@ -1208,6 +1271,8 @@ function reload(force: boolean, init: boolean): void {
         if (page <= 1) {
             totalCount.value = data && data.totalCount ? data.totalCount : 1;
         }
+
+        loadTransactionSplitIndex();
 
         if (force) {
             snackbar.value?.showMessage('Data has been updated');
@@ -1824,6 +1889,10 @@ init(props);
 .transaction-table .transaction-table-column-category .v-btn .v-btn__append,
 .transaction-table .transaction-table-column-account .v-btn .v-btn__append {
     margin-inline-start: 0in;
+}
+
+.transaction-table .transaction-table-column-description .transaction-split-chip {
+    flex-shrink: 0;
 }
 
 .transaction-table .transaction-table-column-tags .v-chip.transaction-tag {

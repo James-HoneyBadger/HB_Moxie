@@ -94,6 +94,13 @@ export interface TransactionAmountsResponseItemAmountInfo {
     readonly expenseAmount: number;
 }
 
+export interface TransactionSplitIndexItem {
+    readonly transactionId: string;
+    readonly total: number;
+    readonly currency: string;
+    readonly personCount: number;
+}
+
 export interface TransactionSplitInfoResponse {
     readonly personName: string;
     readonly currency: string;

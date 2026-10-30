@@ -143,6 +143,7 @@ import type {
 import type {
     TransactionSplits,
     TransactionSplitUpdateRequest,
+    TransactionSplitIndexItem,
     SharedExpenseSummaryItem,
     SharedExpenseEntry
 } from '@/models/transaction_split.ts';
@@ -829,6 +830,9 @@ export default {
         return axios.get<ApiResponse<TransactionReviewResponse>>('v1/insights/review.json', {
             params: { months }
         });
+    },
+    getTransactionSplitIndex: ({ minTime, maxTime }: { minTime: number, maxTime: number }): ApiResponsePromise<TransactionSplitIndexItem[]> => {
+        return axios.get<ApiResponse<TransactionSplitIndexItem[]>>(`v1/transactions/splits/index.json?min_time=${minTime}&max_time=${maxTime}`);
     },
     getTransactionSplits: ({ transactionId }: { transactionId: string }): ApiResponsePromise<TransactionSplits> => {
         return axios.get<ApiResponse<TransactionSplits>>('v1/transactions/splits/list.json?transactionId=' + transactionId);

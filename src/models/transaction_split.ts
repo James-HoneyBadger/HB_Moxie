@@ -40,3 +40,10 @@ export interface TransactionSplitUpdateRequest {
     transactionId: string;
     splits: TransactionSplitRequestItem[];
 }
+
+export interface TransactionSplitIndexItem {
+    readonly transactionId: string;
+    readonly total: number;
+    readonly currency: string;
+    readonly personCount: number;
+}

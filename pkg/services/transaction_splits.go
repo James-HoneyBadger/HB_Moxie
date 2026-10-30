@@ -230,6 +230,89 @@ func (s *TransactionSplitService) GetSharedExpenseSummary(c core.Context, uid in
 	return summarizeSharedExpenses(splits, deletedTransactionIds), nil
 }
 
+// GetTransactionSplitIndex returns the split state of the transactions in a time
+// range, so the transaction list can mark the ones that are shared. Times are in
+// the same millisecond scale as the transaction list filters; a zero maxTime
+// leaves the range open ended.
+func (s *TransactionSplitService) GetTransactionSplitIndex(c core.Context, uid int64, minTime int64, maxTime int64) ([]*models.TransactionSplitIndexItem, error) {
+	if uid <= 0 {
+		return nil, errs.ErrUserIdInvalid
+	}
+
+	session := s.UserDataDB(uid).NewSession(c)
+	defer session.Close()
+
+	var splits []*models.TransactionSplit
+
+	if err := session.Where("uid=?", uid).Find(&splits); err != nil {
+		return nil, err
+	}
+
+	if len(splits) == 0 {
+		return []*models.TransactionSplitIndexItem{}, nil
+	}
+
+	transactionIds := make([]int64, 0, len(splits))
+
+	for _, split := range splits {
+		transactionIds = append(transactionIds, split.TransactionId)
+	}
+
+	var transactions []*models.Transaction
+	query := session.Where("uid=? AND deleted=?", uid, false).In("transaction_id", transactionIds)
+
+	if minTime > 0 {
+		query = query.And("transaction_time >= ?", minTime)
+	}
+
+	if maxTime > 0 {
+		query = query.And("transaction_time <= ?", maxTime)
+	}
+
+	if err := query.Find(&transactions); err != nil {
+		return nil, err
+	}
+
+	inRange := make(map[int64]bool, len(transactions))
+
+	for _, transaction := range transactions {
+		inRange[transaction.TransactionId] = true
+	}
+
+	index := make(map[int64]*models.TransactionSplitIndexItem, len(splits))
+
+	for _, split := range splits {
+		if !inRange[split.TransactionId] {
+			continue
+		}
+
+		item, exists := index[split.TransactionId]
+
+		if !exists {
+			item = &models.TransactionSplitIndexItem{
+				TransactionId: split.TransactionId,
+				Currency:      split.Currency,
+			}
+			index[split.TransactionId] = item
+		}
+
+		item.Total += split.Amount
+		item.PersonCount++
+	}
+
+	result := make([]*models.TransactionSplitIndexItem, 0, len(index))
+
+	for _, item := range index {
+		result = append(result, item)
+	}
+
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].TransactionId > result[j].TransactionId
+	})
+
+	return result, nil
+}
+
 // GetSharedExpensesByPerson returns the individual shared expenses owed by one person,
 // newest first and excluding deleted transactions.
 func (s *TransactionSplitService) GetSharedExpensesByPerson(c core.Context, uid int64, personName string) ([]*models.SharedExpenseEntryResponse, error) {

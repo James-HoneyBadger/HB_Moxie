@@ -17,7 +17,10 @@ details.
   total. Backed by `GET /api/v1/transactions/splits/{list,summary,person}.json`
   and `POST /api/v1/transactions/splits/update.json`.
 - A `Shared Expenses` page under Basis Data, with a split editor that shows the
-  transaction amount and the unallocated remainder while editing.
+  transaction amount and the unallocated remainder while editing. Shared
+  expenses are also marked directly in the transaction list, where a chip shows
+  the amount others owe and opens the split editor, and expense rows offer the
+  same editor next to the description.
 - Versioned database migrations with a `schema_migration` ledger, applied at
   startup after the automatic schema sync. Each migration runs once, inside a
   transaction, and is recorded only on success.

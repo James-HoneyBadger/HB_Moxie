@@ -312,6 +312,30 @@
           "expenseAmount"
         ]
       },
+      "TransactionSplitIndexItem": {
+        "properties": {
+          "transactionId": {
+            "type": "string"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "personCount": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "transactionId",
+          "total",
+          "currency",
+          "personCount"
+        ]
+      },
       "TransactionSplitInfoResponse": {
         "properties": {
           "personName": {
@@ -942,6 +966,47 @@
           }
         },
         "summary": "Generate an MCP token"
+      }
+    },
+    "/api/v1/transactions/splits/index.json": {
+      "get": {
+        "operationId": "getTransactionSplitIndex",
+        "parameters": [
+          {
+            "description": "Minimum transaction time in milliseconds",
+            "in": "query",
+            "name": "min_time",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Maximum transaction time in milliseconds, 0 for no upper bound",
+            "in": "query",
+            "name": "max_time",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TransactionSplitIndexItem"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "List the split state of the transactions in a time range"
       }
     },
     "/api/v1/transactions/splits/list.json": {

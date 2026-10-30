@@ -67,3 +67,12 @@ type SharedExpenseEntryResponse struct {
 	Currency          string `json:"currency"`
 	Comment           string `json:"comment"`
 }
+
+// TransactionSplitIndexItem represents the split state of one transaction, used to
+// mark split transactions in the transaction list
+type TransactionSplitIndexItem struct {
+	TransactionId int64  `json:"transactionId,string"`
+	Total         int64  `json:"total"`
+	Currency      string `json:"currency"`
+	PersonCount   int32  `json:"personCount"`
+}
