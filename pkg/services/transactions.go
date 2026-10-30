@@ -3005,3 +3005,20 @@ func (s *TransactionService) isPicturesValid(sess *xorm.Session, transaction *mo
 
 	return nil
 }
+
+// GetTransactionsForReview returns all non-deleted transactions of the user at
+// or after the given unix time, oldest first.
+func (s *TransactionService) GetTransactionsForReview(c core.Context, uid int64, minUnixTime int64) ([]*models.Transaction, error) {
+	if uid <= 0 {
+		return nil, errs.ErrUserIdInvalid
+	}
+
+	var transactions []*models.Transaction
+
+	err := s.UserDataDB(uid).NewSession(c).
+		Where("uid=? AND deleted=? AND transaction_time>=?", uid, false, utils.GetMinTransactionTimeFromUnixTime(minUnixTime)).
+		OrderBy("transaction_time asc").
+		Find(&transactions)
+
+	return transactions, err
+}
