@@ -17,6 +17,14 @@ const (
 	SPLIT_DIRECTION_I_OWE_THEM TransactionSplitDirection = 2
 )
 
+// Values of the shared_filter transaction list parameter
+const (
+	// TRANSACTION_SHARED_FILTER_SHARED keeps only transactions that are split
+	TRANSACTION_SHARED_FILTER_SHARED = "shared"
+	// TRANSACTION_SHARED_FILTER_UNSHARED keeps only transactions that are not split
+	TRANSACTION_SHARED_FILTER_UNSHARED = "unshared"
+)
+
 // SettlementMaxAmount is the largest amount a single settlement may record
 const SettlementMaxAmount = 99999999999
 

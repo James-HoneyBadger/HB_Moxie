@@ -2668,5 +2668,6 @@
     "Dismiss": "Opusti",
     "Forget Saved Mapping": "Pozabi shranjeno preslikavo",
     "Saved mapping loaded": "Shranjena preslikava naložena",
-    "Saved mapping forgotten": "Shranjena preslikava pozabljena"
+    "Saved mapping forgotten": "Shranjena preslikava pozabljena",
+    "Show shared expense transactions only": "Prikaži samo transakcije deljenih stroškov"
 }

@@ -2668,5 +2668,6 @@
     "Dismiss": "Bỏ qua",
     "Forget Saved Mapping": "Quên ánh xạ đã lưu",
     "Saved mapping loaded": "Đã tải ánh xạ đã lưu",
-    "Saved mapping forgotten": "Đã quên ánh xạ đã lưu"
+    "Saved mapping forgotten": "Đã quên ánh xạ đã lưu",
+    "Show shared expense transactions only": "Chỉ hiển thị giao dịch chi phí chia sẻ"
 }

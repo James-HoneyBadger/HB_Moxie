@@ -2668,5 +2668,6 @@
     "Dismiss": "Dispensar",
     "Forget Saved Mapping": "Esquecer o mapeamento salvo",
     "Saved mapping loaded": "Mapeamento salvo carregado",
-    "Saved mapping forgotten": "Mapeamento salvo esquecido"
+    "Saved mapping forgotten": "Mapeamento salvo esquecido",
+    "Show shared expense transactions only": "Mostrar apenas transações de despesas compartilhadas"
 }

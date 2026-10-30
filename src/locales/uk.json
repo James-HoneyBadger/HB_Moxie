@@ -2668,5 +2668,6 @@
     "Dismiss": "Приховати",
     "Forget Saved Mapping": "Забути збережене зіставлення",
     "Saved mapping loaded": "Збережене зіставлення завантажено",
-    "Saved mapping forgotten": "Збережене зіставлення забуто"
+    "Saved mapping forgotten": "Збережене зіставлення забуто",
+    "Show shared expense transactions only": "Показувати лише операції зі спільними витратами"
 }

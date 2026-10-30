@@ -336,6 +336,54 @@ func (s *TransactionSplitService) GetTransactionSplitIndex(c core.Context, uid i
 	return result, nil
 }
 
+// GetTransactionSplitSummaries returns the split summary of the given transactions,
+// keyed by transaction id. It is used to attach shared expense state to a list of
+// transactions without a second request.
+func (s *TransactionSplitService) GetTransactionSplitSummaries(c core.Context, uid int64, transactionIds []int64) (map[int64]*models.TransactionSplitIndexItem, error) {
+	summaries := make(map[int64]*models.TransactionSplitIndexItem, len(transactionIds))
+
+	if len(transactionIds) == 0 {
+		return summaries, nil
+	}
+
+	session := s.UserDataDB(uid).NewSession(c)
+	defer session.Close()
+
+	var splits []*models.TransactionSplit
+
+	placeholders := make([]string, 0, len(transactionIds))
+	conditionParams := make([]any, 0, len(transactionIds)+1)
+	conditionParams = append(conditionParams, uid)
+
+	for _, transactionId := range transactionIds {
+		placeholders = append(placeholders, "?")
+		conditionParams = append(conditionParams, transactionId)
+	}
+
+	condition := "uid=? AND transaction_id IN (" + strings.Join(placeholders, ",") + ")"
+
+	if err := session.Where(condition, conditionParams...).Find(&splits); err != nil {
+		return nil, err
+	}
+
+	for _, split := range splits {
+		item, exists := summaries[split.TransactionId]
+
+		if !exists {
+			item = &models.TransactionSplitIndexItem{
+				TransactionId: split.TransactionId,
+				Currency:      split.Currency,
+			}
+			summaries[split.TransactionId] = item
+		}
+
+		item.Total += split.Amount
+		item.PersonCount++
+	}
+
+	return summaries, nil
+}
+
 // GetSharedExpensesByPerson returns the individual shared expenses owed by one person,
 // newest first and excluding deleted transactions.
 func (s *TransactionSplitService) GetSharedExpensesByPerson(c core.Context, uid int64, personName string) ([]*models.SharedExpenseEntryResponse, error) {

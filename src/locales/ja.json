@@ -2668,5 +2668,6 @@
     "Dismiss": "非表示",
     "Forget Saved Mapping": "保存されたマッピングを削除",
     "Saved mapping loaded": "保存されたマッピングを読み込みました",
-    "Saved mapping forgotten": "保存されたマッピングを削除しました"
+    "Saved mapping forgotten": "保存されたマッピングを削除しました",
+    "Show shared expense transactions only": "共有した支出の取引のみを表示"
 }

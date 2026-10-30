@@ -71,6 +71,7 @@ export interface TransactionListPartialFilter {
     tagFilter?: string;
     amountFilter?: string;
     keyword?: string;
+    sharedFilter?: string;
 }
 
 export interface TransactionListFilter extends TransactionListPartialFilter {
@@ -83,6 +84,7 @@ export interface TransactionListFilter extends TransactionListPartialFilter {
     tagFilter: string;
     amountFilter: string;
     keyword: string;
+    sharedFilter: string;
 }
 
 export interface TransactionTotalAmount {
@@ -123,7 +125,8 @@ export const useTransactionsStore = defineStore('transactions', () => {
         accountIds: '',
         tagFilter: '',
         amountFilter: '',
-        keyword: ''
+        keyword: '',
+        sharedFilter: ''
     });
 
     const transactions = ref<TransactionMonthList[]>([]);
@@ -621,6 +624,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
         transactionsFilter.value.tagFilter = '';
         transactionsFilter.value.amountFilter = '';
         transactionsFilter.value.keyword = '';
+        transactionsFilter.value.sharedFilter = '';
         transactions.value = [];
         transactionsNextTimeId.value = 0;
         transactionListStateInvalid.value = true;
@@ -687,6 +691,12 @@ export const useTransactionsStore = defineStore('transactions', () => {
         } else {
             transactionsFilter.value.keyword = '';
         }
+
+        if (filter && isString(filter.sharedFilter)) {
+            transactionsFilter.value.sharedFilter = filter.sharedFilter;
+        } else {
+            transactionsFilter.value.sharedFilter = '';
+        }
     }
 
     function updateTransactionListFilter(filter: TransactionListPartialFilter): boolean {
@@ -742,6 +752,11 @@ export const useTransactionsStore = defineStore('transactions', () => {
             changed = true;
         }
 
+        if (filter && isString(filter.sharedFilter) && transactionsFilter.value.sharedFilter !== filter.sharedFilter) {
+            transactionsFilter.value.sharedFilter = filter.sharedFilter;
+            changed = true;
+        }
+
         return changed;
     }
 
@@ -781,6 +796,10 @@ export const useTransactionsStore = defineStore('transactions', () => {
             querys.push('keyword=' + encodeURIComponent(transactionsFilter.value.keyword));
         }
 
+        if (transactionsFilter.value.sharedFilter) {
+            querys.push('sharedFilter=' + encodeURIComponent(transactionsFilter.value.sharedFilter));
+        }
+
         return querys.join('&');
     }
 
@@ -818,7 +837,8 @@ export const useTransactionsStore = defineStore('transactions', () => {
                 accountIds: transactionsFilter.value.accountIds,
                 tagFilter: transactionsFilter.value.tagFilter,
                 amountFilter: transactionsFilter.value.amountFilter,
-                keyword: transactionsFilter.value.keyword
+                keyword: transactionsFilter.value.keyword,
+                sharedFilter: transactionsFilter.value.sharedFilter
             }).then(response => {
                 const data = response.data;
 

@@ -130,6 +130,14 @@
                                                               @keyup.enter="changeKeywordFilter(searchKeyword)"
                                                 />
                                             </div>
+                                            <v-btn class="transaction-shared-filter ms-2" density="compact"
+                                                   :variant="query.sharedFilter ? 'flat' : 'outlined'"
+                                                   :color="query.sharedFilter ? 'primary' : 'default'"
+                                                   :disabled="loading"
+                                                   @click="changeSharedFilter()">
+                                                <v-icon :icon="mdiAccountMultiple" size="20"/>
+                                                <v-tooltip activator="parent">{{ tt('Show shared expense transactions only') }}</v-tooltip>
+                                            </v-btn>
                                         </div>
                                     </template>
 
@@ -740,7 +748,6 @@ import {
 } from '@/lib/category.ts';
 import { isDataExportingEnabled, isDataImportingEnabled, isTransactionFromAIImageRecognitionEnabled } from '@/lib/server_settings.ts';
 import { scrollToSelectedItem, startDownloadFile } from '@/lib/ui/common.ts';
-import services from '@/lib/services.ts';
 import logger from '@/lib/logger.ts';
 
 import {
@@ -773,7 +780,8 @@ interface TransactionListProps {
     initAccountIds?: string,
     initTagFilter?: string,
     initAmountFilter?: string,
-    initKeyword?: string
+    initKeyword?: string,
+    initSharedFilter?: string
 }
 
 const props = defineProps<TransactionListProps>();
@@ -885,7 +893,6 @@ const currentAmountFilterType = ref<string>('');
 const currentAmountFilterValue1 = ref<number>(0);
 const currentAmountFilterValue2 = ref<number>(0);
 const currentPageTransactions = ref<Transaction[]>([]);
-const transactionSplitIndex = ref<Record<string, TransactionSplitIndexItem>>({});
 const categoryMenuState = ref<boolean>(false);
 const amountMenuState = ref<boolean>(false);
 const exportingData = ref<boolean>(false);
@@ -1146,7 +1153,8 @@ function init(initProps: TransactionListProps): void {
         accountIds: initProps.initAccountIds,
         tagFilter: initProps.initTagFilter,
         amountFilter: initProps.initAmountFilter || '',
-        keyword: initProps.initKeyword || ''
+        keyword: initProps.initKeyword || '',
+        sharedFilter: initProps.initSharedFilter || ''
     });
 
     if (initProps.initPageType) {
@@ -1189,7 +1197,7 @@ function init(initProps: TransactionListProps): void {
 }
 
 function splitInfoOf(transaction: Transaction): TransactionSplitIndexItem | undefined {
-    return transactionSplitIndex.value[transaction.id];
+    return transaction.split;
 }
 
 function formatSplitTotal(split: TransactionSplitIndexItem | undefined): string {
@@ -1198,24 +1206,6 @@ function formatSplitTotal(split: TransactionSplitIndexItem | undefined): string 
     }
 
     return formatAmountToLocalizedNumeralsWithCurrency(split.total, split.currency);
-}
-
-function loadTransactionSplitIndex(): void {
-    services.getTransactionSplitIndex({
-        minTime: query.value.minTime * 1000,
-        maxTime: query.value.maxTime * 1000
-    }).then(response => {
-        const index: Record<string, TransactionSplitIndexItem> = {};
-
-        for (const item of response.data.result ?? []) {
-            index[item.transactionId] = item;
-        }
-
-        transactionSplitIndex.value = index;
-    }).catch(error => {
-        logger.error('failed to load transaction split index', error);
-        transactionSplitIndex.value = {};
-    });
 }
 
 function openSplitDialog(transaction: Transaction): void {
@@ -1271,8 +1261,6 @@ function reload(force: boolean, init: boolean): void {
         if (page <= 1) {
             totalCount.value = data && data.totalCount ? data.totalCount : 1;
         }
-
-        loadTransactionSplitIndex();
 
         if (force) {
             snackbar.value?.showMessage('Data has been updated');
@@ -1556,6 +1544,20 @@ function changeKeywordFilter(keyword: string): void {
     updateUrlWhenChanged(changed);
 }
 
+function changeSharedFilter(): void {
+    const sharedFilter = query.value.sharedFilter ? '' : 'shared';
+
+    if (query.value.sharedFilter === sharedFilter) {
+        return;
+    }
+
+    const changed = transactionsStore.updateTransactionListFilter({
+        sharedFilter: sharedFilter
+    });
+
+    updateUrlWhenChanged(changed);
+}
+
 function changeAmountFilter(filterType: string): void {
     currentAmountFilterType.value = '';
     amountMenuState.value = false;
@@ -1791,7 +1793,8 @@ onBeforeRouteUpdate((to) => {
             initAccountIds: (to.query['accountIds'] as string | null) || undefined,
             initTagFilter: (to.query['tagFilter'] as string | null) || undefined,
             initAmountFilter: (to.query['amountFilter'] as string | null) || undefined,
-            initKeyword: (to.query['keyword'] as string | null) || undefined
+            initKeyword: (to.query['keyword'] as string | null) || undefined,
+            initSharedFilter: (to.query['sharedFilter'] as string | null) || undefined
         });
     } else {
         init({});

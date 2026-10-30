@@ -497,7 +497,11 @@ GET /api/v1/transactions/count.json
 GET /api/v1/transactions/list.json
 ```
 
-Query parameters: `page`, `count` (1–50), `account_ids`, `category_ids`, `tag_filter`, `amount_filter`, `type`, `keyword`, `max_time`, `min_time`, `with_count`, `with_pictures`, `trim_account`, `trim_category`, `trim_tag`.
+Query parameters: `page`, `count` (1–50), `account_ids`, `category_ids`, `tag_filter`, `amount_filter`, `type`, `keyword`, `max_time`, `min_time`, `with_count`, `with_pictures`, `trim_account`, `trim_category`, `trim_tag`, `shared_filter`.
+
+`shared_filter` accepts `shared` (only transactions that are split with other people) or `unshared` (only transactions without a split); omit it for no filtering. The filter is applied inside the query, so paging stays exact.
+
+Each item carries a `split` object when the transaction is split with other people: `transactionId`, `total` (sum of the shares), `currency`, and `personCount`.
 
 ### List by Month
 
@@ -1186,7 +1190,7 @@ Requires `enable_mcp = true` and a valid MCP token in the `Authorization` header
 | `tools/call` | Execute a tool |
 | `ping` | Health check |
 
-The `query_transactions` tool defaults to 100 records per page and caps `count` at 1000.
+The `query_transactions` tool defaults to 100 records per page and caps `count` at 1000. Pass `shared_filter=shared` or `shared_filter=unshared` to restrict the results to (or exclude) transactions that are split with other people.
 
 ### Authentication
 

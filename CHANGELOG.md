@@ -44,6 +44,13 @@ details.
 - The import column mapping is remembered per file layout, so importing the same
   export twice no longer means repeating the mapping, with a menu action to
   forget it.
+- The transaction list reports the shared expense state of each row in the same
+  response, so marking split transactions no longer costs a second request per
+  page.
+- A shared expense filter on the transaction list (`shared_filter=shared` or
+  `unshared` on `GET /api/v1/transactions/list.json`) with a toggle next to the
+  search box. The filter runs inside the query, so paging and the total count
+  stay exact.
 - An AI assistant API (`POST /api/v1/ai/ask.json`) that answers questions about
   the user's finances with a language model the user configures in
   `[llm_ai_assistant]`. It is disabled by default, and only an aggregated,

@@ -129,3 +129,29 @@ func manySplitItems(count int) []models.TransactionSplitRequestItem {
 
 	return items
 }
+
+func TestBuildSharedTransactionSubCondition(t *testing.T) {
+	service := &TransactionService{}
+
+	t.Run("shared keeps split transactions only", func(t *testing.T) {
+		condition, params := service.buildSharedTransactionSubCondition(7, models.TRANSACTION_SHARED_FILTER_SHARED)
+
+		assert.Contains(t, condition, "IN (SELECT transaction_id FROM transaction_split")
+		assert.NotContains(t, condition, "NOT IN")
+		assert.Equal(t, []any{int64(7)}, params)
+	})
+
+	t.Run("unshared excludes split transactions", func(t *testing.T) {
+		condition, params := service.buildSharedTransactionSubCondition(7, models.TRANSACTION_SHARED_FILTER_UNSHARED)
+
+		assert.Contains(t, condition, "NOT IN (SELECT transaction_id FROM transaction_split")
+		assert.Equal(t, []any{int64(7)}, params)
+	})
+
+	t.Run("no filter adds no condition", func(t *testing.T) {
+		condition, params := service.buildSharedTransactionSubCondition(7, "")
+
+		assert.Empty(t, condition)
+		assert.Empty(t, params)
+	})
+}

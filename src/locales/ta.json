@@ -2668,5 +2668,6 @@
     "Dismiss": "நிராகரி",
     "Forget Saved Mapping": "சேமித்த மேப்பிங்கை மறந்துவிடு",
     "Saved mapping loaded": "சேமித்த மேப்பிங் ஏற்றப்பட்டது",
-    "Saved mapping forgotten": "சேமித்த மேப்பிங் மறக்கப்பட்டது"
+    "Saved mapping forgotten": "சேமித்த மேப்பிங் மறக்கப்பட்டது",
+    "Show shared expense transactions only": "பங்கிடப்பட்ட செலவு பரிவர்த்தனைகளை மட்டும் காட்டு"
 }

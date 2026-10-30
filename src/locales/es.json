@@ -2668,5 +2668,6 @@
     "Dismiss": "Descartar",
     "Forget Saved Mapping": "Olvidar la asignación guardada",
     "Saved mapping loaded": "Asignación guardada cargada",
-    "Saved mapping forgotten": "Asignación guardada olvidada"
+    "Saved mapping forgotten": "Asignación guardada olvidada",
+    "Show shared expense transactions only": "Mostrar solo transacciones de gastos compartidos"
 }

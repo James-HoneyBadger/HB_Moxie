@@ -2668,5 +2668,6 @@
     "Dismiss": "Скрыть",
     "Forget Saved Mapping": "Забыть сохранённое сопоставление",
     "Saved mapping loaded": "Сохранённое сопоставление загружено",
-    "Saved mapping forgotten": "Сохранённое сопоставление удалено"
+    "Saved mapping forgotten": "Сохранённое сопоставление удалено",
+    "Show shared expense transactions only": "Показывать только операции с общими расходами"
 }

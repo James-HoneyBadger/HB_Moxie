@@ -2668,5 +2668,6 @@
     "Dismiss": "Negeren",
     "Forget Saved Mapping": "Opgeslagen toewijzing vergeten",
     "Saved mapping loaded": "Opgeslagen toewijzing geladen",
-    "Saved mapping forgotten": "Opgeslagen toewijzing vergeten"
+    "Saved mapping forgotten": "Opgeslagen toewijzing vergeten",
+    "Show shared expense transactions only": "Alleen gedeelde uitgaventransacties tonen"
 }

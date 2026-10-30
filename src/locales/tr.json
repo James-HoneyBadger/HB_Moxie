@@ -2668,5 +2668,6 @@
     "Dismiss": "Yoksay",
     "Forget Saved Mapping": "Kayıtlı eşlemeyi unut",
     "Saved mapping loaded": "Kayıtlı eşleme yüklendi",
-    "Saved mapping forgotten": "Kayıtlı eşleme unutuldu"
+    "Saved mapping forgotten": "Kayıtlı eşleme unutuldu",
+    "Show shared expense transactions only": "Yalnızca paylaşılan gider işlemlerini göster"
 }

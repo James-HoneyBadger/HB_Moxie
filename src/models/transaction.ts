@@ -7,9 +7,11 @@ import { Account, type AccountInfoResponse } from './account.ts';
 import { TransactionCategory, type TransactionCategoryInfoResponse } from './transaction_category.ts';
 import { TransactionTag, type TransactionTagInfoResponse } from './transaction_tag.ts';
 import { TransactionPicture, type TransactionPictureInfoBasicResponse } from './transaction_picture_info.ts';
+import type { TransactionSplitIndexItem } from './transaction_split.ts';
 
 export class Transaction implements TransactionInfoResponse {
     public id: string;
+    public split?: TransactionSplitIndexItem;
     public timeSequenceId: string;
     public type: number;
     public expenseCategoryId: string = '';
@@ -329,6 +331,10 @@ export class Transaction implements TransactionInfoResponse {
             transactionResponse.editable
         );
 
+        if (transactionResponse.split) {
+            transaction.split = transactionResponse.split;
+        }
+
         if (transactionResponse.category) {
             transaction.setCategory(TransactionCategory.of(transactionResponse.category));
         }
@@ -584,6 +590,7 @@ export interface TransactionListByMaxTimeRequest {
     readonly tagFilter: string;
     readonly amountFilter: string;
     readonly keyword: string;
+    readonly sharedFilter?: string;
 }
 
 export interface TransactionListInMonthByPageRequest {
@@ -613,6 +620,8 @@ export type TransactionGeoLocationResponse = Coordinate;
 
 export interface TransactionInfoResponse {
     readonly id: string;
+    /** Shared expense summary, present on list responses. */
+    readonly split?: TransactionSplitIndexItem;
     readonly timeSequenceId: string;
     readonly type: number;
     readonly categoryId: string;

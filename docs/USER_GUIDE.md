@@ -399,6 +399,14 @@ The dialog shows the transaction amount and how much is still unallocated, so a
 split can never add up to more than the transaction cost. Only expense
 transactions can be split, and each person may appear once per transaction.
 
+Splitting is also available from the transaction list: rows that are already
+split show a chip with the amount other people owe, and other expense rows show
+a split button next to the description. Both open the same editor.
+
+To see only the transactions you share, click the people icon next to the
+transaction list search box. Click it again to show every transaction; the
+choice is kept in the page address, so a filtered list can be bookmarked.
+
 ### Tracking What Is Owed
 
 The summary lists every person with the total they owe, grouped by currency, and

@@ -2668,5 +2668,6 @@
     "Dismiss": "무시",
     "Forget Saved Mapping": "저장된 매핑 지우기",
     "Saved mapping loaded": "저장된 매핑을 불러왔습니다",
-    "Saved mapping forgotten": "저장된 매핑을 지웠습니다"
+    "Saved mapping forgotten": "저장된 매핑을 지웠습니다",
+    "Show shared expense transactions only": "공유 지출 거래만 표시"
 }

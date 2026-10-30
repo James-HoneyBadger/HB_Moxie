@@ -2668,5 +2668,6 @@
     "Dismiss": "略過",
     "Forget Saved Mapping": "忘記已儲存的對應",
     "Saved mapping loaded": "已載入儲存的對應",
-    "Saved mapping forgotten": "已忘記儲存的對應"
+    "Saved mapping forgotten": "已忘記儲存的對應",
+    "Show shared expense transactions only": "僅顯示共用支出交易"
 }

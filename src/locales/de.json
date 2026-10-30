@@ -2668,5 +2668,6 @@
     "Dismiss": "Verwerfen",
     "Forget Saved Mapping": "Gespeicherte Zuordnung verwerfen",
     "Saved mapping loaded": "Gespeicherte Zuordnung geladen",
-    "Saved mapping forgotten": "Gespeicherte Zuordnung verworfen"
+    "Saved mapping forgotten": "Gespeicherte Zuordnung verworfen",
+    "Show shared expense transactions only": "Nur geteilte Ausgaben anzeigen"
 }

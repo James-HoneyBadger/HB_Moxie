@@ -2668,5 +2668,6 @@
     "Dismiss": "Ignorer",
     "Forget Saved Mapping": "Oublier la correspondance enregistrée",
     "Saved mapping loaded": "Correspondance enregistrée chargée",
-    "Saved mapping forgotten": "Correspondance enregistrée oubliée"
+    "Saved mapping forgotten": "Correspondance enregistrée oubliée",
+    "Show shared expense transactions only": "Afficher uniquement les dépenses partagées"
 }

@@ -2668,5 +2668,6 @@
     "Dismiss": "ข้าม",
     "Forget Saved Mapping": "ลืมการจับคู่ที่บันทึกไว้",
     "Saved mapping loaded": "โหลดการจับคู่ที่บันทึกไว้แล้ว",
-    "Saved mapping forgotten": "ลืมการจับคู่ที่บันทึกไว้แล้ว"
+    "Saved mapping forgotten": "ลืมการจับคู่ที่บันทึกไว้แล้ว",
+    "Show shared expense transactions only": "แสดงเฉพาะรายการธุรกรรมค่าใช้จ่ายที่แบ่งปัน"
 }

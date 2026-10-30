@@ -237,6 +237,9 @@ type TransactionListByMaxTimeRequest struct {
 	TrimAccount  bool            `form:"trim_account"`
 	TrimCategory bool            `form:"trim_category"`
 	TrimTag      bool            `form:"trim_tag"`
+	// SharedFilter limits the result to transactions that are split with other
+	// people ("shared") or that are not ("unshared"). Empty means no filter.
+	SharedFilter string `form:"shared_filter" binding:"omitempty,oneof=shared unshared"`
 }
 
 // TransactionListInMonthByPageRequest represents all parameters of transaction listing by month request
@@ -370,6 +373,8 @@ type TransactionInfoResponse struct {
 	Comment              string                                   `json:"comment"`
 	GeoLocation          *TransactionGeoLocationResponse          `json:"geoLocation,omitempty"`
 	Editable             bool                                     `json:"editable"`
+	// Split summarises the shared expense state, present on list responses only.
+	Split *TransactionSplitIndexItem `json:"split,omitempty"`
 }
 
 // TransactionCountResponse represents transaction count response

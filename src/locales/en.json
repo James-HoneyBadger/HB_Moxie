@@ -2668,5 +2668,6 @@
     "Dismiss": "Dismiss",
     "Forget Saved Mapping": "Forget Saved Mapping",
     "Saved mapping loaded": "Saved mapping loaded",
-    "Saved mapping forgotten": "Saved mapping forgotten"
+    "Saved mapping forgotten": "Saved mapping forgotten",
+    "Show shared expense transactions only": "Show shared expense transactions only"
 }
