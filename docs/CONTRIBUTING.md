@@ -197,18 +197,33 @@ Before merging, all of the following must pass:
 
 Translation contributions are highly valued.
 
-### Adding a New Language
-
-1. Create a new locale file: `src/locales/<language_code>.json`.
-2. Copy the structure from `en.json` and translate all values.
-3. Register the new locale in the locale configuration.
-4. Add the language to `contributors.json` under the `translators` section.
-
 ### Updating Existing Translations
 
 1. Edit the appropriate file in `src/locales/`.
 2. Keep key names identical to the English version.
 3. Make sure translations fit the UI context (length, formality, etc.).
+
+Every locale must define exactly the same keys as `src/locales/en.json`, which
+is the canonical list. Some keys are looked up dynamically — `t('calendar.' +
+name)` and ``t(`language.${name}`)`` — so a key missing from `en.json` renders
+as a raw identifier in English, and one missing from a translation falls back
+to English. Run the check before pushing:
+
+```bash
+node scripts/check-locales.mjs
+```
+
+It fails on missing keys, keys that `en.json` does not define, and empty
+values, then reports how many strings in each locale are still identical to
+English — a rough untranslated count (English words that are correct in a
+translation, such as product names, count against it too).
+
+### Adding a New Language
+
+1. Create a new locale file: `src/locales/<language_code>.json` with the same
+   key set as `en.json`, and translate all values.
+2. Register the new locale in the locale configuration.
+3. Add the language to `contributors.json` under the `translators` section.
 
 ### Current Languages
 

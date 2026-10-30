@@ -157,7 +157,9 @@
         "Buddhist": "佛曆",
         "Persian": "伊朗曆",
         "Gregorian with Chinese Calendar": "公曆+農曆",
-        "Gregorian with Persian Calendar": "公曆+伊朗曆"
+        "Gregorian with Persian Calendar": "公曆+伊朗曆",
+        "Hebrew": "希伯來曆",
+        "Gregorian with Hebrew Calendar": "公曆+希伯來曆"
     },
     "datetime": {
         "AM": {
@@ -1086,6 +1088,9 @@
         "login name or password is invalid": "登入名稱或密碼無效",
         "login name or password is wrong": "登入名稱或密碼錯誤",
         "user is disabled": "使用者已停用",
+        "auto-login requires exactly one user": "auto-login requires exactly one user",
+        "auto-login is not available when two-factor authentication is enabled": "auto-login is not available when two-factor authentication is enabled",
+        "backup is only supported for SQLite databases": "backup is only supported for SQLite databases",
         "email is invalid": "電子郵件無效",
         "email is empty or invalid": "電子郵件為空或無效",
         "new password equals old password": "新密碼與舊密碼相同",

@@ -157,7 +157,9 @@
         "Buddhist": "Budistični",
         "Persian": "Perzijski",
         "Gregorian with Chinese Calendar": "Gregorijanski s kitajskim koledarjem",
-        "Gregorian with Persian Calendar": "Gregorijanski s perzijskim koledarjem"
+        "Gregorian with Persian Calendar": "Gregorijanski s perzijskim koledarjem",
+        "Hebrew": "Hebrew",
+        "Gregorian with Hebrew Calendar": "Gregorian with Hebrew Calendar"
     },
     "datetime": {
         "AM": {
@@ -1086,6 +1088,9 @@
         "login name or password is invalid": "Prijavno ime ali geslo ni veljavno",
         "login name or password is wrong": "Prijavno ime ali geslo je napačno",
         "user is disabled": "Uporabnik je onemogočen",
+        "auto-login requires exactly one user": "auto-login requires exactly one user",
+        "auto-login is not available when two-factor authentication is enabled": "auto-login is not available when two-factor authentication is enabled",
+        "backup is only supported for SQLite databases": "backup is only supported for SQLite databases",
         "email is invalid": "E-poštni naslov ni veljaven",
         "email is empty or invalid": "E-poštni naslov je prazen ali neveljaven",
         "new password equals old password": "Novo geslo je enako staremu geslu",

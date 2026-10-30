@@ -157,7 +157,9 @@
         "Buddhist": "불기",
         "Persian": "페르시아력",
         "Gregorian with Chinese Calendar": "그레고리력 (중국력)",
-        "Gregorian with Persian Calendar": "그레고리력 (페르시아력)"
+        "Gregorian with Persian Calendar": "그레고리력 (페르시아력)",
+        "Hebrew": "Hebrew",
+        "Gregorian with Hebrew Calendar": "Gregorian with Hebrew Calendar"
     },
     "datetime": {
         "AM": {
@@ -1086,6 +1088,9 @@
         "login name or password is invalid": "로그인 이름 또는 비밀번호가 유효하지 않습니다",
         "login name or password is wrong": "로그인 이름 또는 비밀번호가 잘못되었습니다",
         "user is disabled": "사용자가 비활성화되었습니다",
+        "auto-login requires exactly one user": "auto-login requires exactly one user",
+        "auto-login is not available when two-factor authentication is enabled": "auto-login is not available when two-factor authentication is enabled",
+        "backup is only supported for SQLite databases": "backup is only supported for SQLite databases",
         "email is invalid": "이메일이 유효하지 않습니다",
         "email is empty or invalid": "이메일이 비어 있거나 유효하지 않습니다",
         "new password equals old password": "새 비밀번호가 이전 비밀번호와 같습니다",

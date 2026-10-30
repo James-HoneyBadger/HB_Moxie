@@ -157,7 +157,9 @@
         "Buddhist": "พุทธศักราช",
         "Persian": "เปอร์เซีย",
         "Gregorian with Chinese Calendar": "เกรกอเรียนร่วมกับปฏิทินจีน",
-        "Gregorian with Persian Calendar": "เกรกอเรียนร่วมกับปฏิทินเปอร์เซีย"
+        "Gregorian with Persian Calendar": "เกรกอเรียนร่วมกับปฏิทินเปอร์เซีย",
+        "Hebrew": "Hebrew",
+        "Gregorian with Hebrew Calendar": "Gregorian with Hebrew Calendar"
     },
     "datetime": {
         "AM": {
@@ -1086,6 +1088,9 @@
         "login name or password is invalid": "ชื่อเข้าสู่ระบบหรือรหัสผ่านไม่ถูกต้อง",
         "login name or password is wrong": "ชื่อเข้าสู่ระบบหรือรหัสผ่านผิด",
         "user is disabled": "ผู้ใช้ถูกปิดใช้งาน",
+        "auto-login requires exactly one user": "auto-login requires exactly one user",
+        "auto-login is not available when two-factor authentication is enabled": "auto-login is not available when two-factor authentication is enabled",
+        "backup is only supported for SQLite databases": "backup is only supported for SQLite databases",
         "email is invalid": "อีเมลไม่ถูกต้อง",
         "email is empty or invalid": "อีเมลว่างเปล่าหรือไม่ถูกต้อง",
         "new password equals old password": "รหัสผ่านใหม่เหมือนรหัสผ่านเก่า",

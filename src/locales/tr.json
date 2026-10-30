@@ -157,7 +157,9 @@
         "Buddhist": "Budist",
         "Persian": "Hicri Şemsi (İran)",
         "Gregorian with Chinese Calendar": "Çin Takvimi ile Miladi",
-        "Gregorian with Persian Calendar": "İran Takvimi ile Miladi"
+        "Gregorian with Persian Calendar": "İran Takvimi ile Miladi",
+        "Hebrew": "Hebrew",
+        "Gregorian with Hebrew Calendar": "Gregorian with Hebrew Calendar"
     },
     "datetime": {
         "AM": {
@@ -1086,6 +1088,9 @@
         "login name or password is invalid": "Giriş adı veya şifre geçersiz",
         "login name or password is wrong": "Giriş adı veya şifre yanlış",
         "user is disabled": "Kullanıcı devre dışı bırakıldı",
+        "auto-login requires exactly one user": "auto-login requires exactly one user",
+        "auto-login is not available when two-factor authentication is enabled": "auto-login is not available when two-factor authentication is enabled",
+        "backup is only supported for SQLite databases": "backup is only supported for SQLite databases",
         "email is invalid": "E-posta geçersiz",
         "email is empty or invalid": "E-posta boş veya geçersiz",
         "new password equals old password": "Yeni şifre eski şifreyle aynı",

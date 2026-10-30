@@ -122,6 +122,9 @@ jobs:
       - name: Check brand consistency
         run: node scripts/check-brand.mjs
 
+      - name: Check locale key parity
+        run: node scripts/check-locales.mjs
+
       - name: Check for telemetry and analytics endpoints
         run: ./scripts/check-no-telemetry.sh
 

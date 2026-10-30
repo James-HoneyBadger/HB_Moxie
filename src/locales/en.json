@@ -5,7 +5,25 @@
         }
     },
     "language": {
-        "English": "English"
+        "German": "German",
+        "English": "English",
+        "Spanish": "Spanish",
+        "French": "French",
+        "Italian": "Italian",
+        "Japanese": "Japanese",
+        "Kannada": "Kannada",
+        "Korean": "Korean",
+        "Dutch": "Dutch",
+        "Portuguese (Brazil)": "Portuguese (Brazil)",
+        "Russian": "Russian",
+        "Slovenian": "Slovenian",
+        "Tamil": "Tamil",
+        "Thai": "Thai",
+        "Turkish": "Turkish",
+        "Ukrainian": "Ukrainian",
+        "Vietnamese": "Vietnamese",
+        "Chinese (Simplified)": "Chinese (Simplified)",
+        "Chinese (Traditional)": "Chinese (Traditional)"
     },
     "default": {
         "currency": "USD",
@@ -137,6 +155,9 @@
     "calendar": {
         "Gregorian": "Gregorian",
         "Buddhist": "Buddhist",
+        "Persian": "Persian",
+        "Gregorian with Chinese Calendar": "Gregorian with Chinese Calendar",
+        "Gregorian with Persian Calendar": "Gregorian with Persian Calendar",
         "Hebrew": "Hebrew",
         "Gregorian with Hebrew Calendar": "Gregorian with Hebrew Calendar"
     },

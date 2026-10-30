@@ -157,7 +157,9 @@
         "Buddhist": "Buddhist",
         "Persian": "Persian",
         "Gregorian with Chinese Calendar": "Gregorian with Chinese Calendar",
-        "Gregorian with Persian Calendar": "Gregorian with Persian Calendar"
+        "Gregorian with Persian Calendar": "Gregorian with Persian Calendar",
+        "Hebrew": "Hebrew",
+        "Gregorian with Hebrew Calendar": "Gregorian with Hebrew Calendar"
     },
     "datetime": {
         "AM": {
@@ -1086,6 +1088,9 @@
         "login name or password is invalid": "Inlognaam of wachtwoord is ongeldig",
         "login name or password is wrong": "Inlognaam of wachtwoord is onjuist",
         "user is disabled": "Gebruiker is uitgeschakeld",
+        "auto-login requires exactly one user": "auto-login requires exactly one user",
+        "auto-login is not available when two-factor authentication is enabled": "auto-login is not available when two-factor authentication is enabled",
+        "backup is only supported for SQLite databases": "backup is only supported for SQLite databases",
         "email is invalid": "E-mail is ongeldig",
         "email is empty or invalid": "E-mail is leeg of ongeldig",
         "new password equals old password": "Nieuw wachtwoord is gelijk aan oud wachtwoord",

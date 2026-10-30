@@ -157,7 +157,9 @@
         "Buddhist": "ಬೌದ್ಧ",
         "Persian": "ಪರ್ಶಿಯನ್",
         "Gregorian with Chinese Calendar": "ಗ್ರೆಗೋರಿಯನ್ ಚೈನೀಸ್ ಕ್ಯಾಲೆಂಡರ್ ಜೊತೆಗೆ",
-        "Gregorian with Persian Calendar": "ಗ್ರೆಗೋರಿಯನ್ ಪರ್ಶಿಯನ್ ಕ್ಯಾಲೆಂಡರ್ ಜೊತೆಗೆ"
+        "Gregorian with Persian Calendar": "ಗ್ರೆಗೋರಿಯನ್ ಪರ್ಶಿಯನ್ ಕ್ಯಾಲೆಂಡರ್ ಜೊತೆಗೆ",
+        "Hebrew": "Hebrew",
+        "Gregorian with Hebrew Calendar": "Gregorian with Hebrew Calendar"
     },
     "datetime": {
         "AM": {
@@ -1086,6 +1088,9 @@
         "login name or password is invalid": "ಲಾಗಿನ್ ಹೆಸರು ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್ ಅಮಾನ್ಯವಾಗಿದೆ",
         "login name or password is wrong": "ಲಾಗಿನ್ ಹೆಸರು ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್ ತಪ್ಪಾಗಿದೆ",
         "user is disabled": "ಬಳಕೆದಾರ ನಿಷ್ಕ್ರಿಯಗೊಂಡಿದ್ದಾನೆ",
+        "auto-login requires exactly one user": "auto-login requires exactly one user",
+        "auto-login is not available when two-factor authentication is enabled": "auto-login is not available when two-factor authentication is enabled",
+        "backup is only supported for SQLite databases": "backup is only supported for SQLite databases",
         "email is invalid": "ಇಮೇಲ್ ಅಮಾನ್ಯವಾಗಿದೆ",
         "email is empty or invalid": "ಇಮೇಲ್ ಖಾಲಿಯಾಗಿದ್ದು ಅಥವಾ ಅಮಾನ್ಯವಾಗಿದೆ",
         "new password equals old password": "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಹಳೆಯದಿನಷ್ಟೇ ಇದೆ",

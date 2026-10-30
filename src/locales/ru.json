@@ -157,7 +157,9 @@
         "Buddhist": "Буддийский",
         "Persian": "Персидский",
         "Gregorian with Chinese Calendar": "Грегорианский с китайским календарём",
-        "Gregorian with Persian Calendar": "Грегорианский с персидским календарём"
+        "Gregorian with Persian Calendar": "Грегорианский с персидским календарём",
+        "Hebrew": "Hebrew",
+        "Gregorian with Hebrew Calendar": "Gregorian with Hebrew Calendar"
     },
     "datetime": {
         "AM": {
@@ -1086,6 +1088,9 @@
         "login name or password is invalid": "Имя для входа или пароль недействительны",
         "login name or password is wrong": "Имя для входа или пароль неверны",
         "user is disabled": "Пользователь отключен",
+        "auto-login requires exactly one user": "auto-login requires exactly one user",
+        "auto-login is not available when two-factor authentication is enabled": "auto-login is not available when two-factor authentication is enabled",
+        "backup is only supported for SQLite databases": "backup is only supported for SQLite databases",
         "email is invalid": "Электронная почта недействительна",
         "email is empty or invalid": "Электронная почта пуста или недействительна",
         "new password equals old password": "Новый пароль совпадает со старым",

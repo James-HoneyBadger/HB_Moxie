@@ -157,7 +157,9 @@
         "Buddhist": "Buddhist",
         "Persian": "Persian",
         "Gregorian with Chinese Calendar": "Gregorian with Chinese Calendar",
-        "Gregorian with Persian Calendar": "Gregorian with Persian Calendar"
+        "Gregorian with Persian Calendar": "Gregorian with Persian Calendar",
+        "Hebrew": "Hebrew",
+        "Gregorian with Hebrew Calendar": "Gregorian with Hebrew Calendar"
     },
     "datetime": {
         "AM": {
@@ -1086,6 +1088,9 @@
         "login name or password is invalid": "Nome de login ou senha é inválido",
         "login name or password is wrong": "Nome de login ou senha está errado",
         "user is disabled": "Usuário está desativado",
+        "auto-login requires exactly one user": "auto-login requires exactly one user",
+        "auto-login is not available when two-factor authentication is enabled": "auto-login is not available when two-factor authentication is enabled",
+        "backup is only supported for SQLite databases": "backup is only supported for SQLite databases",
         "email is invalid": "E-mail é inválido",
         "email is empty or invalid": "E-mail está vazio ou inválido",
         "new password equals old password": "Nova senha é igual à senha antiga",

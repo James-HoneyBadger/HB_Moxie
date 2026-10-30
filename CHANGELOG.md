@@ -40,6 +40,10 @@ details.
 
 ### Fixed
 
+- English was missing the translation keys for the Persian, Chinese, and Hebrew
+  calendar display options and for the names of every language in the language
+  picker, so those menus rendered raw identifiers. Every locale now defines the
+  same key set, enforced by `scripts/check-locales.mjs` in CI.
 - The backend shuts down gracefully on `SIGTERM`/`SIGINT`: it stops accepting
   connections, drains in-flight requests, stops the cron scheduler, and closes
   database connections instead of exiting mid-write.
