@@ -125,6 +125,14 @@ jobs:
       - build-windows-package
       - build-electron
       - verify-openapi
+    permissions:
+      contents: write
+      id-token: write # required for build provenance attestations
+      attestations: write
+    # The secrets context is not available in step-level `if` conditions, so
+    # map them to env and test those instead.
+    env:
+      MINISIGN_SECRET_KEY: ${{ secrets.MINISIGN_SECRET_KEY }}
     steps:
       - name: Download all packaged files
         uses: actions/download-artifact@v4
@@ -139,6 +147,38 @@ jobs:
           pattern: ${{ needs.setup.outputs.ratel_ledger_electron_artifact_name_prefix }}-*
           merge-multiple: true
           path: release-files
+
+      - name: Install minisign
+        if: env.MINISIGN_SECRET_KEY != ''
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends minisign
+
+      # The key must be passwordless: minisign -G -W -p minisign.pub -s minisign.key
+      - name: Sign release artifacts
+        if: env.MINISIGN_SECRET_KEY != ''
+        run: |
+          set -eu
+          umask 077
+
+          key_file="$RUNNER_TEMP/minisign.key"
+          printf '%s' "$MINISIGN_SECRET_KEY" > "$key_file"
+
+          # Publish the matching public key next to the artifacts.
+          minisign -R -W -s "$key_file" -p release-files/minisign.pub
+
+          for artifact in release-files/*; do
+            case "$artifact" in
+              *.minisig) continue ;;
+              */minisign.pub) continue ;;
+            esac
+            minisign -S -W -s "$key_file" -m "$artifact" -c "Ratel Ledger release artifact"
+          done
+
+          rm -f "$key_file"
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: release-files/*
 
       - name: Publish Release ${{ github.ref_name }}
         uses: softprops/action-gh-release@v2

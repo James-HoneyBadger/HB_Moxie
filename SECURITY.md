@@ -13,6 +13,28 @@ a new patch release; there are no long-term support branches.
 | Latest `1.4.x` release | ✅ |
 | Older releases | ❌ |
 
+## Verifying Releases
+
+Release artifacts can be checked without trusting this repository's hosting:
+
+**Build provenance.** GitHub attests that each published file was produced by
+the release workflow of this repository. Verify any artifact with:
+
+```bash
+gh attestation verify <file> --repo James-HoneyBadger/ratel-ledger
+```
+
+**Detached signature.** Artifacts are signed with
+[minisign](https://jedisct1.github.io/minisign/) when signing is configured.
+Each release publishes the `minisign.pub` public key next to the installers:
+
+```bash
+minisign -V -p minisign.pub -m <file>
+```
+
+If a release has no `.minisig` files, signing was not configured for it —
+prefer the provenance attestation, or build from source.
+
 ## Reporting a Vulnerability
 
 **Do not open a public issue, pull request, or discussion for a security

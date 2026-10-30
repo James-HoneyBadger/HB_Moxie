@@ -50,6 +50,9 @@ details.
 
 ### Security
 
+- Release artifacts now carry a SLSA build-provenance attestation, and are
+  signed with minisign when a `MINISIGN_SECRET_KEY` secret is configured. The
+  verification commands are documented in `SECURITY.md`.
 - The generated default-user password is printed to the console only and is no
   longer written to the log file.
 - Updated `golang.org/x/net`, `golang.org/x/crypto`, `xuri/excelize/v2`,
