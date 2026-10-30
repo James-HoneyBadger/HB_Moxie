@@ -4,8 +4,8 @@ go 1.25.0
 
 require (
 	fyne.io/fyne/v2 v2.8.2
-	github.com/mattn/go-sqlite3 v1.14.28
-	gopkg.in/ini.v1 v1.67.0
+	github.com/mattn/go-sqlite3 v1.14.52
+	gopkg.in/ini.v1 v1.67.3
 )
 
 require (
