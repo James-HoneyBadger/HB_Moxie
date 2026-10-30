@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
 name: Build packages for Linux
 description: Builds and packages the Linux desktop application
 
