@@ -2575,5 +2575,21 @@
     "An error occurred": "Bir hata oluştu",
     "Parameter Invalid": "Parametre Geçersiz",
     "Numeric Overflow": "Sayısal Taşma",
-    "Click to close": "Kapatmak için tıklayın"
+    "Click to close": "Kapatmak için tıklayın",
+    "Shared Expenses": "Paylaşılan Giderler",
+    "Split an Expense": "Bir Gideri Paylaştır",
+    "Total Owed": "Toplam Borç",
+    "No shared expenses recorded yet": "Henüz kayıtlı paylaşılan gider yok",
+    "People": "Kişiler",
+    "Amount Owed": "Borçlu Tutar",
+    "Entries": "Kayıt",
+    "Last Expense": "Son Gider",
+    "Transaction Amount": "İşlem Tutarı",
+    "Edit Split": "Bölüşümü Düzenle",
+    "Unallocated": "Dağıtılmamış",
+    "Person Name": "Kişi Adı",
+    "Add Person": "Kişi Ekle",
+    "Failed to save data": "Veriler kaydedilemedi",
+    "Track how much other people owe you by splitting expense transactions with them.": "Giderleri diğer kişilerle paylaşarak size ne kadar borçlu olduklarını takip edin.",
+    "Select an expense transaction": "Bir gider işlemi seçin"
 }

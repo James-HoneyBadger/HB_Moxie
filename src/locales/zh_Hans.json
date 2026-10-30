@@ -2575,5 +2575,21 @@
     "An error occurred": "发生错误",
     "Parameter Invalid": "参数错误",
     "Numeric Overflow": "数值溢出",
-    "Click to close": "点击关闭"
+    "Click to close": "点击关闭",
+    "Shared Expenses": "分摊支出",
+    "Split an Expense": "分摊一笔支出",
+    "Total Owed": "应收总额",
+    "No shared expenses recorded yet": "暂无分摊支出记录",
+    "People": "成员",
+    "Amount Owed": "应收金额",
+    "Entries": "笔数",
+    "Last Expense": "最近支出",
+    "Transaction Amount": "交易金额",
+    "Edit Split": "编辑分摊",
+    "Unallocated": "未分配",
+    "Person Name": "姓名",
+    "Add Person": "添加成员",
+    "Failed to save data": "保存数据失败",
+    "Track how much other people owe you by splitting expense transactions with them.": "通过与他人分摊支出，记录他们应付给你的金额。",
+    "Select an expense transaction": "选择一笔支出交易"
 }

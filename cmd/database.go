@@ -192,6 +192,14 @@ func updateAllDatabaseTablesStructure(c *core.CliContext) error {
 
 	log.BootInfof(c, "[database.updateAllDatabaseTablesStructure] insights explorer table maintained successfully")
 
+	err = datastore.Container.UserDataStore.SyncStructs(new(models.TransactionSplit))
+
+	if err != nil {
+		return err
+	}
+
+	log.BootInfof(c, "[database.updateAllDatabaseTablesStructure] transaction split table maintained successfully")
+
 	appliedMigrations, err := datastore.Container.RunMigrations(c)
 
 	if err != nil {

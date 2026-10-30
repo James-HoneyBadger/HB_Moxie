@@ -2575,5 +2575,21 @@
     "An error occurred": "ದೋಷ ಸಂಭವಿಸಿದೆ",
     "Parameter Invalid": "ಅಮಾನ್ಯವಾದ ಪ್ಯಾರಾಮೀಟರ್",
     "Numeric Overflow": "ಸಂಖ್ಯಾ ಓವರ್‌ಫ್ಲೋ",
-    "Click to close": "ಮುಚ್ಚಲು ಕ್ಲಿಕ್ ಮಾಡಿ"
+    "Click to close": "ಮುಚ್ಚಲು ಕ್ಲಿಕ್ ಮಾಡಿ",
+    "Shared Expenses": "ಹಂಚಿದ ಖರ್ಚುಗಳು",
+    "Split an Expense": "ಒಂದು ಖರ್ಚನ್ನು ಹಂಚಿ",
+    "Total Owed": "ಒಟ್ಟು ಬಾಕಿ",
+    "No shared expenses recorded yet": "ಇನ್ನೂ ಯಾವುದೇ ಹಂಚಿದ ಖರ್ಚು ದಾಖಲಾಗಿಲ್ಲ",
+    "People": "ವ್ಯಕ್ತಿಗಳು",
+    "Amount Owed": "ಬಾಕಿ ಮೊತ್ತ",
+    "Entries": "ನಮೂದುಗಳು",
+    "Last Expense": "ಕೊನೆಯ ಖರ್ಚು",
+    "Transaction Amount": "ವಹಿವಾಟಿನ ಮೊತ್ತ",
+    "Edit Split": "ಹಂಚಿಕೆ ಸಂಪಾದಿಸಿ",
+    "Unallocated": "ಹಂಚಿಕೆಯಾಗದ",
+    "Person Name": "ವ್ಯಕ್ತಿಯ ಹೆಸರು",
+    "Add Person": "ವ್ಯಕ್ತಿ ಸೇರಿಸಿ",
+    "Failed to save data": "ಡೇಟಾ ಉಳಿಸಲು ವಿಫಲವಾಗಿದೆ",
+    "Track how much other people owe you by splitting expense transactions with them.": "ಖರ್ಚುಗಳನ್ನು ಇತರರೊಂದಿಗೆ ಹಂಚಿ ಅವರು ನಿಮಗೆ ಎಷ್ಟು ಬಾಕಿ ಇದ್ದಾರೆ ಎಂಬುದನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ.",
+    "Select an expense transaction": "ಒಂದು ಖರ್ಚಿನ ವಹಿವಾಟನ್ನು ಆಯ್ಕೆಮಾಡಿ"
 }

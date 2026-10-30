@@ -47,6 +47,11 @@ type apiSchemaTypes struct {
 	TransactionStatisticAssetTrendsResponseItem models.TransactionStatisticAssetTrendsResponseItem
 	TransactionAmountsRequest                   models.TransactionAmountsRequest
 	TransactionAmountsResponseItem              models.TransactionAmountsResponseItem
+
+	TransactionSplitUpdateRequest models.TransactionSplitUpdateRequest
+	TransactionSplitsResponse     models.TransactionSplitsResponse
+	SharedExpenseSummaryItem      models.SharedExpenseSummaryItem
+	SharedExpenseEntryResponse    models.SharedExpenseEntryResponse
 }
 
 func main() {
@@ -168,6 +173,39 @@ func generatedPaths() map[string]any {
 		"/api/v1/tokens/generate/mcp.json": map[string]any{
 			"post": jsonOperation("generateMcpToken", "Generate an MCP token", "TokenGenerateMCPRequest", "TokenGenerateMCPResponse"),
 		},
+		"/api/v1/transactions/splits/list.json": map[string]any{
+			"get": withParameters(
+				responseOperation("listTransactionSplits", "List the shares of a transaction owed by other people", referenceSchema("TransactionSplitsResponse")),
+				queryParameter("transactionId", "Id of the transaction"),
+			),
+		},
+		"/api/v1/transactions/splits/update.json": map[string]any{
+			"post": jsonOperation("updateTransactionSplits", "Replace the shares of an expense transaction", "TransactionSplitUpdateRequest", "TransactionSplitsResponse"),
+		},
+		"/api/v1/transactions/splits/summary.json": map[string]any{
+			"get": responseOperation("getSharedExpenseSummary", "Summarize what each person owes the user, grouped by currency", arraySchema("SharedExpenseSummaryItem")),
+		},
+		"/api/v1/transactions/splits/person.json": map[string]any{
+			"get": withParameters(
+				responseOperation("getSharedExpensesByPerson", "List the shared expenses owed by one person", arraySchema("SharedExpenseEntryResponse")),
+				queryParameter("personName", "Name of the person"),
+			),
+		},
+	}
+}
+
+func withParameters(operation map[string]any, parameters ...map[string]any) map[string]any {
+	operation["parameters"] = parameters
+	return operation
+}
+
+func queryParameter(name string, description string) map[string]any {
+	return map[string]any{
+		"name":        name,
+		"in":          "query",
+		"required":    true,
+		"description": description,
+		"schema":      map[string]any{"type": "string"},
 	}
 }
 

@@ -2575,5 +2575,21 @@
     "An error occurred": "Si è verificato un errore",
     "Parameter Invalid": "Parametro non valido",
     "Numeric Overflow": "Overflow numerico",
-    "Click to close": "Clicca per chiudere"
+    "Click to close": "Clicca per chiudere",
+    "Shared Expenses": "Spese condivise",
+    "Split an Expense": "Dividi una spesa",
+    "Total Owed": "Totale dovuto",
+    "No shared expenses recorded yet": "Nessuna spesa condivisa registrata",
+    "People": "Persone",
+    "Amount Owed": "Importo dovuto",
+    "Entries": "Voci",
+    "Last Expense": "Ultima spesa",
+    "Transaction Amount": "Importo della transazione",
+    "Edit Split": "Modifica divisione",
+    "Unallocated": "Non assegnato",
+    "Person Name": "Nome della persona",
+    "Add Person": "Aggiungi persona",
+    "Failed to save data": "Impossibile salvare i dati",
+    "Track how much other people owe you by splitting expense transactions with them.": "Tieni traccia di quanto ti devono gli altri dividendo le spese con loro.",
+    "Select an expense transaction": "Seleziona una transazione di spesa"
 }

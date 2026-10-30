@@ -2575,5 +2575,21 @@
     "An error occurred": "เกิดข้อผิดพลาด",
     "Parameter Invalid": "พารามิเตอร์ไม่ถูกต้อง",
     "Numeric Overflow": "ตัวเลขล้น",
-    "Click to close": "คลิกเพื่อปิด"
+    "Click to close": "คลิกเพื่อปิด",
+    "Shared Expenses": "ค่าใช้จ่ายที่แบ่งกัน",
+    "Split an Expense": "แบ่งค่าใช้จ่าย",
+    "Total Owed": "ยอดค้างชำระรวม",
+    "No shared expenses recorded yet": "ยังไม่มีบันทึกค่าใช้จ่ายที่แบ่งกัน",
+    "People": "บุคคล",
+    "Amount Owed": "ยอดที่ต้องชำระ",
+    "Entries": "รายการ",
+    "Last Expense": "ค่าใช้จ่ายล่าสุด",
+    "Transaction Amount": "จำนวนเงินของรายการ",
+    "Edit Split": "แก้ไขการแบ่ง",
+    "Unallocated": "ยังไม่ได้จัดสรร",
+    "Person Name": "ชื่อบุคคล",
+    "Add Person": "เพิ่มบุคคล",
+    "Failed to save data": "บันทึกข้อมูลไม่สำเร็จ",
+    "Track how much other people owe you by splitting expense transactions with them.": "ติดตามว่าผู้อื่นค้างชำระคุณเท่าใดโดยแบ่งค่าใช้จ่ายกับพวกเขา",
+    "Select an expense transaction": "เลือกรายการค่าใช้จ่าย"
 }

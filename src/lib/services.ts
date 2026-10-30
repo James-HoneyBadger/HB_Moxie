@@ -141,6 +141,12 @@ import type {
     TransactionReviewResponse
 } from '@/models/transaction_review.ts';
 import type {
+    TransactionSplits,
+    TransactionSplitUpdateRequest,
+    SharedExpenseSummaryItem,
+    SharedExpenseEntry
+} from '@/models/transaction_split.ts';
+import type {
     TokenGenerateAPIRequest,
     TokenGenerateMCPRequest,
     TokenRevokeRequest,
@@ -823,6 +829,18 @@ export default {
         return axios.get<ApiResponse<TransactionReviewResponse>>('v1/insights/review.json', {
             params: { months }
         });
+    },
+    getTransactionSplits: ({ transactionId }: { transactionId: string }): ApiResponsePromise<TransactionSplits> => {
+        return axios.get<ApiResponse<TransactionSplits>>('v1/transactions/splits/list.json?transactionId=' + transactionId);
+    },
+    updateTransactionSplits: (req: TransactionSplitUpdateRequest): ApiResponsePromise<TransactionSplits> => {
+        return axios.post<ApiResponse<TransactionSplits>>('v1/transactions/splits/update.json', req);
+    },
+    getSharedExpenseSummary: (): ApiResponsePromise<SharedExpenseSummaryItem[]> => {
+        return axios.get<ApiResponse<SharedExpenseSummaryItem[]>>('v1/transactions/splits/summary.json');
+    },
+    getSharedExpensesByPerson: ({ personName }: { personName: string }): ApiResponsePromise<SharedExpenseEntry[]> => {
+        return axios.get<ApiResponse<SharedExpenseEntry[]>>('v1/transactions/splits/person.json?personName=' + encodeURIComponent(personName));
     },
     getInsightsExplorer: ({ id }: { id: string }): ApiResponsePromise<InsightsExplorerInfoResponse> => {
         return axios.get<ApiResponse<InsightsExplorerInfoResponse>>('v1/insights/explorers/get.json?id=' + id);

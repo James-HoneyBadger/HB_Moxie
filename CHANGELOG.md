@@ -12,6 +12,15 @@ details.
 
 ### Added
 
+- Shared expenses: split an expense transaction with up to 20 people, review what
+  each person owes per currency, and drill into the individual expenses behind a
+  total. Backed by `GET /api/v1/transactions/splits/{list,summary,person}.json`
+  and `POST /api/v1/transactions/splits/update.json`.
+- A `Shared Expenses` page under Basis Data, with a split editor that shows the
+  transaction amount and the unallocated remainder while editing.
+- Versioned database migrations with a `schema_migration` ledger, applied at
+  startup after the automatic schema sync. Each migration runs once, inside a
+  transaction, and is recorded only on success.
 - Pull request CI covering `gofmt`, `go vet`, generated OpenAPI verification, a
   backend build, `go test -short -race`, frontend lint/tests/build, Electron
   entry-point syntax checks, a `govulncheck` vulnerability scan, and repository

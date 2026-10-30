@@ -2575,5 +2575,21 @@
     "An error occurred": "오류가 발생했습니다.",
     "Parameter Invalid": "잘못된 매개변수",
     "Numeric Overflow": "숫자 오버플로우",
-    "Click to close": "닫으려면 클릭하세요"
+    "Click to close": "닫으려면 클릭하세요",
+    "Shared Expenses": "공유 지출",
+    "Split an Expense": "지출 나누기",
+    "Total Owed": "총 미수 금액",
+    "No shared expenses recorded yet": "아직 기록된 공유 지출이 없습니다",
+    "People": "사람",
+    "Amount Owed": "청구 금액",
+    "Entries": "건수",
+    "Last Expense": "최근 지출",
+    "Transaction Amount": "거래 금액",
+    "Edit Split": "분할 편집",
+    "Unallocated": "미배분",
+    "Person Name": "이름",
+    "Add Person": "사람 추가",
+    "Failed to save data": "데이터를 저장하지 못했습니다",
+    "Track how much other people owe you by splitting expense transactions with them.": "지출을 다른 사람과 나누어 받을 금액을 기록하세요.",
+    "Select an expense transaction": "지출 거래 선택"
 }

@@ -2575,5 +2575,21 @@
     "An error occurred": "பிழை ஏற்பட்டது",
     "Parameter Invalid": "தவறான அளவுரு",
     "Numeric Overflow": "எண் வழிதல்",
-    "Click to close": "மூட கிளிக் செய்யவும்"
+    "Click to close": "மூட கிளிக் செய்யவும்",
+    "Shared Expenses": "பகிரப்பட்ட செலவுகள்",
+    "Split an Expense": "ஒரு செலவைப் பகிர்",
+    "Total Owed": "மொத்த நிலுவை",
+    "No shared expenses recorded yet": "பகிரப்பட்ட செலவுகள் இன்னும் பதிவாகவில்லை",
+    "People": "நபர்கள்",
+    "Amount Owed": "நிலுவைத் தொகை",
+    "Entries": "பதிவுகள்",
+    "Last Expense": "கடைசி செலவு",
+    "Transaction Amount": "பரிவர்த்தனைத் தொகை",
+    "Edit Split": "பங்கீட்டைத் திருத்து",
+    "Unallocated": "ஒதுக்கப்படாதது",
+    "Person Name": "நபரின் பெயர்",
+    "Add Person": "நபரைச் சேர்",
+    "Failed to save data": "தரவைச் சேமிக்க முடியவில்லை",
+    "Track how much other people owe you by splitting expense transactions with them.": "செலவுகளை மற்றவர்களுடன் பகிர்ந்து, அவர்கள் உங்களுக்கு எவ்வளவு கொடுக்க வேண்டும் என்பதைக் கண்காணியுங்கள்.",
+    "Select an expense transaction": "ஒரு செலவுப் பரிவர்த்தனையைத் தேர்ந்தெடு"
 }

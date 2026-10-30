@@ -2575,5 +2575,21 @@
     "An error occurred": "An error occurred",
     "Parameter Invalid": "Parameter Invalid",
     "Numeric Overflow": "Numeric Overflow",
-    "Click to close": "Click to close"
+    "Click to close": "Click to close",
+    "Shared Expenses": "Shared Expenses",
+    "Split an Expense": "Split an Expense",
+    "Total Owed": "Total Owed",
+    "No shared expenses recorded yet": "No shared expenses recorded yet",
+    "People": "People",
+    "Amount Owed": "Amount Owed",
+    "Entries": "Entries",
+    "Last Expense": "Last Expense",
+    "Transaction Amount": "Transaction Amount",
+    "Edit Split": "Edit Split",
+    "Unallocated": "Unallocated",
+    "Person Name": "Person Name",
+    "Add Person": "Add Person",
+    "Failed to save data": "Failed to save data",
+    "Track how much other people owe you by splitting expense transactions with them.": "Track how much other people owe you by splitting expense transactions with them.",
+    "Select an expense transaction": "Select an expense transaction"
 }

@@ -62,6 +62,12 @@
                     </router-link>
                 </li>
                 <li class="nav-link">
+                    <router-link to="/insights/shared-expenses">
+                        <v-icon class="nav-item-icon" :icon="mdiAccountGroupOutline"/>
+                        <span class="nav-item-title">{{ tt('Shared Expenses') }}</span>
+                    </router-link>
+                </li>
+                <li class="nav-link">
                     <router-link to="/account/list">
                         <v-icon class="nav-item-icon" :icon="mdiCreditCardOutline"/>
                         <span class="nav-item-title">{{ tt('Accounts') }}</span>
@@ -225,6 +231,7 @@ import {
     mdiChartPieOutline,
     mdiCompassOutline,
     mdiShieldCheckOutline,
+    mdiAccountGroupOutline,
     mdiSwapHorizontal,
     mdiCogOutline,
     mdiInformationOutline,

@@ -2575,5 +2575,21 @@
     "An error occurred": "Er is een fout opgetreden",
     "Parameter Invalid": "Ongeldige parameter",
     "Numeric Overflow": "Numerieke overloop",
-    "Click to close": "Klik om te sluiten"
+    "Click to close": "Klik om te sluiten",
+    "Shared Expenses": "Gedeelde uitgaven",
+    "Split an Expense": "Een uitgave splitsen",
+    "Total Owed": "Totaal verschuldigd",
+    "No shared expenses recorded yet": "Nog geen gedeelde uitgaven vastgelegd",
+    "People": "Personen",
+    "Amount Owed": "Verschuldigd bedrag",
+    "Entries": "Regels",
+    "Last Expense": "Laatste uitgave",
+    "Transaction Amount": "Transactiebedrag",
+    "Edit Split": "Verdeling bewerken",
+    "Unallocated": "Niet toegewezen",
+    "Person Name": "Naam van de persoon",
+    "Add Person": "Persoon toevoegen",
+    "Failed to save data": "Gegevens opslaan mislukt",
+    "Track how much other people owe you by splitting expense transactions with them.": "Houd bij hoeveel anderen jou verschuldigd zijn door uitgaven met hen te splitsen.",
+    "Select an expense transaction": "Selecteer een uitgavetransactie"
 }

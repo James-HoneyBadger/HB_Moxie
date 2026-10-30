@@ -2575,5 +2575,21 @@
     "An error occurred": "Đã xảy ra lỗi",
     "Parameter Invalid": "Tham số không hợp lệ",
     "Numeric Overflow": "Tràn số",
-    "Click to close": "Nhấp để đóng"
+    "Click to close": "Nhấp để đóng",
+    "Shared Expenses": "Chi phí chia sẻ",
+    "Split an Expense": "Chia một khoản chi",
+    "Total Owed": "Tổng nợ",
+    "No shared expenses recorded yet": "Chưa có chi phí chia sẻ nào",
+    "People": "Người",
+    "Amount Owed": "Số tiền nợ",
+    "Entries": "Mục",
+    "Last Expense": "Khoản chi gần nhất",
+    "Transaction Amount": "Số tiền giao dịch",
+    "Edit Split": "Sửa cách chia",
+    "Unallocated": "Chưa phân bổ",
+    "Person Name": "Tên người",
+    "Add Person": "Thêm người",
+    "Failed to save data": "Không lưu được dữ liệu",
+    "Track how much other people owe you by splitting expense transactions with them.": "Theo dõi số tiền người khác nợ bạn bằng cách chia các khoản chi với họ.",
+    "Select an expense transaction": "Chọn một giao dịch chi"
 }

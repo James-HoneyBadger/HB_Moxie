@@ -2575,5 +2575,21 @@
     "An error occurred": "Prišlo je do napake",
     "Parameter Invalid": "Neveljaven parameter",
     "Numeric Overflow": "Številčni preliv (Overflow)",
-    "Click to close": "Kliknite za zaprtje"
+    "Click to close": "Kliknite za zaprtje",
+    "Shared Expenses": "Skupni izdatki",
+    "Split an Expense": "Razdeli izdatek",
+    "Total Owed": "Skupaj dolgovano",
+    "No shared expenses recorded yet": "Skupnih izdatkov še ni zabeleženih",
+    "People": "Osebe",
+    "Amount Owed": "Dolgovani znesek",
+    "Entries": "Vnosi",
+    "Last Expense": "Zadnji izdatek",
+    "Transaction Amount": "Znesek transakcije",
+    "Edit Split": "Uredi razdelitev",
+    "Unallocated": "Nerazporejeno",
+    "Person Name": "Ime osebe",
+    "Add Person": "Dodaj osebo",
+    "Failed to save data": "Podatkov ni bilo mogoče shraniti",
+    "Track how much other people owe you by splitting expense transactions with them.": "Spremljajte, koliko vam drugi dolgujejo, tako da izdatke razdelite z njimi.",
+    "Select an expense transaction": "Izberite transakcijo izdatka"
 }

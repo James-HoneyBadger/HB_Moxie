@@ -18,6 +18,7 @@ A complete guide to using Ratel Ledger for personal finance management.
 - [Backups](#backups)
 - [Statistics & Overview](#statistics--overview)
 - [Insights Explorer](#insights-explorer)
+- [Shared Expenses](#shared-expenses)
 - [Exchange Rates](#exchange-rates)
 - [AI Receipt Recognition](#ai-receipt-recognition)
 - [Application Settings](#application-settings)
@@ -363,6 +364,38 @@ Build custom data queries and visualize results.
 ### Managing Explorers
 
 Saved explorers appear in the Insights sidebar. You can reorder, edit, or delete them.
+
+---
+
+## Shared Expenses
+
+Track money other people owe you by splitting expense transactions with them.
+
+### Splitting an Expense
+
+1. Navigate to **Shared Expenses** in the sidebar.
+2. Click **Split an Expense**.
+3. Pick the expense transaction to split.
+4. Enter each person's name and the amount they owe, using **Add Person** for
+   more people (up to 20 per transaction).
+5. Click **Save**.
+
+The dialog shows the transaction amount and how much is still unallocated, so a
+split can never add up to more than the transaction cost. Only expense
+transactions can be split, and each person may appear once per transaction.
+
+### Tracking What Is Owed
+
+The summary lists every person with the total they owe, grouped by currency, and
+the date of the most recent shared expense. Click a person row to see the
+individual expenses behind the total, where you can:
+
+- **Edit** — change the people or amounts of that transaction.
+- **Clear** — remove the split entirely.
+
+Splits follow their transaction: deleting or editing a transaction removes it
+from the summary. Each split records the account currency at creation time, so
+totals in different currencies are never mixed.
 
 ---
 

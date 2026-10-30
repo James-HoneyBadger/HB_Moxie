@@ -109,6 +109,78 @@
           "password"
         ]
       },
+      "SharedExpenseEntryResponse": {
+        "properties": {
+          "transactionId": {
+            "type": "string"
+          },
+          "time": {
+            "type": "integer"
+          },
+          "utcOffset": {
+            "type": "integer"
+          },
+          "categoryId": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "transactionAmount": {
+            "type": "integer"
+          },
+          "splitAmount": {
+            "type": "integer"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "transactionId",
+          "time",
+          "utcOffset",
+          "categoryId",
+          "accountId",
+          "transactionAmount",
+          "splitAmount",
+          "currency",
+          "comment"
+        ]
+      },
+      "SharedExpenseSummaryItem": {
+        "properties": {
+          "personName": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "entryCount": {
+            "type": "integer"
+          },
+          "lastTime": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "personName",
+          "currency",
+          "total",
+          "entryCount",
+          "lastTime"
+        ]
+      },
       "TokenGenerateAPIRequest": {
         "properties": {
           "expiresInSeconds": {
@@ -238,6 +310,88 @@
           "currency",
           "incomeAmount",
           "expenseAmount"
+        ]
+      },
+      "TransactionSplitInfoResponse": {
+        "properties": {
+          "personName": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "personName",
+          "currency",
+          "amount"
+        ]
+      },
+      "TransactionSplitRequestItem": {
+        "properties": {
+          "personName": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "personName",
+          "amount"
+        ]
+      },
+      "TransactionSplitUpdateRequest": {
+        "properties": {
+          "transactionId": {
+            "type": "string"
+          },
+          "splits": {
+            "items": {
+              "$ref": "#/components/schemas/TransactionSplitRequestItem"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "transactionId",
+          "splits"
+        ]
+      },
+      "TransactionSplitsResponse": {
+        "properties": {
+          "transactionId": {
+            "type": "string"
+          },
+          "transactionAmount": {
+            "type": "integer"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "splits": {
+            "items": {
+              "$ref": "#/components/schemas/TransactionSplitInfoResponse"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "transactionId",
+          "transactionAmount",
+          "currency",
+          "splits"
         ]
       },
       "TransactionStatisticAssetTrendsRequest": {
@@ -788,6 +942,116 @@
           }
         },
         "summary": "Generate an MCP token"
+      }
+    },
+    "/api/v1/transactions/splits/list.json": {
+      "get": {
+        "operationId": "listTransactionSplits",
+        "parameters": [
+          {
+            "description": "Id of the transaction",
+            "in": "query",
+            "name": "transactionId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionSplitsResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "List the shares of a transaction owed by other people"
+      }
+    },
+    "/api/v1/transactions/splits/person.json": {
+      "get": {
+        "operationId": "getSharedExpensesByPerson",
+        "parameters": [
+          {
+            "description": "Name of the person",
+            "in": "query",
+            "name": "personName",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SharedExpenseEntryResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "List the shared expenses owed by one person"
+      }
+    },
+    "/api/v1/transactions/splits/summary.json": {
+      "get": {
+        "operationId": "getSharedExpenseSummary",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SharedExpenseSummaryItem"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Summarize what each person owes the user, grouped by currency"
+      }
+    },
+    "/api/v1/transactions/splits/update.json": {
+      "post": {
+        "operationId": "updateTransactionSplits",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionSplitUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionSplitsResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Replace the shares of an expense transaction"
       }
     }
   }

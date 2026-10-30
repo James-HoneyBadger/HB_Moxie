@@ -28,6 +28,7 @@ The machine-readable OpenAPI document is generated at [`openapi.json`](./openapi
 - [Transaction Tags](#transaction-tags)
 - [Transaction Templates](#transaction-templates)
 - [Insights Explorers](#insights-explorers)
+- [Shared Expenses](#shared-expenses)
 - [Exchange Rates](#exchange-rates)
 - [Data Management](#data-management)
 - [Backups](#backups)
@@ -871,6 +872,61 @@ POST /api/v1/insights/explorers/move.json
 ```
 POST /api/v1/insights/explorers/delete.json
 ```
+
+---
+
+## Shared Expenses
+
+Split expense transactions with other people and track what each of them owes.
+
+### List Transaction Splits
+
+```
+GET /api/v1/transactions/splits/list.json?transactionId=<transactionId>
+```
+
+Returns the transaction amount, its currency, and the shares owed by other
+people.
+
+### Update Transaction Splits
+
+```
+POST /api/v1/transactions/splits/update.json
+```
+
+```json
+{
+  "transactionId": "3851278476451512320",
+  "splits": [
+    { "personName": "Priya", "amount": 3200 },
+    { "personName": "Sam", "amount": 2000 }
+  ]
+}
+```
+
+Replaces all shares of the transaction; send an empty `splits` array to clear
+them. Only expense transactions can be split, person names are trimmed and must
+be unique per transaction, amounts must be positive, and the shares may not add
+up to more than the transaction amount. Up to 20 people may share one
+transaction.
+
+### Shared Expense Summary
+
+```
+GET /api/v1/transactions/splits/summary.json
+```
+
+Returns one entry per person and currency with the outstanding total, the number
+of shared expenses, and the time of the most recent one. Splits of deleted
+transactions are excluded.
+
+### Shared Expenses by Person
+
+```
+GET /api/v1/transactions/splits/person.json?personName=<personName>
+```
+
+Returns the individual expenses behind a person's total, newest first.
 
 ---
 

@@ -2575,5 +2575,21 @@
     "An error occurred": "エラーが発生しました",
     "Parameter Invalid": "パラメーターが無効です",
     "Numeric Overflow": "数値オーバーフロー",
-    "Click to close": "クリックして閉じる"
+    "Click to close": "クリックして閉じる",
+    "Shared Expenses": "割り勘",
+    "Split an Expense": "支出を割り勘する",
+    "Total Owed": "未収合計",
+    "No shared expenses recorded yet": "割り勘の記録はまだありません",
+    "People": "メンバー",
+    "Amount Owed": "負担額",
+    "Entries": "件数",
+    "Last Expense": "最新の支出",
+    "Transaction Amount": "取引金額",
+    "Edit Split": "割り勘を編集",
+    "Unallocated": "未割り当て",
+    "Person Name": "氏名",
+    "Add Person": "メンバーを追加",
+    "Failed to save data": "データの保存に失敗しました",
+    "Track how much other people owe you by splitting expense transactions with them.": "支出を他の人と割り勘して、相手があなたに支払うべき金額を記録します。",
+    "Select an expense transaction": "支出の取引を選択"
 }

@@ -20,6 +20,7 @@ import StatisticsTransactionPage from '@/views/desktop/statistics/TransactionPag
 
 import InsightsExplorerPage from '@/views/desktop/insights/ExplorerPage.vue';
 import TransactionReviewPage from '@/views/desktop/insights/ReviewPage.vue';
+import SharedExpensesPage from '@/views/desktop/insights/SharedExpensesPage.vue';
 
 import AccountListPage from '@/views/desktop/accounts/ListPage.vue';
 
@@ -154,6 +155,11 @@ const router = createRouter({
                 {
                     path: '/insights/review',
                     component: TransactionReviewPage,
+                    beforeEnter: checkLogin
+                },
+                {
+                    path: '/insights/shared-expenses',
+                    component: SharedExpensesPage,
                     beforeEnter: checkLogin
                 },
                 {

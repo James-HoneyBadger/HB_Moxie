@@ -2575,5 +2575,21 @@
     "An error occurred": "Сталася помилка",
     "Parameter Invalid": "Неправильний параметр",
     "Numeric Overflow": "Числове переповнення",
-    "Click to close": "Натисніть, щоб закрити"
+    "Click to close": "Натисніть, щоб закрити",
+    "Shared Expenses": "Спільні витрати",
+    "Split an Expense": "Розділити витрату",
+    "Total Owed": "Усього до отримання",
+    "No shared expenses recorded yet": "Спільних витрат ще немає",
+    "People": "Люди",
+    "Amount Owed": "Сума до отримання",
+    "Entries": "Записи",
+    "Last Expense": "Остання витрата",
+    "Transaction Amount": "Сума транзакції",
+    "Edit Split": "Редагувати розподіл",
+    "Unallocated": "Не розподілено",
+    "Person Name": "Ім'я особи",
+    "Add Person": "Додати особу",
+    "Failed to save data": "Не вдалося зберегти дані",
+    "Track how much other people owe you by splitting expense transactions with them.": "Відстежуйте, скільки вам винні інші, розділяючи з ними витрати.",
+    "Select an expense transaction": "Виберіть транзакцію витрати"
 }

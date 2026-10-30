@@ -2575,5 +2575,21 @@
     "An error occurred": "Произошла ошибка",
     "Parameter Invalid": "Неверный параметр",
     "Numeric Overflow": "Числовое переполнение",
-    "Click to close": "Нажмите, чтобы закрыть"
+    "Click to close": "Нажмите, чтобы закрыть",
+    "Shared Expenses": "Общие расходы",
+    "Split an Expense": "Разделить расход",
+    "Total Owed": "Итого к получению",
+    "No shared expenses recorded yet": "Общих расходов пока нет",
+    "People": "Люди",
+    "Amount Owed": "Сумма к получению",
+    "Entries": "Записи",
+    "Last Expense": "Последний расход",
+    "Transaction Amount": "Сумма транзакции",
+    "Edit Split": "Изменить разделение",
+    "Unallocated": "Не распределено",
+    "Person Name": "Имя человека",
+    "Add Person": "Добавить человека",
+    "Failed to save data": "Не удалось сохранить данные",
+    "Track how much other people owe you by splitting expense transactions with them.": "Отслеживайте, сколько вам должны другие, разделяя с ними расходы.",
+    "Select an expense transaction": "Выберите транзакцию расхода"
 }

@@ -35,6 +35,26 @@ export interface BackupRestoreRequest {
     readonly password: string;
 }
 
+export interface SharedExpenseEntryResponse {
+    readonly transactionId: string;
+    readonly time: number;
+    readonly utcOffset: number;
+    readonly categoryId: string;
+    readonly accountId: string;
+    readonly transactionAmount: number;
+    readonly splitAmount: number;
+    readonly currency: string;
+    readonly comment: string;
+}
+
+export interface SharedExpenseSummaryItem {
+    readonly personName: string;
+    readonly currency: string;
+    readonly total: number;
+    readonly entryCount: number;
+    readonly lastTime: number;
+}
+
 export interface TokenGenerateAPIRequest {
     readonly expiresInSeconds: number;
     readonly password: string;
@@ -72,6 +92,29 @@ export interface TransactionAmountsResponseItemAmountInfo {
     readonly currency: string;
     readonly incomeAmount: number;
     readonly expenseAmount: number;
+}
+
+export interface TransactionSplitInfoResponse {
+    readonly personName: string;
+    readonly currency: string;
+    readonly amount: number;
+}
+
+export interface TransactionSplitRequestItem {
+    readonly personName: string;
+    readonly amount: number;
+}
+
+export interface TransactionSplitUpdateRequest {
+    readonly transactionId: string;
+    readonly splits: TransactionSplitRequestItem[];
+}
+
+export interface TransactionSplitsResponse {
+    readonly transactionId: string;
+    readonly transactionAmount: number;
+    readonly currency: string;
+    readonly splits: TransactionSplitInfoResponse[];
 }
 
 export interface TransactionStatisticAssetTrendsRequest {

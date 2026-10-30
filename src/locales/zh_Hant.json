@@ -2575,5 +2575,21 @@
     "An error occurred": "發生錯誤",
     "Parameter Invalid": "參數無效",
     "Numeric Overflow": "數值溢位",
-    "Click to close": "點選關閉"
+    "Click to close": "點選關閉",
+    "Shared Expenses": "分攤支出",
+    "Split an Expense": "分攤一筆支出",
+    "Total Owed": "應收總額",
+    "No shared expenses recorded yet": "尚無分攤支出紀錄",
+    "People": "成員",
+    "Amount Owed": "應收金額",
+    "Entries": "筆數",
+    "Last Expense": "最近支出",
+    "Transaction Amount": "交易金額",
+    "Edit Split": "編輯分攤",
+    "Unallocated": "未分配",
+    "Person Name": "姓名",
+    "Add Person": "新增成員",
+    "Failed to save data": "儲存資料失敗",
+    "Track how much other people owe you by splitting expense transactions with them.": "透過與他人分攤支出，記錄他們應付給你的金額。",
+    "Select an expense transaction": "選擇一筆支出交易"
 }
