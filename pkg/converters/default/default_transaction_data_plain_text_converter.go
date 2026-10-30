@@ -3,10 +3,10 @@ package _default
 import (
 	"time"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/converter"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/datatable"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/converters/converter"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/converters/datatable"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
 )
 
 // defaultTransactionDataPlainTextConverter defines the structure of Honey Ledger default plain text converter for transaction data

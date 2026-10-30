@@ -4,10 +4,10 @@ import (
 	"time"
 	"xorm.io/xorm"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/datastore"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/datastore"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
 )
 
 // UserCustomExchangeRatesService represents user custom exchange rate data service

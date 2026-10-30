@@ -1,6 +1,6 @@
 package custom
 
-import "github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+import "github.com/James-HoneyBadger/honey-ledger/pkg/core"
 
 // CustomTransactionDataParser represents the parser for custom transaction data files
 type CustomTransactionDataParser interface {

@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
 )
 
 // IPPattern represents a pattern for matching IP addresses, either IPv4 or IPv6

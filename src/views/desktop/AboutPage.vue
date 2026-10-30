@@ -28,8 +28,8 @@
                             <span class="text-body-1">{{ tt('Official Website') }}</span>
                         </v-col>
                         <v-col cols="12" md="10" class="mb-6">
-                            <a class="text-body-1" href="https://github.com/James-HoneyBadger/ratel-ledger" target="_blank">
-                                https://github.com/James-HoneyBadger/ratel-ledger
+                            <a class="text-body-1" href="https://github.com/James-HoneyBadger/honey-ledger" target="_blank">
+                                https://github.com/James-HoneyBadger/honey-ledger
                             </a>
                         </v-col>
                     </v-row>
@@ -38,8 +38,8 @@
                             <span class="text-body-1">{{ tt('Report Issue') }}</span>
                         </v-col>
                         <v-col cols="12" md="10" class="mb-6">
-                            <a class="text-body-1" href="https://github.com/James-HoneyBadger/ratel-ledger/issues" target="_blank">
-                                https://github.com/James-HoneyBadger/ratel-ledger/issues
+                            <a class="text-body-1" href="https://github.com/James-HoneyBadger/honey-ledger/issues" target="_blank">
+                                https://github.com/James-HoneyBadger/honey-ledger/issues
                             </a>
                         </v-col>
                     </v-row>
@@ -48,8 +48,8 @@
                             <span class="text-body-1">{{ tt('Getting help') }}</span>
                         </v-col>
                         <v-col cols="12" md="10">
-                            <a class="text-body-1" href="https://github.com/James-HoneyBadger/ratel-ledger" target="_blank">
-                                https://github.com/James-HoneyBadger/ratel-ledger
+                            <a class="text-body-1" href="https://github.com/James-HoneyBadger/honey-ledger" target="_blank">
+                                https://github.com/James-HoneyBadger/honey-ledger
                             </a>
                         </v-col>
                     </v-row>

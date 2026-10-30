@@ -3,12 +3,12 @@ package middlewares
 import (
 	"github.com/golang-jwt/jwt/v5"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/services"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/log"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/services"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 // TokenSourceType represents token source

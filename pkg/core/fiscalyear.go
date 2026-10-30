@@ -3,7 +3,7 @@ package core
 import (
 	"fmt"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
 )
 
 // FiscalYearStart represents the fiscal year start date as a uint16 (month: high byte, day: low byte)

@@ -7,10 +7,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/converter"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/converters/converter"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 func TestFeideeMymoneyTransactionDataXlsImporterParseImportedData_MinimumValidData(t *testing.T) {

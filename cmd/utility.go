@@ -7,11 +7,11 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/mail"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/requestid"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/mail"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/requestid"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 // Utilities represents the utilities command

@@ -3,8 +3,8 @@ package datastore
 import (
 	"xorm.io/xorm"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
 )
 
 // DataStore represents a data storage containing a series of database shards

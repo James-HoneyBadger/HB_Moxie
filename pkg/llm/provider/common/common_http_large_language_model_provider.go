@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/httpclient"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/data"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/provider"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/httpclient"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/llm/data"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/llm/provider"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/log"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 // HttpLargeLanguageModelAdapter defines the structure of http large language model adapter

@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 const MaximumTagsCountOfTransaction = 10

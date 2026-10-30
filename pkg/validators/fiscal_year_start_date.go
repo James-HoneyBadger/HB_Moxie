@@ -3,7 +3,7 @@ package validators
 import (
 	"github.com/go-playground/validator/v10"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
 )
 
 // ValidateFiscalYearStart validates if a fiscal year start date is valid

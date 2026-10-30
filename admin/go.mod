@@ -1,4 +1,4 @@
-module github.com/James-HoneyBadger/ratel-ledger/admin
+module github.com/James-HoneyBadger/honey-ledger/admin
 
 go 1.25.0
 

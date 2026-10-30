@@ -4,7 +4,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 // Length and mask of all information in uuid

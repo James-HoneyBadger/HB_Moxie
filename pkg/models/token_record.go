@@ -1,6 +1,6 @@
 package models
 
-import "github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+import "github.com/James-HoneyBadger/honey-ledger/pkg/core"
 
 // TokenMaxUserAgentLength represents the maximum size of user agent stored in database
 const TokenMaxUserAgentLength = 255

@@ -2,7 +2,7 @@
   "name": "honey-ledger-desktop",
   "version": "1.4.3",
   "description": "Honey Ledger — private, local-first personal finance management",
-  "homepage": "https://github.com/James-HoneyBadger/ratel-ledger",
+  "homepage": "https://github.com/James-HoneyBadger/honey-ledger",
   "main": "main.js",
   "author": {
     "name": "Honey Badger Universe",

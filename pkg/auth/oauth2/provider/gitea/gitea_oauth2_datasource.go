@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/auth/oauth2/data"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/auth/oauth2/provider"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/auth/oauth2/provider/common"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/auth/oauth2/data"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/auth/oauth2/provider"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/auth/oauth2/provider/common"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/log"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 type giteaUserInfoResponse struct {

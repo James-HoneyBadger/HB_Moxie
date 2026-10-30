@@ -5,10 +5,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/auth/oauth2/provider/common"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/auth/oauth2/provider/common"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 func TestNewNextcloudOAuth2Provider(t *testing.T) {

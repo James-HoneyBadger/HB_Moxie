@@ -6,12 +6,12 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	clis "github.com/James-HoneyBadger/ratel-ledger/pkg/cli"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	clis "github.com/James-HoneyBadger/honey-ledger/pkg/cli"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/log"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 // UserData represents the data command

@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 func TestClone(t *testing.T) {

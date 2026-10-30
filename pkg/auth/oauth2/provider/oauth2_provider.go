@@ -3,8 +3,8 @@ package provider
 import (
 	"golang.org/x/oauth2"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/auth/oauth2/data"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/auth/oauth2/data"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
 )
 
 // OAuth2Provider defines the structure of OAuth 2.0 provider

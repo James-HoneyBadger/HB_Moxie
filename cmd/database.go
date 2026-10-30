@@ -3,11 +3,11 @@ package cmd
 import (
 	"github.com/urfave/cli/v3"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/datastore"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/datastore"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/log"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 // Database represents the database command

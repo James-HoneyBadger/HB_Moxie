@@ -7,13 +7,13 @@ import (
 
 	"golang.org/x/oauth2"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/auth/oauth2/data"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/auth/oauth2/provider"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/httpclient"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/auth/oauth2/data"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/auth/oauth2/provider"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/httpclient"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/log"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 const githubOAuth2AuthUrl = "https://github.com/login/oauth/authorize"     // Reference: https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps

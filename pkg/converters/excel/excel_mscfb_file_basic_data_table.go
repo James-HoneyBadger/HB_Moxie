@@ -6,8 +6,8 @@ import (
 
 	"github.com/extrame/xls"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/datatable"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/converters/datatable"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
 )
 
 // ExcelMSCFBFileBasicDataTable defines the structure of excel (microsoft compound file binary) file data table

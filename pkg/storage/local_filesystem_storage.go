@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 // LocalFileSystemObjectStorage represents local file system object storage

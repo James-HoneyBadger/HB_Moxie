@@ -1,6 +1,6 @@
 package data
 
-import "github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+import "github.com/James-HoneyBadger/honey-ledger/pkg/core"
 
 // OAuth2UserInfo represents the user info retrieved from OAuth 2.0 provider
 type OAuth2UserInfo struct {

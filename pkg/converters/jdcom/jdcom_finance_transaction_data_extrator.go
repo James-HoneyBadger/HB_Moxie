@@ -3,11 +3,11 @@ package jdcom
 import (
 	"strings"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/csv"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/datatable"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/converters/csv"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/converters/datatable"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/log"
 )
 
 func createNewJDComFinanceTransactionBasicDataTable(ctx core.Context, originalDataTable datatable.BasicDataTable) (datatable.BasicDataTable, error) {

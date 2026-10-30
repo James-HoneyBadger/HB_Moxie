@@ -7,16 +7,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/data"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/services"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/templates"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/llm"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/llm/data"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/log"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/services"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/templates"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 // LargeLanguageModelsApi represents large language models api

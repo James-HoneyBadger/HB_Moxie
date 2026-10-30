@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"xorm.io/xorm"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 func TestGetMysqlConnectionString_TCP(t *testing.T) {

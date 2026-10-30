@@ -6,8 +6,8 @@ import (
 
 	"github.com/xuri/excelize/v2"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/datatable"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/converters/datatable"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
 )
 
 // excelOOXMLSheet defines the structure of excel (Office Open XML) file sheet

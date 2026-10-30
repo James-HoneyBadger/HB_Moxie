@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 // TransactionEditScope represents the scope which transaction can be edited

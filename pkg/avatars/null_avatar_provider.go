@@ -1,7 +1,7 @@
 package avatars
 
 import (
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
 )
 
 // NullAvatarProvider represents the null avatar provider

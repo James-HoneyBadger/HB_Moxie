@@ -14,16 +14,16 @@ import (
 	"golang.org/x/text/encoding/unicode"
 	"golang.org/x/text/transform"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/sgml"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/converters/sgml"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/log"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 const ofx1USAsciiEncoding = "usascii"
 const ofx1UnicodeEncoding = "unicode"
-const ofx1UTF8Encoding = "utf-8" // non-standard ofx 1.x encoding, used by some banks (https://github.com/James-HoneyBadger/ratel-ledger/issues/48)
+const ofx1UTF8Encoding = "utf-8" // non-standard ofx 1.x encoding, used by some banks (https://github.com/James-HoneyBadger/honey-ledger/issues/48)
 const ofx1SGMLDataFormat = "OFXSGML"
 
 var ofx2HeaderPattern = regexp.MustCompile("<\\?OFX( +[A-Z]+=\"[^=]*\")* *\\?>")

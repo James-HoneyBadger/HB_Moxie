@@ -94,7 +94,7 @@
 
                                 <v-col cols="12" class="text-center text-sm">
                                     <span>Powered by </span>
-                                    <a href="https://github.com/James-HoneyBadger/ratel-ledger" target="_blank">Honey Ledger</a>&nbsp;<span>{{ version }}</span>
+                                    <a href="https://github.com/James-HoneyBadger/honey-ledger" target="_blank">Honey Ledger</a>&nbsp;<span>{{ version }}</span>
                                 </v-col>
                             </v-row>
                         </v-card-text>

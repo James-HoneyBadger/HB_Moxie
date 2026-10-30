@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 // Reference: https://en.gravatar.com/site/implement/hash/

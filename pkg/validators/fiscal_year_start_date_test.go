@@ -6,7 +6,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
 )
 
 type fiscalYearStartContainer struct {

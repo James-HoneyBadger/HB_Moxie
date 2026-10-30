@@ -16,7 +16,7 @@ import (
 
 	"golang.org/x/crypto/pbkdf2"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
 )
 
 const (

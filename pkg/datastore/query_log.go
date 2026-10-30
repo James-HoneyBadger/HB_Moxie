@@ -3,8 +3,8 @@ package datastore
 import (
 	xorm "xorm.io/xorm/log"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/log"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 // XOrmLoggerAdapter represents the logger adapter for xorm

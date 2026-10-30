@@ -56,7 +56,7 @@ brew install go node gcc git
 ## Repository Setup
 
 ```bash
-git clone https://github.com/James-HoneyBadger/ratel-ledger.git
+git clone https://github.com/James-HoneyBadger/honey-ledger.git
 cd honey-ledger
 ```
 

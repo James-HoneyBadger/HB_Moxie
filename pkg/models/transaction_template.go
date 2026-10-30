@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 // TransactionTemplateType represents transaction template type in database

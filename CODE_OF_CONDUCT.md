@@ -136,4 +136,4 @@ Together, we build a community where everyone can learn, grow, and contribute th
 **Version:** 1.0
 
 For the latest version, visit:
-https://github.com/James-HoneyBadger/ratel-ledger/blob/main/CODE_OF_CONDUCT.md
+https://github.com/James-HoneyBadger/honey-ledger/blob/main/CODE_OF_CONDUCT.md

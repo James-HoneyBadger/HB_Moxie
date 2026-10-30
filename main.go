@@ -9,9 +9,9 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/James-HoneyBadger/ratel-ledger/cmd"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/cmd"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 var (

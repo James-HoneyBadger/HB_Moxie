@@ -8,8 +8,8 @@ import (
 
 	"github.com/go-playground/validator/v10"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
 )
 
 // GetDisplayErrorMessage returns the display error message for given error

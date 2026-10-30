@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
 )
 
 func TestGetCategoryMapByList_EmptyList(t *testing.T) {

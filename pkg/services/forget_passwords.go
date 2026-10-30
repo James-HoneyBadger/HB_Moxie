@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/locales"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/mail"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/templates"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/locales"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/mail"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/templates"
 )
 
 const passwordResetUrlFormat = "%sdesktop#/resetpassword?token=%s"

@@ -8,9 +8,9 @@ import (
 	"github.com/go-co-op/gocron/v2"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/duplicatechecker"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/duplicatechecker"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 func TestCronJobSchedulerContainerRegisterIntervalJob(t *testing.T) {

@@ -8,7 +8,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 // LogFormatter represents a log formatter

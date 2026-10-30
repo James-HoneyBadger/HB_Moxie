@@ -6,8 +6,8 @@ import (
 
 	"golang.org/x/net/html/charset"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
 )
 
 // camt052FileReader defines the structure of camt.052 file reader

@@ -1,8 +1,8 @@
 package uuid
 
 import (
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 // UuidContainer contains the current uuid generator

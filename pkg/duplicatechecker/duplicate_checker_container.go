@@ -3,8 +3,8 @@ package duplicatechecker
 import (
 	"time"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 // DuplicateCheckerContainer contains the current duplicate checker

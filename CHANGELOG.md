@@ -52,6 +52,10 @@ details.
   remain supported alongside the new `HONEY_*` names.
 - Import mapping files exported before the rename still load through the legacy
   `ratelLedger…` JSON root fields.
+- The GitHub repository moved to `James-HoneyBadger/honey-ledger`, and the Go
+  module path followed it (`github.com/James-HoneyBadger/honey-ledger`), so
+  `go install` and imports use the new location. GitHub redirects the previous
+  repository and clone URLs.
 - Upgrade the admin tool to Fyne 2.8.2 (from 2.5.4). Building it on Linux now
   requires the Wayland development headers in addition to X11.
 - Upgrade the desktop shell to Electron 45.1 (from 33, which reached
@@ -102,6 +106,6 @@ details.
 
 - Multi-platform application icons for the Linux, macOS, and Windows builds.
 
-[Unreleased]: https://github.com/James-HoneyBadger/ratel-ledger/compare/v1.4.3...HEAD
-[1.4.3]: https://github.com/James-HoneyBadger/ratel-ledger/releases/tag/v1.4.3
-[1.4.2]: https://github.com/James-HoneyBadger/ratel-ledger/releases/tag/v1.4.2
+[Unreleased]: https://github.com/James-HoneyBadger/honey-ledger/compare/v1.4.3...HEAD
+[1.4.3]: https://github.com/James-HoneyBadger/honey-ledger/releases/tag/v1.4.3
+[1.4.2]: https://github.com/James-HoneyBadger/honey-ledger/releases/tag/v1.4.2

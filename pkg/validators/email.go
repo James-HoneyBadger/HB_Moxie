@@ -3,7 +3,7 @@ package validators
 import (
 	"github.com/go-playground/validator/v10"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 // ValidEmail returns whether the given email is valid

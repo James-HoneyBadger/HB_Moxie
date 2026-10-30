@@ -21,7 +21,7 @@ Release artifacts can be checked without trusting this repository's hosting:
 the release workflow of this repository. Verify any artifact with:
 
 ```bash
-gh attestation verify <file> --repo James-HoneyBadger/ratel-ledger
+gh attestation verify <file> --repo James-HoneyBadger/honey-ledger
 ```
 
 **Detached signature.** Artifacts are signed with
@@ -41,7 +41,7 @@ prefer the provenance attestation, or build from source.
 problem.**
 
 1. **Preferred:** open a private advisory at
-   <https://github.com/James-HoneyBadger/ratel-ledger/security/advisories/new>.
+   <https://github.com/James-HoneyBadger/honey-ledger/security/advisories/new>.
    GitHub private vulnerability reporting is enabled for this repository.
 2. **Alternative:** email <james@honey-badger.org> with a description of the
    issue and reproduction steps.

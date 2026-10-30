@@ -3,8 +3,8 @@ package services
 import (
 	"time"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
 )
 
 // TransactionStatisticsRepository is the data-access boundary used by the

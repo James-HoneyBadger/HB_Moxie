@@ -7,7 +7,7 @@ import (
 
 	"github.com/patrickmn/go-cache"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 // InMemoryDuplicateChecker represents in-memory duplicate checker

@@ -4,12 +4,12 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/James-HoneyBadger/ratel-ledger.git"
+    "url": "git+https://github.com/James-HoneyBadger/honey-ledger.git"
   },
   "author": "James Temple",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/James-HoneyBadger/ratel-ledger/issues"
+    "url": "https://github.com/James-HoneyBadger/honey-ledger/issues"
   },
   "scripts": {
     "serve": "cross-env NODE_ENV=development vite",

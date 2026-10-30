@@ -3,7 +3,7 @@ package models
 import (
 	"strings"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 const UserCustomExchangeRateFactorInDatabase = int64(100000000)

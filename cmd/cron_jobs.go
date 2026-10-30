@@ -5,9 +5,9 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/cron"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/cron"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/log"
 )
 
 // CronJobs represents the cron command

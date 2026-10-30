@@ -3,10 +3,10 @@ package mcp
 import (
 	"reflect"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/services"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/services"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 // MCPAvailableServices holds the services available for MCP tools

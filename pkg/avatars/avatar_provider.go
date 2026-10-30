@@ -1,6 +1,6 @@
 package avatars
 
-import "github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+import "github.com/James-HoneyBadger/honey-ledger/pkg/models"
 
 // AvatarProvider is user avatar provider interface
 type AvatarProvider interface {

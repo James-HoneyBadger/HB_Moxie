@@ -30,7 +30,7 @@ Complete instructions for installing and running Honey Ledger as a desktop appli
 
 ### Pre-built Package
 
-Download the latest desktop installer for your platform from the [Releases](https://github.com/James-HoneyBadger/ratel-ledger/releases) page:
+Download the latest desktop installer for your platform from the [Releases](https://github.com/James-HoneyBadger/honey-ledger/releases) page:
 
 | Platform | Format |
 |----------|--------|
@@ -44,7 +44,7 @@ Run the installer and launch Honey Ledger from your applications menu.
 
 ```bash
 # Clone the repository
-git clone https://github.com/James-HoneyBadger/ratel-ledger.git
+git clone https://github.com/James-HoneyBadger/honey-ledger.git
 cd honey-ledger
 
 # Build the Go backend
@@ -76,7 +76,7 @@ See [ELECTRON.md](ELECTRON.md) for full Electron build and packaging details.
 ### Full Build (Backend + Frontend)
 
 ```bash
-git clone https://github.com/James-HoneyBadger/ratel-ledger.git
+git clone https://github.com/James-HoneyBadger/honey-ledger.git
 cd honey-ledger
 ./scripts/build.sh package
 ```

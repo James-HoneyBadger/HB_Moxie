@@ -1,4 +1,4 @@
-module github.com/James-HoneyBadger/ratel-ledger
+module github.com/James-HoneyBadger/honey-ledger
 
 go 1.26.0
 

@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
 )
 
 func TestExcelOOXMLFileBasicDataTableDataRowCount(t *testing.T) {

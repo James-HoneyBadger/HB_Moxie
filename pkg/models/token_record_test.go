@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
 )
 
 func TestTokenRecordSecretColumnFitsGeneratedTokenSecret(t *testing.T) {

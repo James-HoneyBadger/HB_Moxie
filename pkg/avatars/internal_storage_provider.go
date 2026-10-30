@@ -3,8 +3,8 @@ package avatars
 import (
 	"fmt"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 const internalAvatarUrlFormat = "%savatar/%d.%s"

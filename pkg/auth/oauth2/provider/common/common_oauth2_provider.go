@@ -6,13 +6,13 @@ import (
 
 	"golang.org/x/oauth2"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/auth/oauth2/data"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/auth/oauth2/provider"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/httpclient"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/log"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/auth/oauth2/data"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/auth/oauth2/provider"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/httpclient"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/log"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 // CommonOAuth2Provider represents common OAuth 2.0 provider

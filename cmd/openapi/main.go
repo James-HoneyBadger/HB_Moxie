@@ -16,7 +16,7 @@ import (
 
 	"github.com/invopop/jsonschema"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
 )
 
 const (

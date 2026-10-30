@@ -1,6 +1,6 @@
 package storage
 
-import "github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+import "github.com/James-HoneyBadger/honey-ledger/pkg/core"
 
 // ObjectStorage represents an object storage to store file object
 type ObjectStorage interface {

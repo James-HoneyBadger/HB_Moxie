@@ -3,7 +3,7 @@ package core
 import (
 	"net/http/httputil"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
 )
 
 // CliHandlerFunc represents the cli handler function

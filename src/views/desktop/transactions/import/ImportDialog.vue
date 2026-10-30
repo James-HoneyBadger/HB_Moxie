@@ -564,7 +564,7 @@ const exportFileGuideDocumentUrl = computed<string | undefined>(() => {
 
     const language = document.language ? document.language + '/' : '';
     const anchor = document.anchor ? '#' + document.anchor : '';
-    return `https://github.com/James-HoneyBadger/ratel-ledger/${language}export_and_import${anchor}`;
+    return `https://github.com/James-HoneyBadger/honey-ledger/${language}export_and_import${anchor}`;
 });
 
 const exportFileGuideDocumentLanguageName = computed<string | undefined>(() => allSupportedImportFileTypesMap.value[fileType.value]?.document?.displayLanguageName);

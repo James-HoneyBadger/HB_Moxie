@@ -1,6 +1,6 @@
 package cli
 
-import "github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+import "github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 
 // CliUsingConfig represents a cli that need to use config
 type CliUsingConfig struct {

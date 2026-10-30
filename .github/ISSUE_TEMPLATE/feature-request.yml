@@ -7,7 +7,7 @@ body:
       label: Before You Submit
       description: Please check whether the following items have been completed.
       options:
-        - label: I've already checked that this request hasn't been raised in [issues](https://github.com/James-HoneyBadger/ratel-ledger/issues)
+        - label: I've already checked that this request hasn't been raised in [issues](https://github.com/James-HoneyBadger/honey-ledger/issues)
           required: true
 
   - type: textarea

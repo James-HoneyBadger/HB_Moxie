@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/converters/datatable"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/converters/datatable"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
 )
 
 // defaultPlainTextDataTable defines the structure of Honey Ledger default plain text data table

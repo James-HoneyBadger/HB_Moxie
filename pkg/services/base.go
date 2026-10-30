@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/datastore"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/mail"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/storage"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/utils"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/uuid"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/datastore"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/mail"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/storage"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/utils"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/uuid"
 )
 
 // ServiceUsingDB represents a service that need to use db

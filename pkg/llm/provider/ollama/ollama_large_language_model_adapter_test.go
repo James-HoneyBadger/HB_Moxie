@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/data"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/llm/data"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
 )
 
 func TestOllamaLargeLanguageModelAdapter_buildJsonRequestBody_TextualUserPrompt(t *testing.T) {

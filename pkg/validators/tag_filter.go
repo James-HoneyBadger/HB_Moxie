@@ -3,7 +3,7 @@ package validators
 import (
 	"github.com/go-playground/validator/v10"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/models"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/models"
 )
 
 // ValidTagFilter returns whether the given tag filter is valid

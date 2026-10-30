@@ -3,9 +3,9 @@ package openai
 import (
 	"net/http"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/provider"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/llm/provider"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 // OpenAIOfficialChatCompletionsAPIProvider defines the structure of OpenAI official chat completions API provider

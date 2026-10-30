@@ -8,8 +8,8 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 const logFieldRequestId = "REQUEST_ID"

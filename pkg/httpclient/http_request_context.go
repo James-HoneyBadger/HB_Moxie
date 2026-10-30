@@ -1,7 +1,7 @@
 package httpclient
 
 import (
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
 )
 
 const (

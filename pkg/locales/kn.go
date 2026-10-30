@@ -1,7 +1,7 @@
 package locales
 
 import (
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
 )
 
 var kn = &LocaleTextItems{

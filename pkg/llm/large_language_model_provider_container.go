@@ -1,16 +1,16 @@
 package llm
 
 import (
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/core"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/errs"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/data"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/provider"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/provider/anthropic"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/provider/googleai"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/provider/lmstudio"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/provider/ollama"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/llm/provider/openai"
-	"github.com/James-HoneyBadger/ratel-ledger/pkg/settings"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/core"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/errs"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/llm/data"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/llm/provider"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/llm/provider/anthropic"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/llm/provider/googleai"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/llm/provider/lmstudio"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/llm/provider/ollama"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/llm/provider/openai"
+	"github.com/James-HoneyBadger/honey-ledger/pkg/settings"
 )
 
 // LargeLanguageModelProviderContainer contains the current large language model provider
