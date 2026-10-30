@@ -156,6 +156,7 @@ __pycache__/
 ratel-ledger
 ratel-ledger_bin
 admin/ratel-ledger-admin
+admin/admin
 /package/
 
 # Environment variable files

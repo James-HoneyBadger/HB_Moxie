@@ -150,6 +150,11 @@ func (a *AdminApp) loadUsers() []UserRecord {
 		}
 		users = append(users, u)
 	}
+
+	if err := rows.Err(); err != nil {
+		log.Printf("loadUsers iteration error: %v", err)
+	}
+
 	return users
 }
 
@@ -163,66 +168,109 @@ func (a *AdminApp) loadTables() []TableInfo {
 	var tables []TableInfo
 	for rows.Next() {
 		var name string
-		rows.Scan(&name)
+
+		if err := rows.Scan(&name); err != nil {
+			log.Printf("loadTables scan error: %v", err)
+			continue
+		}
+
 		var count int64
 		a.db.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM `%s`", name)).Scan(&count)
 		tables = append(tables, TableInfo{Name: name, RowCount: count})
 	}
+
+	if err := rows.Err(); err != nil {
+		log.Printf("loadTables iteration error: %v", err)
+	}
+
 	return tables
 }
 
-func (a *AdminApp) exportDatabase(w io.Writer) {
+func (a *AdminApp) exportDatabase(w io.Writer) error {
 	fmt.Fprintf(w, "-- Ratel Ledger Database Export\n")
 	fmt.Fprintf(w, "-- Generated: %s\n", time.Now().Format("2006-01-02 15:04:05"))
 	fmt.Fprintf(w, "-- Database: %s\n\n", a.dbPath)
 
 	rows, err := a.db.Query("SELECT name, sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name")
 	if err != nil {
-		return
+		return fmt.Errorf("query table list: %w", err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		var name, createSQL string
-		rows.Scan(&name, &createSQL)
+
+		if err := rows.Scan(&name, &createSQL); err != nil {
+			return fmt.Errorf("read table definition: %w", err)
+		}
+
 		fmt.Fprintf(w, "-- Table: %s\n%s;\n\n", name, createSQL)
 
-		dataRows, err := a.db.Query(fmt.Sprintf("SELECT * FROM `%s`", name))
-		if err != nil {
-			continue
+		if err := a.exportTable(w, name); err != nil {
+			return err
 		}
-		cols, _ := dataRows.Columns()
 
-		for dataRows.Next() {
-			values := make([]interface{}, len(cols))
-			ptrs := make([]interface{}, len(cols))
-			for i := range values {
-				ptrs[i] = &values[i]
-			}
-			dataRows.Scan(ptrs...)
-
-			var valStrs []string
-			for _, v := range values {
-				switch val := v.(type) {
-				case nil:
-					valStrs = append(valStrs, "NULL")
-				case int64:
-					valStrs = append(valStrs, fmt.Sprintf("%d", val))
-				case float64:
-					valStrs = append(valStrs, fmt.Sprintf("%g", val))
-				case string:
-					valStrs = append(valStrs, fmt.Sprintf("'%s'", strings.ReplaceAll(val, "'", "''")))
-				case []byte:
-					valStrs = append(valStrs, fmt.Sprintf("'%s'", strings.ReplaceAll(string(val), "'", "''")))
-				default:
-					valStrs = append(valStrs, fmt.Sprintf("'%v'", val))
-				}
-			}
-			fmt.Fprintf(w, "INSERT INTO `%s` VALUES (%s);\n", name, strings.Join(valStrs, ", "))
-		}
-		dataRows.Close()
 		fmt.Fprintln(w)
 	}
+
+	if err := rows.Err(); err != nil {
+		return fmt.Errorf("read table list: %w", err)
+	}
+
+	return nil
+}
+
+func (a *AdminApp) exportTable(w io.Writer, name string) error {
+	dataRows, err := a.db.Query(fmt.Sprintf("SELECT * FROM `%s`", name))
+	if err != nil {
+		return fmt.Errorf("query table %q: %w", name, err)
+	}
+	defer dataRows.Close()
+
+	cols, err := dataRows.Columns()
+	if err != nil {
+		return fmt.Errorf("read columns of table %q: %w", name, err)
+	}
+
+	for dataRows.Next() {
+		values := make([]interface{}, len(cols))
+		ptrs := make([]interface{}, len(cols))
+
+		for i := range values {
+			ptrs[i] = &values[i]
+		}
+
+		if err := dataRows.Scan(ptrs...); err != nil {
+			return fmt.Errorf("read row of table %q: %w", name, err)
+		}
+
+		var valStrs []string
+
+		for _, v := range values {
+			switch val := v.(type) {
+			case nil:
+				valStrs = append(valStrs, "NULL")
+			case int64:
+				valStrs = append(valStrs, fmt.Sprintf("%d", val))
+			case float64:
+				valStrs = append(valStrs, fmt.Sprintf("%g", val))
+			case string:
+				valStrs = append(valStrs, fmt.Sprintf("'%s'", strings.ReplaceAll(val, "'", "''")))
+			case []byte:
+				valStrs = append(valStrs, fmt.Sprintf("'%s'", strings.ReplaceAll(string(val), "'", "''")))
+			default:
+				valStrs = append(valStrs, fmt.Sprintf("'%v'", val))
+			}
+		}
+
+		fmt.Fprintf(w, "INSERT INTO `%s` VALUES (%s);\n", name, strings.Join(valStrs, ", "))
+	}
+
+	if err := dataRows.Err(); err != nil {
+		return fmt.Errorf("read rows of table %q: %w", name, err)
+	}
+
+	return nil
 }
 
 // --- Utility functions ---

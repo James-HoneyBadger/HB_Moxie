@@ -80,10 +80,22 @@ func (a *AdminApp) makeDatabaseTab() fyne.CanvasObject {
 			var name, colType string
 			var notNull, pk int
 			var dflt sql.NullString
-			pragmaRows.Scan(&cid, &name, &colType, &notNull, &dflt, &pk)
+
+			if err := pragmaRows.Scan(&cid, &name, &colType, &notNull, &dflt, &pk); err != nil {
+				pragmaRows.Close()
+				pageLabel.SetText("Error: " + err.Error())
+				return
+			}
+
 			dbColumns = append(dbColumns, name)
 		}
+		pragmaErr := pragmaRows.Err()
 		pragmaRows.Close()
+
+		if pragmaErr != nil {
+			pageLabel.SetText("Error: " + pragmaErr.Error())
+			return
+		}
 
 		// Get data
 		dataRows, err := a.db.Query(fmt.Sprintf("SELECT * FROM %s LIMIT %d OFFSET %d", quotedName, pageSize, offset))
@@ -95,7 +107,13 @@ func (a *AdminApp) makeDatabaseTab() fyne.CanvasObject {
 		for dataRows.Next() {
 			dbRows = append(dbRows, scanRowStrings(dataRows, len(dbColumns)))
 		}
+		dataErr := dataRows.Err()
 		dataRows.Close()
+
+		if dataErr != nil {
+			pageLabel.SetText("Error: " + dataErr.Error())
+			return
+		}
 
 		// Update column widths based on header length
 		for i, col := range dbColumns {
@@ -210,6 +228,12 @@ func (a *AdminApp) makeDatabaseTab() fyne.CanvasObject {
 			count++
 		}
 
+		if err := rows.Err(); err != nil {
+			queryStatus.SetText("Error: " + err.Error())
+			queryResultTable.Refresh()
+			return
+		}
+
 		// Auto-size columns
 		for i, col := range qrColumns {
 			w := float32(len(col)*10 + 40)
@@ -305,10 +329,22 @@ func (a *AdminApp) makeDatabaseTab() fyne.CanvasObject {
 			if err != nil || writer == nil {
 				return
 			}
-			defer writer.Close()
-			a.exportDatabase(writer)
+			exportPath := writer.URI().Path()
+			exportErr := a.exportDatabase(writer)
+			closeErr := writer.Close()
+
+			if exportErr != nil {
+				dialog.ShowError(fmt.Errorf("export failed: %w", exportErr), a.window)
+				return
+			}
+
+			if closeErr != nil {
+				dialog.ShowError(fmt.Errorf("export failed while writing the file: %w", closeErr), a.window)
+				return
+			}
+
 			dialog.ShowInformation("Export Complete",
-				"Database exported successfully to:\n"+writer.URI().Path(),
+				"Database exported successfully to:\n"+exportPath,
 				a.window)
 		}, a.window)
 		d.SetFileName(fmt.Sprintf("ratel_ledger_export_%s.sql", ""))
