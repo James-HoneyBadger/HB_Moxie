@@ -5,7 +5,7 @@ inputs:
   go-version:
     description: Go version to use
     required: false
-    default: "1.25.7"
+    default: "1.27.x"
   mingw-version:
     description: MinGW version to use
     required: false

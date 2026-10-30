@@ -1,5 +1,9 @@
 name: Build Release
 
+env:
+  # Newest supported Go release line; must build the go directive in go.mod.
+  GO_VERSION: "1.27.x"
+
 permissions:
   contents: write
 
@@ -93,7 +97,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.25.7"
+          go-version: ${{ env.GO_VERSION }}
 
       - name: Verify generated OpenAPI and TypeScript models
         run: go run ./cmd/openapi --check
