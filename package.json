@@ -38,7 +38,7 @@
     "ua-parser-js": "^1.0.39",
     "vue": "^3.5.27",
     "vue-echarts": "^8.0.1",
-    "vue-i18n": "^11.2.8",
+    "vue-i18n": "^11.4.14",
     "vue-router": "^5.0.2",
     "vue3-perfect-scrollbar": "^2.0.0",
     "vuedraggable": "^4.1.0",
