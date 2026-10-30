@@ -34,15 +34,19 @@ A standalone desktop application for managing Ratel Ledger configuration, users,
 
 ### Prerequisites
 
+Fyne draws through OpenGL and links against both the X11 and Wayland
+backends, so the desktop development headers are required.
+
 **Fedora/RHEL:**
 ```bash
 sudo dnf install -y gcc mesa-libGL-devel libX11-devel libXcursor-devel \
-  libXrandr-devel libXinerama-devel libXi-devel libXxf86vm-devel
+  libXrandr-devel libXinerama-devel libXi-devel libXxf86vm-devel \
+  wayland-devel libxkbcommon-devel
 ```
 
 **Ubuntu/Debian:**
 ```bash
-sudo apt install -y gcc libgl1-mesa-dev xorg-dev
+sudo apt install -y gcc libgl1-mesa-dev xorg-dev libwayland-dev libxkbcommon-dev
 ```
 
 ### Compile

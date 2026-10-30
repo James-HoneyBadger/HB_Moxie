@@ -24,6 +24,8 @@ details.
 
 ### Changed
 
+- Upgrade the admin tool to Fyne 2.8.2 (from 2.5.4). Building it on Linux now
+  requires the Wayland development headers in addition to X11.
 - Upgrade the desktop shell to Electron 45.1 (from 33, which reached
   end-of-life in April 2025) and electron-builder 26, dropping the unused
   `electron-is-dev` dependency. The Electron 45 toolchain requires Node 22.12+.
@@ -49,6 +51,8 @@ details.
 - Updated `golang.org/x/net`, `golang.org/x/crypto`, `xuri/excelize/v2`,
   `quic-go`, and `go-jose/v4`, clearing all vulnerabilities reachable from the
   application code according to `govulncheck`.
+- Updated `golang.org/x/image` in the admin tool, clearing the four reachable
+  image-decoding vulnerabilities reported by `govulncheck`.
 
 ## [1.4.3] - 2026-10-24
 
