@@ -73,7 +73,7 @@ Gin Router ──► Middleware Chain ──► API Handler ──► Service �
 | Component | Responsibility |
 |-----------|---------------|
 | **Gin Router** | HTTP routing, middleware pipeline, static file serving |
-| **Middleware** | Authentication, rate limiting, error recovery, gzip |
+| **Middleware** | Authentication, rate limiting, error recovery |
 | **API Handlers** (`pkg/api/`) | Request parsing, response formatting, input validation |
 | **Services** (`pkg/services/`) | Business logic, authorization checks, cross-cutting concerns |
 | **DataStore** (`pkg/datastore/`) | Database abstraction, ORM queries, transactions |
@@ -501,14 +501,14 @@ Source
   │
   ├── ./scripts/build.sh backend
   │       │
-  │       ├── go get
+  │       ├── go mod download
   │       ├── go vet (lint)
   │       ├── go test
   │       └── go build (-tags timetzdata, CGO_ENABLED=1)
   │
   ├── ./scripts/build.sh frontend
   │       │
-  │       ├── npm install
+  │       ├── npm ci
   │       ├── npm run lint
   │       ├── npm test
   │       └── npm run build (vite)

@@ -57,7 +57,7 @@ Then extract the archive and run the binary. See [docs/INSTALLATION.md](docs/INS
 
 ## Default Credentials
 
-On first launch with no existing database, Ratel Ledger creates a default administrator account with a random password displayed in the startup log. If auto-login is enabled (default), the login screen is skipped entirely.
+On first launch with no existing database, Ratel Ledger creates a default administrator account (`admin`) with a random password. The password is printed once to the console on that first start and is never written to the log file. If auto-login is enabled (default), the login screen is skipped entirely; you can set a new password at any time with `ratel-ledger userdata user-modify-password --username admin --password <new-password>`.
 
 ## Keyboard Shortcuts
 
@@ -93,7 +93,7 @@ go run .
 
 | Layer    | Technology |
 |----------|------------|
-| Backend  | Go 1.25, Gin, xorm |
+| Backend  | Go 1.26, Gin, xorm |
 | Frontend | Vue 3, Vuetify 3, TypeScript, Vite |
 | Desktop  | Electron 33 |
 | Database | SQLite 3 / MySQL / PostgreSQL |

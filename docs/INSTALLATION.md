@@ -21,7 +21,7 @@ Complete instructions for installing and running Ratel Ledger as a desktop appli
 | OS | Linux (amd64, arm64), macOS, Windows |
 | RAM | 256 MB |
 | Disk | 200 MB (application) + database storage |
-| Go | 1.25+ (build from source only) |
+| Go | 1.26+ (build from source only) |
 | Node.js | 20.19+ or 22.12+ (build from source only) |
 
 ---
@@ -68,7 +68,7 @@ See [ELECTRON.md](ELECTRON.md) for full Electron build and packaging details.
 
 ### Prerequisites
 
-- Go 1.25 or later
+- Go 1.26 or later
 - Node.js 24 or later
 - npm
 - GCC (for SQLite CGO compilation)
@@ -114,14 +114,14 @@ If you prefer not to use `scripts/build.sh`:
 
 ```bash
 # Backend
-go get .
+go mod download
 go build -o ratel-ledger \
   -tags timetzdata \
   -ldflags "-X main.Version=dev -X main.CommitHash=$(git rev-parse HEAD)" \
   .
 
 # Frontend
-npm install
+npm ci
 npm run build
 ```
 

@@ -35,7 +35,7 @@ Users get a self-contained application with no browser or terminal needed.
 |------|---------|
 | Node.js | 20.19+ or 22.12+ |
 | npm | 9+ |
-| Go | 1.25+ (to build the backend binary) |
+| Go | 1.26+ (to build the backend binary) |
 | GCC | For SQLite CGO compilation |
 
 ---

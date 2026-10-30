@@ -38,8 +38,15 @@ A complete guide to using Ratel Ledger for personal finance management.
 1. Launch the Ratel Ledger desktop application.
 2. Log in with the default credentials:
    - **Username:** `admin`
-   - **Password:** the random password printed in the startup log on first launch.
+   - **Password:** the random password printed to the console on first launch. It is shown once and is deliberately not written to the log file.
 3. Change your password immediately via **Settings → Security**.
+
+   If auto-login is enabled (the default) the login screen is skipped, so no password is needed. If you missed the one-time console output, set a new password from the command line:
+
+   ```bash
+   ./ratel-ledger userdata user-modify-password --username admin --password "newpassword"
+   ```
+
 4. Set your preferred currency, timezone, and language in **Settings → Basic**.
 
 ### Initial Setup Checklist

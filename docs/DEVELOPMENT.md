@@ -27,7 +27,7 @@ Instructions for setting up a development environment, building, testing, and de
 
 | Tool | Version | Purpose |
 |------|---------|---------|
-| Go | 1.25+ | Backend compilation |
+| Go | 1.26+ | Backend compilation |
 | Node.js | 20.19+ or 22.12+ | Frontend build |
 | npm | 9+ | Package management |
 | GCC | Any recent | SQLite CGO compilation |
@@ -63,13 +63,13 @@ cd ratel-ledger
 ### Backend Dependencies
 
 ```bash
-go get .
+go mod download
 ```
 
 ### Frontend Dependencies
 
 ```bash
-npm install
+npm ci
 ```
 
 ---
@@ -354,10 +354,19 @@ npx jest --watch
 go vet ./...
 ```
 
+### Dependencies
+
+```bash
+govulncheck ./...
+```
+
+Reports known vulnerabilities that your code can actually reach, based on the Go vulnerability database. Install it with `go install golang.org/x/vuln/cmd/govulncheck@latest`. CI runs the same scan.
+
 ### Frontend
 
 ```bash
-npm run lint
+npm run lint       # type-check and report lint errors, does not modify files
+npm run lint:fix   # type-check and apply automatic fixes
 ```
 
 ESLint configuration is in `eslint.config.mjs`.

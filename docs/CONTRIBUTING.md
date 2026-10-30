@@ -38,8 +38,8 @@ Guidelines for contributing to Ratel Ledger.
 See [docs/DEVELOPMENT.md](DEVELOPMENT.md) for complete setup instructions. Quick start:
 
 ```bash
-go get .
-npm install
+go mod download
+npm ci
 go build -o ratel-ledger . && ./ratel-ledger server run  # Terminal 1
 npm run serve                                           # Terminal 2
 ```
@@ -146,8 +146,12 @@ chore: update Go dependencies to latest patch versions
 3. **Run linters**:
    ```bash
    go vet ./...
-   npm run lint
+   npm run lint        # check only; use `npm run lint:fix` to apply fixes
    ```
+
+   CI runs the same checks on every pull request: `gofmt`, `go vet`, `go test -short -race`, generated OpenAPI verification, a `govulncheck` vulnerability scan, `npm run lint`, `npm test`, and a frontend build. Run them locally before opening the PR to avoid a round trip.
+
+   Run the vulnerability scan locally with `govulncheck ./...`; it exits non-zero when your code reaches a known vulnerability.
 
 4. **Update documentation** if your change affects:
    - Configuration options → update `docs/CONFIGURATION.md`
