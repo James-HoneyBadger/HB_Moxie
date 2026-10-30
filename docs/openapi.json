@@ -1,6 +1,58 @@
 {
   "components": {
     "schemas": {
+      "AIAssistantAskRequest": {
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "months": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "question",
+          "months"
+        ]
+      },
+      "AIAssistantAskResponse": {
+        "properties": {
+          "answer": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "endTime": {
+            "type": "integer"
+          },
+          "transactionCount": {
+            "type": "integer"
+          },
+          "privacyNote": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "answer",
+          "provider",
+          "model",
+          "startTime",
+          "endTime",
+          "transactionCount",
+          "privacyNote"
+        ]
+      },
       "ApplicationCloudSetting": {
         "properties": {
           "settingKey": {
@@ -925,6 +977,34 @@
           }
         },
         "summary": "Log in the single desktop user without a password"
+      }
+    },
+    "/api/v1/ai/ask.json": {
+      "post": {
+        "operationId": "askAIAssistant",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AIAssistantAskRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AIAssistantAskResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Ask a question about the user's finances; only an aggregated summary is sent to the configured model"
       }
     },
     "/api/v1/backups/create.json": {

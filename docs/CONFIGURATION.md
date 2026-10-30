@@ -266,6 +266,17 @@ max_ai_recognition_picture_size = 10485760
 ## LLM Image Recognition
 
 ```ini
+[llm]
+# Allow asking questions about your finances through the AI assistant API
+ai_assistant = false
+
+[llm_ai_assistant]
+# Provider for the AI assistant, same values as llm_image_recognition
+llm_provider = openai_compatible
+openai_compatible_base_url = https://api.example.com/v1
+openai_compatible_api_key = <key>
+openai_compatible_model_id = <model>
+
 [llm_image_recognition]
 llm_provider =
 openai_api_key =

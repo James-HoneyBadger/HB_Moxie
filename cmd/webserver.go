@@ -408,6 +408,9 @@ func startWebServer(c *core.CliContext) error {
 			apiV1Route.POST("/insights/explorers/move.json", bindApi(api.InsightsExplorers.InsightsExplorerMoveHandler))
 			apiV1Route.POST("/insights/explorers/delete.json", bindApi(api.InsightsExplorers.InsightsExplorerDeleteHandler))
 
+			// AI assistant
+			apiV1Route.POST("/ai/ask.json", bindApi(api.AIAssistant.AskHandler))
+
 			// Shared expenses
 			apiV1Route.GET("/transactions/splits/index.json", bindApi(api.TransactionSplits.TransactionSplitIndexHandler))
 			apiV1Route.GET("/transactions/splits/list.json", bindApi(api.TransactionSplits.TransactionSplitListHandler))

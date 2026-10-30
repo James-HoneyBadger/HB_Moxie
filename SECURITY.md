@@ -13,6 +13,22 @@ a new patch release; there are no long-term support branches.
 | Latest `1.4.x` release | ✅ |
 | Older releases | ❌ |
 
+## Optional third-party model access
+
+Two features can send data to a model endpoint that you configure yourself; both
+are disabled by default and send nothing on their own:
+
+- **Receipt image recognition** sends the picture you choose to the configured
+  `[llm_image_recognition]` provider.
+- **AI assistant** sends an aggregated summary to the configured
+  `[llm_ai_assistant]` provider: totals per currency, expense totals per category
+  name, account balances and shared expense balances labelled by position. Account
+  names, people names, descriptions, tags and pictures are never sent, and every
+  response reports what was included in its `privacyNote` field.
+
+No telemetry, analytics or crash reporting is built in; `scripts/check-no-telemetry.sh`
+enforces that in CI.
+
 ## Verifying Releases
 
 Release artifacts can be checked without trusting this repository's hosting:

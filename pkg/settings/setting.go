@@ -357,6 +357,12 @@ type Config struct {
 
 	// Large Language Model for Receipt Image Recognition
 	ReceiptImageRecognitionLLMConfig *LLMConfig
+	// AIAssistantLLMConfig configures the model that answers questions about the
+	// user's finances through the AI assistant API.
+	AIAssistantLLMConfig *LLMConfig
+	// EnableAIAssistant gates the AI assistant API; it is off by default because
+	// answers require sending an aggregated summary to a third party.
+	EnableAIAssistant bool
 
 	// Uuid
 	UuidGeneratorType string
@@ -537,6 +543,12 @@ func LoadConfiguration(configFilePath string) (*Config, error) {
 	}
 
 	config.ReceiptImageRecognitionLLMConfig, err = loadLLMConfiguration(cfgFile, "llm_image_recognition")
+
+	if err != nil {
+		return nil, err
+	}
+
+	config.AIAssistantLLMConfig, err = loadLLMConfiguration(cfgFile, "llm_ai_assistant")
 
 	if err != nil {
 		return nil, err
@@ -878,6 +890,7 @@ func loadStorageConfiguration(config *Config, configFile *ini.File, sectionName 
 func loadLLMGlobalConfiguration(config *Config, configFile *ini.File, sectionName string) error {
 	config.TransactionFromAIImageRecognition = getConfigItemBoolValue(configFile, sectionName, "transaction_from_ai_image_recognition", false)
 	config.MaxAIRecognitionPictureFileSize = getConfigItemUint32Value(configFile, sectionName, "max_ai_recognition_picture_size", defaultAIRecognitionPictureMaxSize)
+	config.EnableAIAssistant = getConfigItemBoolValue(configFile, sectionName, "ai_assistant", false)
 
 	return nil
 }

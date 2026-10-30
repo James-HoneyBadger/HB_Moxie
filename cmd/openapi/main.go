@@ -57,6 +57,8 @@ type apiSchemaTypes struct {
 	SharedExpenseSummaryItem             models.SharedExpenseSummaryItem
 	SharedExpenseEntryResponse           models.SharedExpenseEntryResponse
 	SharedExpenseSettlementDeleteRequest models.SharedExpenseSettlementDeleteRequest
+	AIAssistantAskRequest                models.AIAssistantAskRequest
+	AIAssistantAskResponse               models.AIAssistantAskResponse
 }
 
 func main() {
@@ -177,6 +179,9 @@ func generatedPaths() map[string]any {
 		},
 		"/api/v1/tokens/generate/mcp.json": map[string]any{
 			"post": jsonOperation("generateMcpToken", "Generate an MCP token", "TokenGenerateMCPRequest", "TokenGenerateMCPResponse"),
+		},
+		"/api/v1/ai/ask.json": map[string]any{
+			"post": jsonOperation("askAIAssistant", "Ask a question about the user's finances; only an aggregated summary is sent to the configured model", "AIAssistantAskRequest", "AIAssistantAskResponse"),
 		},
 		"/api/v1/transactions/splits/index.json": map[string]any{
 			"get": withParameters(

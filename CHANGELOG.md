@@ -34,6 +34,13 @@ details.
   across the listed people.
 - The first real database migration, which backfills the direction of splits
   created before directions existed.
+- An AI assistant API (`POST /api/v1/ai/ask.json`) that answers questions about
+  the user's finances with a language model the user configures in
+  `[llm_ai_assistant]`. It is disabled by default, and only an aggregated,
+  de-identified summary is sent: totals per currency, expense totals per category
+  name, account balances and shared expense balances labelled by position. Each
+  response reports what was sent in its `privacyNote`, and the settings support
+  every provider the receipt recognition feature already supports.
 - Pull request CI covering `gofmt`, `go vet`, generated OpenAPI verification, a
   backend build, `go test -short -race`, frontend lint/tests/build, Electron
   entry-point syntax checks, a `govulncheck` vulnerability scan, and repository

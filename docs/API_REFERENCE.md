@@ -28,6 +28,7 @@ The machine-readable OpenAPI document is generated at [`openapi.json`](./openapi
 - [Transaction Tags](#transaction-tags)
 - [Transaction Templates](#transaction-templates)
 - [Insights Explorers](#insights-explorers)
+- [AI Assistant](#ai-assistant)
 - [Shared Expenses](#shared-expenses)
 - [Exchange Rates](#exchange-rates)
 - [Data Management](#data-management)
@@ -871,6 +872,49 @@ POST /api/v1/insights/explorers/move.json
 
 ```
 POST /api/v1/insights/explorers/delete.json
+```
+
+---
+
+## AI Assistant
+
+Answers a question about the user's finances with the configured language model.
+
+```
+POST /api/v1/ai/ask.json
+```
+
+```json
+{
+  "question": "How much did I spend on dining this year?",
+  "months": 12
+}
+```
+
+The endpoint is disabled unless `[llm] ai_assistant = true` and a provider is
+configured in `[llm_ai_assistant]`.
+
+Only an aggregated summary leaves the machine, and every response describes what
+was sent in its `privacyNote` field:
+
+- income and expense totals per currency, plus the transaction count
+- expense totals per category name, capped at the eight largest
+- account balances labelled `Account 1`, `Account 2`, … with the account category
+- shared expense balances labelled `Person 1`, `Person 2`, …
+
+Account names, people names, transaction descriptions, tags and pictures are
+never included. Amounts are integers in the smallest currency unit.
+
+```json
+{
+  "answer": "You spent 75.00 USD on dining.",
+  "provider": "openai_compatible",
+  "model": "<model id>",
+  "startTime": 1761864428,
+  "endTime": 1793400428,
+  "transactionCount": 2,
+  "privacyNote": "Only the aggregated summary ..."
+}
 ```
 
 ---
