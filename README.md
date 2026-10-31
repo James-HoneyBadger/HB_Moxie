@@ -2,7 +2,7 @@
 
 A standalone desktop personal finance management application.
 
-Honey Ledger is a self-contained Electron desktop application for individuals who want full control over their financial data. All data is stored locally on your machine — no cloud, no browser, no external services required.
+Honey Ledger is a self-contained Electron desktop application for individuals who want full control over their financial data. The Go backend runs inside the app and everything you enter lives in a database on your own machine — there is no account to create and no server to run. Network access is limited to the features that need it: exchange-rate downloads, map tiles, receipt recognition, the AI assistant, settings sync and update checks. None of them carry telemetry and every one is optional: leave them unconfigured or switch them off and the app runs fully offline. [SECURITY.md](SECURITY.md) lists exactly what can leave the machine, and the [documentation](docs/) covers the switch for each.
 
 ## Features
 
