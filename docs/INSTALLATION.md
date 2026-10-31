@@ -22,7 +22,7 @@ Complete instructions for installing and running Honey Ledger as a desktop appli
 | RAM | 256 MB |
 | Disk | 200 MB (application) + database storage |
 | Go | 1.26+ (build from source only) |
-| Node.js | 22.12+ (build from source only) |
+| Node.js | 22.13+ (build from source only) |
 
 ---
 
@@ -69,7 +69,7 @@ See [ELECTRON.md](ELECTRON.md) for full Electron build and packaging details.
 ### Prerequisites
 
 - Go 1.26 or later
-- Node.js 22.12 or later
+- Node.js 22.13 or later
 - npm
 - GCC (for SQLite CGO compilation)
 

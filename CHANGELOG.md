@@ -141,6 +141,35 @@ details.
   application code according to `govulncheck`.
 - Updated `golang.org/x/image` in the admin tool, clearing the four reachable
   image-decoding vulnerabilities reported by `govulncheck`.
+- Cleared the Dependabot backlog. The runtime dependencies move to `axios`
+  1.20.0 (prototype pollution through the fetch adapter, header injection, and
+  an unhandled HTTP/2 `error` event), `vue` 3.5.42 and `vue-i18n` 11.4.14 (XSS
+  through `srcdoc`, and `escapeParameter` leaving named values unescaped),
+  `echarts` 6.1.0, `moment` 2.31.0 (path traversal through a crafted locale
+  name) and `moment-timezone` with it.
+- The build and test tooling follows: `vite` 7.3.7 (launch-editor command
+  injection and the `server.fs.allow` path bypass), `eslint` 10.14 with
+  `eslint-plugin-vue` 10.12 and `@vue/eslint-config-typescript` 14.9,
+  `jest` 30.5.2 with `ts-jest` 29.4.15, and `vite-plugin-checker` 0.14.5.
+  `minimatch` 11 and `glob` 14 are pinned through `overrides`, since the
+  packages that depend on them still declare the vulnerable range.
+- `git-rev-sync` is gone: the Vite config reads the commit hash with
+  `git rev-parse --short HEAD`, which drops the `shelljs`/`glob`/`brace-expansion`
+  chain that came with it.
+- ESLint 10 requires Node 22.13 on the 22 line, so the documented minimum moves
+  from 22.12 to 22.13.
+- One low-severity advisory stays: `deepmerge` 4.3.1 has no fixed release, and
+  only `jest-config` uses it, to merge test configuration at build time.
+- `govulncheck` reports no reachable vulnerabilities. The only advisory left in
+  the module graph is `GO-2026-5932` for the unmaintained `x/crypto/openpgp`
+  package, which has no fix and which the application does not call.
+- The backend's Go dependencies are current: `go-jose/v4` 4.1.6,
+  `klauspost/compress` 1.18.7 (out-of-bounds write in `compress/s2`),
+  `xuri/excelize/v2` at the release that fixes the unrecoverable pivot-table
+  panic, `buger/jsonparser` 1.1.2, `filippo.io/edwards25519` 1.1.1, and the
+  `golang.org/x/{net,crypto,text,sys}` set. The admin tool moves to the same
+  `golang.org/x` versions, which raises its `go` directive to 1.26 to match the
+  backend.
 
 ## [1.4.3] - 2026-10-24
 

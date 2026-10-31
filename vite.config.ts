@@ -1,14 +1,22 @@
 import fs from 'fs';
+import { execSync } from 'child_process';
 import { resolve } from 'path';
 
 import { type UserConfig, defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue';
 import vuetify from 'vite-plugin-vuetify';
 import Checker from 'vite-plugin-checker';
-import git from 'git-rev-sync';
 
 import packageFile from './package.json';
 import thirdPartyLicenseFile from './third-party-dependencies.json';
+
+function getBuildCommitHash(): string {
+    try {
+        return execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim();
+    } catch {
+        return 'unknown';
+    }
+}
 
 const SRC_DIR = resolve(__dirname, './src');
 const PUBLIC_DIR = resolve(__dirname, './public');
@@ -26,7 +34,7 @@ export default defineConfig(() => {
             __HONEY_LEDGER_IS_PRODUCTION__: process.env['NODE_ENV'] === 'production',
             __HONEY_LEDGER_VERSION__: JSON.stringify(packageFile.version),
             __HONEY_LEDGER_BUILD_UNIX_TIME__: JSON.stringify(buildUnixTime),
-            __HONEY_LEDGER_BUILD_COMMIT_HASH__: JSON.stringify(git.short()),
+            __HONEY_LEDGER_BUILD_COMMIT_HASH__: JSON.stringify(getBuildCommitHash()),
             __HONEY_LEDGER_LICENSE__: JSON.stringify(licenseContent),
             __HONEY_LEDGER_THIRD_PARTY_LICENSES__: JSON.stringify(thirdPartyLicenseFile)
         },

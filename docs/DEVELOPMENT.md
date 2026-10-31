@@ -28,7 +28,7 @@ Instructions for setting up a development environment, building, testing, and de
 | Tool | Version | Purpose |
 |------|---------|---------|
 | Go | 1.26+ | Backend compilation |
-| Node.js | 22.12+ | Frontend build and Electron tooling |
+| Node.js | 22.13+ | Frontend build and Electron tooling |
 | npm | 9+ | Package management |
 | GCC | Any recent | SQLite CGO compilation |
 | Git | Any recent | Version control |

@@ -34,7 +34,7 @@ Users get a self-contained application with no browser or terminal needed.
 
 | Tool | Version |
 |------|---------|
-| Node.js | 22.12+ (required by the Electron 45 toolchain) |
+| Node.js | 22.13+ (required by the Electron 45 toolchain and ESLint 10) |
 | npm | 9+ |
 | Go | 1.26+ (to build the backend binary) |
 | GCC | For SQLite CGO compilation |

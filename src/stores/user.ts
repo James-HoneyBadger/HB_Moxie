@@ -387,19 +387,19 @@ export const useUserStore = defineStore('user', () => {
     function getExportedUserData(fileType: string, req?: ExportTransactionDataRequest): Promise<Blob> {
         return new Promise((resolve, reject) => {
             services.getExportedUserData(fileType, req).then(response => {
-                if (response && response.headers) {
-                    const contentType = response.headers['content-type']?.toString() || '';
+                const responseContentType = response.headers?.['content-type']?.toString() || '';
 
-                    if (fileType === 'csv' && !KnownFileType.CSV.isSameType(contentType)) {
+                if (response && response.headers) {
+                    if (fileType === 'csv' && !KnownFileType.CSV.isSameType(responseContentType)) {
                         reject({ message: 'Unable to retrieve exported user data' });
                         return;
-                    } else if (fileType === 'tsv' && !KnownFileType.TSV.isSameType(contentType)) {
+                    } else if (fileType === 'tsv' && !KnownFileType.TSV.isSameType(responseContentType)) {
                         reject({ message: 'Unable to retrieve exported user data' });
                         return;
                     }
                 }
 
-                const blob = new Blob([response.data], { type: response.headers['content-type'] });
+                const blob = new Blob([response.data], { type: responseContentType });
                 resolve(blob);
             }).catch(error => {
                 logger.error('failed to retrieve user statistics data', error);
