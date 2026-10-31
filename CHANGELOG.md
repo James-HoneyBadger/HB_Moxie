@@ -22,8 +22,9 @@ details.
   the amount others owe and opens the split editor, and expense rows offer the
   same editor next to the description.
 - Versioned database migrations with a `schema_migration` ledger, applied at
-  startup after the automatic schema sync. Each migration runs once and is
-  recorded only after it succeeds.
+  startup after the automatic schema sync. Each migration runs once in its own
+  transaction together with the row that records it, so a failure rolls the
+  change back instead of leaving a half-applied schema.
 - Shared expense settlements: record a payment between the user and another
   person in either direction and see net balances ("owes you" / "you owe")
   instead of only what the user is owed. Splits can now point either way, so a

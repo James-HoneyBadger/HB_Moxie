@@ -444,10 +444,8 @@ the migration registry in `pkg/datastore/migration.go`.
 {
     Id:          "20261030_01_split_direction",
     Description: "default existing transaction splits to \"they owe me\"",
-    Up: func(c core.Context, db *Database) error {
-        _, err := db.NewSession(c).Exec("UPDATE transaction_split SET direction = ? WHERE direction = 0", ...)
-
-        return err
+    Up: func(c core.Context, tx *MigrationTx) error {
+        return tx.Exec("UPDATE transaction_split SET direction = ? WHERE direction = 0", ...)
     },
 },
 ```
@@ -456,9 +454,12 @@ Rules for a new migration:
 
 - Append it to `migrations`; never reorder or rename an existing entry.
 - `Id` sorts chronologically: `YYYYMMDD_NN_short_description`.
-- The id is recorded in `schema_migration` only after `Up` succeeds. The runner
-  does not open a transaction around `Up`, so either keep it a single statement
-  or wrap a multi-statement change in `database.DoTransaction`.
+- Send every statement through `tx`. `Up` and the row in `schema_migration` are
+  committed in the same transaction, so a migration that fails half way leaves
+  nothing behind and is simply retried on the next start.
+- `tx.HasTable` and `tx.HasColumn` read through the transaction, so they see
+  changes the same migration already made. Opening a session (`db.NewSession`)
+  inside `Up` would run outside that transaction — don't.
 - Migrations run after the schema sync, on every startup and for
   `honey-ledger database update`.
 
