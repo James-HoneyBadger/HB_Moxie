@@ -256,6 +256,9 @@ type TransactionListInMonthByPageRequest struct {
 	TrimAccount  bool            `form:"trim_account"`
 	TrimCategory bool            `form:"trim_category"`
 	TrimTag      bool            `form:"trim_tag"`
+	// SharedFilter limits the result to transactions that are split with other
+	// people ("shared") or that are not ("unshared"). Empty means no filter.
+	SharedFilter string `form:"shared_filter" binding:"omitempty,oneof=shared unshared"`
 }
 
 // TransactionAllListRequest represents all parameters of all transaction listing request

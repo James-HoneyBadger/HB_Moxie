@@ -207,23 +207,7 @@ func (a *TransactionsApi) TransactionListHandler(c *core.WebContext) (any, *errs
 		return nil, errs.Or(err, errs.ErrOperationFailed)
 	}
 
-	// One query for the page is cheaper than a second request per page from the
-	// client, and it keeps the shared expense state next to the transaction.
-	transactionIds := make([]int64, 0, len(transactionResult))
-
-	for _, item := range transactionResult {
-		transactionIds = append(transactionIds, item.Id)
-	}
-
-	if splitSummaries, err := services.TransactionSplits.GetTransactionSplitSummaries(c, uid, transactionIds); err == nil {
-		for _, item := range transactionResult {
-			if summary, exists := splitSummaries[item.Id]; exists {
-				item.Split = summary
-			}
-		}
-	} else {
-		log.Warnf(c, "[transactions.TransactionListHandler] failed to attach split summaries for user \"uid:%d\", because %s", uid, err.Error())
-	}
+	a.attachTransactionSplitSummaries(c, uid, transactionResult)
 
 	transactionResps := &models.TransactionInfoPageWrapperResponse{
 		Items: transactionResult,
@@ -238,6 +222,33 @@ func (a *TransactionsApi) TransactionListHandler(c *core.WebContext) (any, *errs
 	}
 
 	return transactionResps, nil
+}
+
+// attachTransactionSplitSummaries fills the split state of a page of transactions
+// with one query instead of a second request per page from the client.
+func (a *TransactionsApi) attachTransactionSplitSummaries(c *core.WebContext, uid int64, transactionResult models.TransactionInfoResponseSlice) {
+	if len(transactionResult) == 0 {
+		return
+	}
+
+	transactionIds := make([]int64, 0, len(transactionResult))
+
+	for _, item := range transactionResult {
+		transactionIds = append(transactionIds, item.Id)
+	}
+
+	splitSummaries, err := services.TransactionSplits.GetTransactionSplitSummaries(c, uid, transactionIds)
+
+	if err != nil {
+		log.Warnf(c, "[transactions.attachTransactionSplitSummaries] failed to load split summaries for user \"uid:%d\", because %s", uid, err.Error())
+		return
+	}
+
+	for _, item := range transactionResult {
+		if summary, exists := splitSummaries[item.Id]; exists {
+			item.Split = summary
+		}
+	}
 }
 
 // TransactionMonthListHandler returns all transaction list of current user by month
@@ -294,7 +305,7 @@ func (a *TransactionsApi) TransactionMonthListHandler(c *core.WebContext) (any, 
 		}
 	}
 
-	transactions, err := a.transactions.GetTransactionsInMonthByPage(c, uid, transactionListReq.Year, transactionListReq.Month, transactionListReq.Type, allCategoryIds, allAccountIds, tagFilters, noTags, transactionListReq.AmountFilter, transactionListReq.Keyword)
+	transactions, err := a.transactions.GetTransactionsInMonthByPage(c, uid, transactionListReq.Year, transactionListReq.Month, transactionListReq.Type, allCategoryIds, allAccountIds, tagFilters, noTags, transactionListReq.AmountFilter, transactionListReq.Keyword, transactionListReq.SharedFilter)
 
 	if err != nil {
 		log.Errorf(c, "[transactions.TransactionMonthListHandler] failed to get transactions in month \"%d-%d\" for user \"uid:%d\", because %s", transactionListReq.Year, transactionListReq.Month, uid, err.Error())
@@ -315,6 +326,8 @@ func (a *TransactionsApi) TransactionMonthListHandler(c *core.WebContext) (any, 
 		log.Errorf(c, "[transactions.TransactionMonthListHandler] failed to assemble transaction result for user \"uid:%d\", because %s", uid, err.Error())
 		return nil, errs.Or(err, errs.ErrOperationFailed)
 	}
+
+	a.attachTransactionSplitSummaries(c, uid, transactionResult)
 
 	transactionResps := &models.TransactionInfoPageWrapperResponse2{
 		Items:      transactionResult,

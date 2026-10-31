@@ -509,6 +509,8 @@ Each item carries a `split` object when the transaction is split with other peop
 GET /api/v1/transactions/list/by_month.json
 ```
 
+Returns every transaction of one month and accepts the same `account_ids`, `category_ids`, `tag_filter`, `amount_filter`, `keyword`, and `shared_filter` filters as the paged list. Items carry the same `split` object.
+
 ### List All
 
 ```

@@ -381,7 +381,7 @@ func (s *TransactionService) GetTransactionsByMaxTime(c core.Context, uid int64,
 }
 
 // GetTransactionsInMonthByPage returns all transactions in given year and month
-func (s *TransactionService) GetTransactionsInMonthByPage(c core.Context, uid int64, year int32, month int32, transactionType models.TransactionType, categoryIds []int64, accountIds []int64, tagFilters []*models.TransactionTagFilter, noTags bool, amountFilter string, keyword string) ([]*models.Transaction, error) {
+func (s *TransactionService) GetTransactionsInMonthByPage(c core.Context, uid int64, year int32, month int32, transactionType models.TransactionType, categoryIds []int64, accountIds []int64, tagFilters []*models.TransactionTagFilter, noTags bool, amountFilter string, keyword string, sharedFilter string) ([]*models.Transaction, error) {
 	if uid <= 0 {
 		return nil, errs.ErrUserIdInvalid
 	}
@@ -406,6 +406,13 @@ func (s *TransactionService) GetTransactionsInMonthByPage(c core.Context, uid in
 	var transactions []*models.Transaction
 
 	condition, conditionParams := s.buildTransactionQueryCondition(uid, maxTransactionTime, minTransactionTime, transactionDbType, categoryIds, accountIds, tagFilters, amountFilter, keyword, true)
+
+	if sharedFilter != "" {
+		subCondition, subParams := s.buildSharedTransactionSubCondition(uid, sharedFilter)
+		condition = condition + " AND " + subCondition
+		conditionParams = append(conditionParams, subParams...)
+	}
+
 	sess := s.UserDataDB(uid).NewSession(c).Where(condition, conditionParams...)
 	sess = s.appendFilterTagIdsConditionToQuery(sess, uid, maxTransactionTime, minTransactionTime, tagFilters, noTags)
 
