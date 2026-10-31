@@ -382,6 +382,8 @@ Requires SMTP to be configured in `[mail]` section.
 | `HONEYTOOL_SERVER_BASEURL` | Yes | Server URL (e.g., `http://localhost:8080`) |
 | `HONEYTOOL_TOKEN` | Yes | API or session token |
 
+The pre-rename names `RATELTOOL_SERVER_BASEURL` and `RATELTOOL_TOKEN` are still read when the current names are unset.
+
 ### Usage
 
 ```bash

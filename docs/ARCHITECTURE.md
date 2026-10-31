@@ -102,19 +102,23 @@ Gin Router ──► Middleware Chain ──► API Handler ──► Service �
 
 `cmd/initializer.go` runs on every startup:
 
-1. Load configuration (INI + environment overrides)
-2. Validate secret key (required for production mode)
-3. Initialize subsystems in order:
-   - DataStore (database connection + schema sync)
+1. Load configuration (INI + environment overrides), generating and persisting
+   `secret_key` when it is empty
+2. Initialize subsystems in order:
+   - DataStore (database connection)
    - Logger (file or console output)
    - Storage (local filesystem, MinIO, or WebDAV)
-   - LLM provider (if AI recognition enabled)
+   - LLM providers for receipt recognition and the AI assistant
    - UUID generator
    - Duplicate checker
    - Avatar provider
    - Mail sender
    - Exchange rates data source
-4. Ensure default admin user exists (first run only)
+3. When `[database] auto_update_database` is on, sync every table structure and
+   then apply pending migrations from the registry, each recorded in
+   `schema_migration` so it runs exactly once
+4. Ensure default admin user exists (first run only). The schema has to exist
+   before this lookup, which is why it runs after the schema sync
 
 ### API Layer Pattern
 
@@ -193,7 +197,6 @@ Applied in order per request:
 | Vite 7 | `vite.config.ts` | Dev server, production bundling, HMR |
 | TypeScript 5.9 | `tsconfig.json` | Type checking |
 | vue-tsc | Via vite-plugin-checker | Vue SFC type checking |
-| PostCSS | `postcss.config.js` | CSS post-processing (autoprefixer, etc.) |
 
 ### Application Bootstrap
 
@@ -410,8 +413,20 @@ User ─────┬──── Account ──── Transaction
           ├──── UserExternalAuth (OAuth2)
           ├──── TransactionTemplate
           ├──── TransactionTagGroup ──── TransactionTag
-          └──── InsightsExplorer
+          ├──── InsightsExplorer
+          ├──── TransactionSplit ── (per person share of an expense)
+          ├──── SharedExpenseSettlement ── (payment against those shares)
+          └──── TransactionReviewDismissal ── (hidden review findings)
 ```
+
+Shared expense tables:
+
+| Table | Purpose |
+|-------|---------|
+| `transaction_split` | One row per person and transaction with the share amount, direction (`1` they owe the user, `2` the user owes them), and the currency captured at creation |
+| `shared_expense_settlement` | A payment between the user and one person, positive when they paid the user |
+| `transaction_review_dismissal` | A dismissed review finding, keyed by kind and a stable finding key |
+| `schema_migration` | Applied schema migrations, so each one runs exactly once |
 
 ### Key Design Decisions
 
@@ -478,11 +493,17 @@ Per-user bitmask (`UserFeatureRestrictions`) controls access to 17 features. Adm
 
 ### LLM Providers
 
-8 supported providers for AI receipt recognition. The backend sends receipt images to the configured LLM API and parses structured transaction data from the response using a prompt template (`templates/prompt/receipt_image_recognition.tmpl`).
+8 supported providers (`openai`, `openai_compatible`, `anthropic`,
+`anthropic_compatible`, `openrouter`, `ollama`, `lm_studio`, `google_ai`), used
+independently by receipt recognition and by the AI assistant. Receipt recognition
+sends the image to the configured API and parses structured transaction data from
+the response using a prompt template (`templates/prompt/receipt_image_recognition.tmpl`);
+the assistant sends only an aggregated, de-identified summary of the user's
+finances built by `assembleAIAssistantContext`.
 
 ### Map Providers
 
-13 tile-based map providers. The backend can optionally proxy tile requests to add server-side API keys and work around CORS restrictions.
+12 tile-based map providers. The backend can optionally proxy tile requests to add server-side API keys and work around CORS restrictions.
 
 ### Email Templates
 

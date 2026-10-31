@@ -268,7 +268,7 @@ The Electron app uses `conf/honey-ledger.ini` for configuration. On first launch
   storage/
 ```
 
-Subsequent launches reuse the existing files, so generated secrets and user data survive upgrades. On first launch after the rename, an existing `HB Moxie` user-data directory and a legacy `conf/hbmoxie.ini` are migrated automatically. The backend binary itself remains in `resources/backend/`.
+Subsequent launches reuse the existing files, so generated secrets and user data survive upgrades. On first launch after the rename, a pre-rename user-data directory (`Ratel Ledger` or `HB Moxie`) and its config file (`conf/ratel-ledger.ini` or `conf/hbmoxie.ini`) are migrated automatically, so an upgrade keeps the accounts, transactions, and settings. The backend binary itself remains in `resources/backend/`.
 
 ---
 

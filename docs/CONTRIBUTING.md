@@ -259,8 +259,8 @@ Never report a vulnerability in a public issue. Follow the process in
 
 ## Repository Hygiene Checks
 
-Two checks guard the project's local-first guarantees. CI runs both; run them
-before pushing:
+Two checks guard the project's local-first guarantees. CI runs them in the same
+job as the locale check; run them before pushing:
 
 ```bash
 node scripts/check-brand.mjs        # product identity matches across manifests

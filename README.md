@@ -25,6 +25,15 @@ Honey Ledger is a self-contained Electron desktop application for individuals wh
 - **MCP Support** — Model Context Protocol integration for AI agent access to your financial data.
 - **Scheduled Transactions** — Recurring transaction automation via built-in cron jobs.
 - **Transaction Templates** — Save and reuse common transaction patterns.
+- **Shared Expenses** — Split an expense with up to 20 people, see who owes whom
+  in either direction, record settlements, and filter the transaction list down
+  to the expenses you share.
+- **Transaction Review** — Points out possible duplicate charges, unusual amounts,
+  and repeating subscriptions, with dismissible findings that link to the
+  transaction they came from.
+- **AI Assistant API** — Ask questions about your finances through
+  `POST /api/v1/ai/ask.json` using your own model, with only an aggregated,
+  de-identified summary leaving the machine.
 - **Insights Explorer** — Custom data queries with chart and table visualization.
 - **Account Reconciliation** — Reconciliation statement support for account balancing.
 - **Map Integration** — Geotagging with 12 map providers (OpenStreetMap, Google Maps, Baidu, Amap, and others).
@@ -83,7 +92,7 @@ go run .
 |----------|-------------|
 | [Installation Guide](docs/INSTALLATION.md) | Installation methods: binary, source, Electron packaging |
 | [Configuration Reference](docs/CONFIGURATION.md) | Complete configuration file reference |
-| [User Guide](docs/USER_GUIDE.md) | End-user guide for all application features |
+| [User Guide](docs/USER_GUIDE.md) | End-user guide for all application features, including shared expenses and transaction review |
 | [API Reference](docs/API_REFERENCE.md) | REST API endpoint documentation |
 | [Architecture Overview](docs/ARCHITECTURE.md) | System design, project structure, and technology stack |
 | [Development Guide](docs/DEVELOPMENT.md) | Setting up a development environment, building, testing |

@@ -20,8 +20,8 @@ param(
     [string[]]$CommandArgs
 )
 
-$script:RATELTOOL_SERVER_BASEURL = $env:RATELTOOL_SERVER_BASEURL
-$script:RATELTOOL_TOKEN = $env:RATELTOOL_TOKEN
+$script:HONEYTOOL_SERVER_BASEURL = if ($env:HONEYTOOL_SERVER_BASEURL) { $env:HONEYTOOL_SERVER_BASEURL } else { $env:RATELTOOL_SERVER_BASEURL }
+$script:HONEYTOOL_TOKEN = if ($env:HONEYTOOL_TOKEN) { $env:HONEYTOOL_TOKEN } else { $env:RATELTOOL_TOKEN }
 
 # API Configuration Structure
 $API_CONFIGS = @(
@@ -727,8 +727,9 @@ function Import-DotEnvFile {
                     $value = $matches[1]
                 }
 
-                if ($key -eq 'RATELTOOL_SERVER_BASEURL' -or $key -eq 'RATELTOOL_TOKEN') {
-                    Set-Variable -Name $key -Value $value -Scope Script -Force
+                if ($key -eq 'HONEYTOOL_SERVER_BASEURL' -or $key -eq 'HONEYTOOL_TOKEN' -or
+                    $key -eq 'RATELTOOL_SERVER_BASEURL' -or $key -eq 'RATELTOOL_TOKEN') {
+                    Set-Variable -Name ($key -replace '^RATELTOOL_', 'HONEYTOOL_') -Value $value -Scope Script -Force
                 }
             }
         }
@@ -739,7 +740,7 @@ function Import-DotEnvFile {
 }
 
 function Initialize-EnvironmentVariables {
-    if ($script:RATELTOOL_SERVER_BASEURL -and $script:RATELTOOL_TOKEN) {
+    if ($script:HONEYTOOL_SERVER_BASEURL -and $script:HONEYTOOL_TOKEN) {
         return
     }
 
@@ -751,31 +752,31 @@ function Initialize-EnvironmentVariables {
         $env:HOME
     }
 
-    if (-not $script:RATELTOOL_SERVER_BASEURL -or -not $script:RATELTOOL_TOKEN) {
+    if (-not $script:HONEYTOOL_SERVER_BASEURL -or -not $script:HONEYTOOL_TOKEN) {
         $envPath = Join-Path -Path $currentDir -ChildPath '.env'
         if (Import-DotEnvFile -Path $envPath) {
-            if ($script:RATELTOOL_SERVER_BASEURL -and $script:RATELTOOL_TOKEN) {
+            if ($script:HONEYTOOL_SERVER_BASEURL -and $script:HONEYTOOL_TOKEN) {
                 return
             }
         }
     }
 
-    if (-not $script:RATELTOOL_SERVER_BASEURL -or -not $script:RATELTOOL_TOKEN) {
+    if (-not $script:HONEYTOOL_SERVER_BASEURL -or -not $script:HONEYTOOL_TOKEN) {
         if ($parentDir) {
             $envPath = Join-Path -Path $parentDir -ChildPath '.env'
             if (Import-DotEnvFile -Path $envPath) {
-                if ($script:RATELTOOL_SERVER_BASEURL -and $script:RATELTOOL_TOKEN) {
+                if ($script:HONEYTOOL_SERVER_BASEURL -and $script:HONEYTOOL_TOKEN) {
                     return
                 }
             }
         }
     }
 
-    if (-not $script:RATELTOOL_SERVER_BASEURL -or -not $script:RATELTOOL_TOKEN) {
+    if (-not $script:HONEYTOOL_SERVER_BASEURL -or -not $script:HONEYTOOL_TOKEN) {
         if ($homeDir) {
             $envPath = Join-Path -Path $homeDir -ChildPath '.env'
             if (Import-DotEnvFile -Path $envPath) {
-                if ($script:RATELTOOL_SERVER_BASEURL -and $script:RATELTOOL_TOKEN) {
+                if ($script:HONEYTOOL_SERVER_BASEURL -and $script:HONEYTOOL_TOKEN) {
                     return
                 }
             }
@@ -1166,8 +1167,8 @@ function Show-Help {
     Write-Host "    honeytools.ps1 [-tzName <name>] [-tzOffset <offset>] [-rawResponse] <command> [command-options]"
     Write-Host ""
     Write-Host "Environment Variables (Required):"
-    Write-Host "    RATELTOOL_SERVER_BASEURL      Honey Ledger server base URL (e.g., http://localhost:8080)"
-    Write-Host "    RATELTOOL_TOKEN               Honey Ledger API token"
+    Write-Host "    HONEYTOOL_SERVER_BASEURL      Honey Ledger server base URL (e.g., http://localhost:8080)"
+    Write-Host "    HONEYTOOL_TOKEN               Honey Ledger API token"
     Write-Host ""
     Write-Host "    You can also set the above environment variables in a '.env' file located in the current directory, parent directory or home directory."
     Write-Host ""
@@ -1183,8 +1184,8 @@ function Show-Help {
     Write-Host ""
     Write-Host "Examples:"
     Write-Host "    # Set environment variables"
-    Write-Host "    `$env:RATELTOOL_SERVER_BASEURL = 'http://localhost:8080'"
-    Write-Host "    `$env:RATELTOOL_TOKEN = 'YOUR_TOKEN'"
+    Write-Host "    `$env:HONEYTOOL_SERVER_BASEURL = 'http://localhost:8080'"
+    Write-Host "    `$env:HONEYTOOL_TOKEN = 'YOUR_TOKEN'"
     Write-Host ""
     Write-Host "    # List all available commands"
     Write-Host "    honeytools.ps1 list"
@@ -1370,17 +1371,17 @@ function Invoke-Api {
         exit 1
     }
 
-    $serverBaseUrl = $script:RATELTOOL_SERVER_BASEURL
-    $authToken = $script:RATELTOOL_TOKEN
+    $serverBaseUrl = $script:HONEYTOOL_SERVER_BASEURL
+    $authToken = $script:HONEYTOOL_TOKEN
 
     if (-not $serverBaseUrl) {
-        Write-Red "Error: Environment variable 'RATELTOOL_SERVER_BASEURL' is not set."
+        Write-Red "Error: Environment variable 'HONEYTOOL_SERVER_BASEURL' is not set."
         Write-Host "Please set it to your Honey Ledger server base URL (e.g., http://localhost:8080)"
         exit 1
     }
 
     if (-not $authToken) {
-        Write-Red "Error: Environment variable 'RATELTOOL_TOKEN' is not set."
+        Write-Red "Error: Environment variable 'HONEYTOOL_TOKEN' is not set."
         Write-Host "Please set it to your API token."
         exit 1
     }

@@ -22,8 +22,8 @@ details.
   the amount others owe and opens the split editor, and expense rows offer the
   same editor next to the description.
 - Versioned database migrations with a `schema_migration` ledger, applied at
-  startup after the automatic schema sync. Each migration runs once, inside a
-  transaction, and is recorded only on success.
+  startup after the automatic schema sync. Each migration runs once and is
+  recorded only after it succeeds.
 - Shared expense settlements: record a payment between the user and another
   person in either direction and see net balances ("owes you" / "you owe")
   instead of only what the user is owed. Splits can now point either way, so a
@@ -87,6 +87,9 @@ details.
   remain supported alongside the new `HONEY_*` names.
 - Import mapping files exported before the rename still load through the legacy
   `ratelLedger…` JSON root fields.
+- The Windows API helper is now `scripts/honeytools.ps1` to match its shell
+  counterpart, and reads `HONEYTOOL_SERVER_BASEURL`/`HONEYTOOL_TOKEN`; the
+  pre-rename `RATELTOOL_*` names are still picked up when the new ones are unset.
 - The GitHub repository moved to `James-HoneyBadger/honey-ledger`, and the Go
   module path followed it (`github.com/James-HoneyBadger/honey-ledger`), so
   `go install` and imports use the new location. GitHub redirects the previous

@@ -343,6 +343,23 @@ npx jest --watch
 
 - Backend: Standard Go test framework
 - Frontend: Jest with `tsconfig.jest.json` and `jest.config.ts`
+- Electron helper: `node --test electron/userDataLayout.test.js` covers the
+  legacy user data and config directory migration
+
+### Repository Hygiene Checks
+
+These run in CI and are worth running before pushing:
+
+```bash
+node scripts/check-brand.mjs        # product name, app id, version, copyright
+node scripts/check-locales.mjs      # locale key parity and backend error keys
+./scripts/check-no-telemetry.sh     # no analytics or telemetry endpoints
+node --test electron/userDataLayout.test.js
+```
+
+`check-locales.mjs` also scans `pkg/errs` for every message the API can return
+and fails when a message has no `error.<message>` entry in all 19 locales, so add
+the translation together with the error.
 
 ---
 
@@ -419,7 +436,31 @@ npm run build
 
 ## Database Migrations
 
-Database schema updates are handled automatically by xorm on startup when `auto_update_database = true`.
+Table structures are synced by xorm on startup when `auto_update_database = true`.
+Changes xorm cannot infer — backfills, renamed columns, data fixes — go through
+the migration registry in `pkg/datastore/migration.go`.
+
+```go
+{
+    Id:          "20261030_01_split_direction",
+    Description: "default existing transaction splits to \"they owe me\"",
+    Up: func(c core.Context, db *Database) error {
+        _, err := db.NewSession(c).Exec("UPDATE transaction_split SET direction = ? WHERE direction = 0", ...)
+
+        return err
+    },
+},
+```
+
+Rules for a new migration:
+
+- Append it to `migrations`; never reorder or rename an existing entry.
+- `Id` sorts chronologically: `YYYYMMDD_NN_short_description`.
+- The id is recorded in `schema_migration` only after `Up` succeeds. The runner
+  does not open a transaction around `Up`, so either keep it a single statement
+  or wrap a multi-statement change in `database.DoTransaction`.
+- Migrations run after the schema sync, on every startup and for
+  `honey-ledger database update`.
 
 ### Manual Update
 
@@ -447,6 +488,10 @@ Database schema updates are handled automatically by xorm on startup when `auto_
 | `user_application_cloud_setting` | Cloud-synced settings |
 | `user_external_auth` | OAuth2 linked accounts |
 | `insights_explorer` | Saved insight queries |
+| `transaction_split` | Shares of an expense owed by, or to, other people |
+| `shared_expense_settlement` | Payments between the user and one person |
+| `transaction_review_dismissal` | Dismissed transaction review findings |
+| `schema_migration` | Applied schema migrations |
 
 ---
 

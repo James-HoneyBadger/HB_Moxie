@@ -18,6 +18,7 @@ A complete guide to using Honey Ledger for personal finance management.
 - [Backups](#backups)
 - [Statistics & Overview](#statistics--overview)
 - [Insights Explorer](#insights-explorer)
+- [Transaction Review](#transaction-review)
 - [Shared Expenses](#shared-expenses)
 - [Exchange Rates](#exchange-rates)
 - [AI Receipt Recognition](#ai-receipt-recognition)
@@ -277,6 +278,9 @@ For non-standard file formats, you can:
 - Set the correct file encoding if auto-detection fails (70+ encodings supported).
 - Use **Batch Replace** to fix account/category assignments before importing.
 - Duplicate detection prevents importing the same transaction twice.
+- The column mapping you set for a custom format is remembered for files with the
+  same layout, so importing the same export again skips the mapping step.
+  **Forget Saved Mapping** in the import menu drops what was remembered.
 
 ---
 
@@ -399,6 +403,10 @@ The dialog shows the transaction amount and how much is still unallocated, so a
 split can never add up to more than the transaction cost. Only expense
 transactions can be split, and each person may appear once per transaction.
 
+**They Owe Me / I Owe Them** sets the direction: use *They Owe Me* when you paid
+and someone else owes you their share, and *I Owe Them* when someone else paid
+and you owe them.
+
 Splitting is also available from the transaction list: rows that are already
 split show a chip with the amount other people owe, and other expense rows show
 a split button next to the description. Both open the same editor.
@@ -409,12 +417,28 @@ choice is kept in the page address, so a filtered list can be bookmarked.
 
 ### Tracking What Is Owed
 
-The summary lists every person with the total they owe, grouped by currency, and
-the date of the most recent shared expense. Click a person row to see the
-individual expenses behind the total, where you can:
+The summary lists every person with their net balance per currency, labelled
+**Owes You** or **You Owe**, and the date of the most recent shared expense.
+Click a person row to see the individual expenses behind the total, where you
+can:
 
 - **Edit** — change the people or amounts of that transaction.
 - **Clear** — remove the split entirely.
+
+### Settling Up
+
+When money actually changes hands, record it instead of deleting the split:
+
+1. Click **Settle Up** on the person's row.
+2. Choose **They Paid Me** or **I Paid Them** and enter the amount.
+3. Add an optional description, then save.
+
+Settlements reduce the balance in the summary and stay in the history, so the
+shared expenses and the payments against them remain traceable. Deleting a
+settlement from the person's detail view puts the balance back.
+
+**Rename** changes a person's name across every split and settlement, so a typo
+does not create a second person.
 
 Splits follow their transaction: deleting or editing a transaction removes it
 from the summary. Each split records the account currency at creation time, so
@@ -616,9 +640,16 @@ When the lock is active, you'll need to enter your PIN or use WebAuthn after a p
 
 ---
 
-## Navigation Shortcuts
+## Keyboard Shortcuts
 
-The desktop interface supports the following navigation shortcuts:
+Global shortcuts work anywhere in the system while Honey Ledger is running:
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+Shift+N` / `Cmd+Shift+N` | Open the quick-add transaction dialog and focus the window |
+| `Ctrl+Shift+M` / `Cmd+Shift+M` | Show and focus the main window, or hide it when it is already focused |
+
+Inside the app:
 
 | Shortcut | Action |
 |----------|--------|

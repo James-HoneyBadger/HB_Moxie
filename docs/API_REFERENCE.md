@@ -208,19 +208,30 @@ Revokes the current session token.
 ### Email Verification
 
 ```
-POST /api/verify_email.json
-```
-
-```
 POST /api/verify_email/resend.json
 ```
+
+Send a new verification mail to the login name in the request body. Available when `[user] enable_email_verify` is on.
+
+```
+POST /api/verify_email/by_token.json
+```
+
+Confirm the address with the token from the mail. The request is authorized by that token, not by a login token.
 
 ### Password Reset
 
 ```
-POST /api/forget_password.json
-POST /api/forget_password/reset.json
+POST /api/forget_password/request.json
 ```
+
+Send a reset mail for the login name in the request body. Available when `[auth] enable_forget_password` is on.
+
+```
+POST /api/forget_password/reset/by_token.json
+```
+
+Set a new password with the token from the mail. The request is authorized by that token, not by a login token.
 
 ---
 
@@ -329,11 +340,13 @@ Multipart form upload with an image file.
 POST /api/v1/users/avatar/remove.json
 ```
 
-### Verify Email
+### Resend Verification Email
 
 ```
-POST /api/v1/users/verify_email.json
+POST /api/v1/users/verify_email/resend.json
 ```
+
+Sends a verification mail to the current user's address.
 
 ### External Auth Info
 
@@ -974,6 +987,7 @@ POST /api/v1/transactions/splits/update.json
 ```json
 {
   "transactionId": "3851278476451512320",
+  "direction": 1,
   "splits": [
     { "personName": "Priya", "amount": 3200 },
     { "personName": "Sam", "amount": 2000 }
@@ -982,10 +996,11 @@ POST /api/v1/transactions/splits/update.json
 ```
 
 Replaces all shares of the transaction; send an empty `splits` array to clear
-them. Only expense transactions can be split, person names are trimmed and must
-be unique per transaction, amounts must be positive, and the shares may not add
-up to more than the transaction amount. Up to 20 people may share one
-transaction.
+them. `direction` is `1` when the other people owe the user their share and `2`
+when the user owes them. Only expense transactions can be split, person names are
+trimmed and must be unique per transaction, amounts must be positive, and the
+shares may not add up to more than the transaction amount. Up to 20 people may
+share one transaction.
 
 ### Shared Expense Summary
 
@@ -993,8 +1008,9 @@ transaction.
 GET /api/v1/transactions/splits/summary.json
 ```
 
-Returns one entry per person and currency with the outstanding total, the number
-of shared expenses, and the time of the most recent one. Splits of deleted
+Returns one entry per person and currency with the net balance: `total`
+(positive means the person owes the user), `owedToMe`, `iOwe`, `settled`, the
+number of shared expenses, and the time of the most recent one. Splits of deleted
 transactions are excluded.
 
 ### Shared Expenses by Person
@@ -1004,6 +1020,69 @@ GET /api/v1/transactions/splits/person.json?personName=<personName>
 ```
 
 Returns the individual expenses behind a person's total, newest first.
+
+### Known People
+
+```
+GET /api/v1/transactions/splits/people.json
+```
+
+Returns the person names that appear in previous splits and settlements, for
+autocompletion.
+
+### Split Index
+
+```
+GET /api/v1/transactions/splits/index.json?min_time=<unixMillis>&max_time=<unixMillis>
+```
+
+Returns the transactions in a time range that carry splits, with the split total,
+currency, and person count of each. `max_time` of `0` leaves the range open
+ended. The transaction list already embeds the same summary per item, so this is
+only needed when working with a fixed set of ids.
+
+### Rename Person
+
+```
+POST /api/v1/transactions/splits/rename-person.json
+```
+
+```json
+{ "oldName": "Sam", "newName": "Samantha" }
+```
+
+Renames a person across every split and settlement, so a typo does not create a
+second person.
+
+### Record Settlement
+
+```
+POST /api/v1/transactions/splits/settle.json
+```
+
+```json
+{
+  "personName": "Priya",
+  "currency": "USD",
+  "amount": -1000,
+  "time": 1793400428,
+  "comment": "Partial payback"
+}
+```
+
+Records a payment between the user and another person. A positive `amount` means
+the person paid the user, a negative one means the user paid them. `time` is
+optional and defaults to now.
+
+### Delete Settlement
+
+```
+POST /api/v1/transactions/splits/settle/delete.json
+```
+
+```json
+{ "settlementId": "3851278476451512320" }
+```
 
 ---
 
@@ -1063,8 +1142,13 @@ POST /api/v1/data/clear/transactions.json
 ### Clear by Account
 
 ```
-POST /api/v1/data/clear/by_account.json
+POST /api/v1/data/clear/transactions/by_account.json
 ```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `accountId` | string (int64) | Yes | Account whose transactions are deleted |
+| `password` | string | No | Account password to confirm the deletion |
 
 ### Export CSV
 
@@ -1232,6 +1316,14 @@ GET /oauth2/callback
 ```
 
 Handles the OAuth2 callback and exchanges the authorization code for tokens.
+
+### Authorize With Callback Token
+
+```
+POST /api/oauth2/authorize.json
+```
+
+Completes a third-party login. The request is authorized by the temporary token issued by the callback rather than by a login token, and returns the normal login response. Available when `[auth] enable_oauth2_auth` is on and `oauth2_provider` is set.
 
 ---
 

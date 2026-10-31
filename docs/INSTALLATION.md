@@ -69,7 +69,7 @@ See [ELECTRON.md](ELECTRON.md) for full Electron build and packaging details.
 ### Prerequisites
 
 - Go 1.26 or later
-- Node.js 24 or later
+- Node.js 22.12 or later
 - npm
 - GCC (for SQLite CGO compilation)
 
@@ -104,7 +104,7 @@ Produces optimized assets in the `dist/` directory.
 | Flag | Description |
 |------|-------------|
 | `--release` / `-r` | Set release version string |
-| `--output` / `-o` | Output directory (default: current directory) |
+| `--output` / `-o` | Package file name for the `package` type |
 | `--no-lint` | Skip lint checks during build |
 | `--no-test` | Skip test execution during build |
 
