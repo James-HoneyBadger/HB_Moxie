@@ -512,6 +512,10 @@ echarts.use([
     LegendComponent
 ]);
 
+const storageKeyPrefix = 'honey_';
+// 'ratel_' and 'hbm_' were the prefixes of the two previous product names.
+const legacyStorageKeyPrefixes = ['ratel_', 'hbm_'];
+
 function migrateLegacyStorageKeys(): void {
     for (const storage of [localStorage, sessionStorage]) {
         const legacyKeys: string[] = [];
@@ -519,13 +523,13 @@ function migrateLegacyStorageKeys(): void {
         for (let i = 0; i < storage.length; i++) {
             const key = storage.key(i);
 
-            if (key?.startsWith('hbm_')) {
+            if (key && legacyStorageKeyPrefixes.some(prefix => key.startsWith(prefix))) {
                 legacyKeys.push(key);
             }
         }
 
         for (const key of legacyKeys) {
-            const migratedKey = 'ratel_' + key.substring(4);
+            const migratedKey = storageKeyPrefix + key.substring(key.indexOf('_') + 1);
 
             if (storage.getItem(migratedKey) === null) {
                 storage.setItem(migratedKey, storage.getItem(key) ?? '');

@@ -319,7 +319,7 @@
   </g>
 
   <!-- ===== TITLE AT BOTTOM ===== -->
-  <text x="400" y="540" text-anchor="middle" font-size="44" font-weight="800" fill="url(#titleGold)" font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif" letter-spacing="5">RATEL LEDGER</text>
+  <text x="400" y="540" text-anchor="middle" font-size="44" font-weight="800" fill="url(#titleGold)" font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif" letter-spacing="5">HONEY LEDGER</text>
   <text x="400" y="565" text-anchor="middle" font-size="13" fill="#8b7c52" font-family="'Segoe UI',Arial,sans-serif" letter-spacing="5" opacity="0.6">PERSONAL FINANCE MANAGER</text>
   <text x="400" y="584" text-anchor="middle" font-size="10" fill="#907848" font-family="'Segoe UI',Arial,sans-serif" letter-spacing="2" opacity="0.4" font-style="italic">Fearless with your finances</text>
 </svg>

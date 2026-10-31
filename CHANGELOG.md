@@ -95,6 +95,12 @@ details.
   module path followed it (`github.com/James-HoneyBadger/honey-ledger`), so
   `go install` and imports use the new location. GitHub redirects the previous
   repository and clone URLs.
+- The remaining pre-rename identifiers follow the product name: application
+  settings and the application lock state are stored under `honey_…` browser
+  storage keys, the random element ids are prefixed `honey_`, and the web session
+  cookie is `honey_auth_token`. Values saved under the `ratel_…`/`hbm_…` keys and
+  the `ratel_auth_token`/`hbm_auth_token` cookies are adopted on launch, so no
+  preferences or signed-in sessions are lost.
 - Upgrade the admin tool to Fyne 2.8.2 (from 2.5.4). Building it on Linux now
   requires the Wayland development headers in addition to X11.
 - Upgrade the desktop shell to Electron 45.1 (from 33, which reached
@@ -107,6 +113,10 @@ details.
 
 ### Fixed
 
+- The application logo and splash artwork ship under their new names. The
+  interface asked for `honey-ledger-logo.svg` while the files were still
+  `ratel-ledger-*.svg`, so the logo was missing, and the artwork itself still
+  read "RATEL LEDGER"; both now say Honey Ledger.
 - English was missing the translation keys for the Persian, Chinese, and Hebrew
   calendar display options and for the names of every language in the language
   picker, so those menus rendered raw identifiers. Every locale now defines the

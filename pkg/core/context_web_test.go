@@ -21,15 +21,21 @@ func newTestWebContext(t *testing.T) (*WebContext, *httptest.ResponseRecorder) {
 }
 
 func TestGetTokenStringFromCookie_LegacyFallback(t *testing.T) {
-	webContext, _ := newTestWebContext(t)
-	webContext.Request.AddCookie(&http.Cookie{Name: legacyTokenCookieParam, Value: "legacy-token"})
+	for _, legacyCookieParam := range legacyTokenCookieParams {
+		webContext, _ := newTestWebContext(t)
+		webContext.Request.AddCookie(&http.Cookie{Name: legacyCookieParam, Value: "legacy-token"})
 
-	assert.Equal(t, "legacy-token", webContext.GetTokenStringFromCookie())
+		assert.Equal(t, "legacy-token", webContext.GetTokenStringFromCookie(), legacyCookieParam)
+	}
 }
 
 func TestGetTokenStringFromCookie_PrefersCurrentCookie(t *testing.T) {
 	webContext, _ := newTestWebContext(t)
-	webContext.Request.AddCookie(&http.Cookie{Name: legacyTokenCookieParam, Value: "legacy-token"})
+
+	for _, legacyCookieParam := range legacyTokenCookieParams {
+		webContext.Request.AddCookie(&http.Cookie{Name: legacyCookieParam, Value: "legacy-token"})
+	}
+
 	webContext.Request.AddCookie(&http.Cookie{Name: tokenCookieParam, Value: "current-token"})
 
 	assert.Equal(t, "current-token", webContext.GetTokenStringFromCookie())
@@ -40,7 +46,7 @@ func TestSetTokenStringToCookie_ClearsLegacyCookie(t *testing.T) {
 	webContext.SetTokenStringToCookie("", -1, "/", false)
 
 	cookies := recorder.Result().Cookies()
-	assert.Len(t, cookies, 2)
+	assert.Len(t, cookies, 1+len(legacyTokenCookieParams))
 
 	values := make(map[string]string)
 	for _, cookie := range cookies {
@@ -48,5 +54,8 @@ func TestSetTokenStringToCookie_ClearsLegacyCookie(t *testing.T) {
 	}
 
 	assert.Equal(t, "", values[tokenCookieParam])
-	assert.Equal(t, "", values[legacyTokenCookieParam])
+
+	for _, legacyCookieParam := range legacyTokenCookieParams {
+		assert.Equal(t, "", values[legacyCookieParam])
+	}
 }

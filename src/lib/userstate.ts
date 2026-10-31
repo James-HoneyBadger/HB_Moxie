@@ -11,14 +11,14 @@ import logger from './logger.ts';
 // Kept from before the rename: changing this salt invalidates existing app-lock credentials.
 const appLockSecretBaseStringPrefix: string = 'HBM_LOCK_SECRET_';
 
-const tokenLocalStorageKey: string = 'ratel_user_token';
-const webauthnConfigLocalStorageKey: string = 'ratel_user_webauthn_config';
-const userInfoLocalStorageKey: string = 'ratel_user_info';
-const transactionDraftLocalStorageKey: string = 'ratel_user_draft_transaction';
+const tokenLocalStorageKey: string = 'honey_user_token';
+const webauthnConfigLocalStorageKey: string = 'honey_user_webauthn_config';
+const userInfoLocalStorageKey: string = 'honey_user_info';
+const transactionDraftLocalStorageKey: string = 'honey_user_draft_transaction';
 
-const tokenSessionStorageKey: string = 'ratel_user_session_token';
-const encryptedTokenSessionStorageKey: string = 'ratel_user_session_encrypted_token';
-const appLockStateSessionStorageKey: string = 'ratel_user_app_lock_state'; // { 'username': '', secret: '' }
+const tokenSessionStorageKey: string = 'honey_user_session_token';
+const encryptedTokenSessionStorageKey: string = 'honey_user_session_encrypted_token';
+const appLockStateSessionStorageKey: string = 'honey_user_app_lock_state'; // { 'username': '', secret: '' }
 
 function getAppLockSecret(pinCode: string): string {
     const hashedPinCode = CryptoJS.SHA256(appLockSecretBaseStringPrefix + pinCode).toString();

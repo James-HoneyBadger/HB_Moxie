@@ -33,8 +33,10 @@ const ClientTimezoneNameHeaderName = "X-Timezone-Name"
 const tokenHeaderName = "Authorization"
 const tokenHeaderValuePrefix = "bearer "
 const tokenQueryStringParam = "token"
-const tokenCookieParam = "ratel_auth_token"
-const legacyTokenCookieParam = "hbm_auth_token"
+const tokenCookieParam = "honey_auth_token"
+
+// Pre-rename cookie names, still read so existing web sessions survive the upgrade.
+var legacyTokenCookieParams = []string{"ratel_auth_token", "hbm_auth_token"}
 
 // WebContext represents the request and response context
 type WebContext struct {
@@ -168,11 +170,14 @@ func (c *WebContext) GetTokenStringFromCookie() string {
 	tokenCookie, err := c.Cookie(tokenCookieParam)
 
 	if err != nil {
-		// Accept the pre-rename cookie so existing sessions survive the upgrade.
-		tokenCookie, err = c.Cookie(legacyTokenCookieParam)
-		if err != nil {
-			return ""
+		for _, legacyCookieParam := range legacyTokenCookieParams {
+			tokenCookie, err = c.Cookie(legacyCookieParam)
+			if err == nil {
+				return tokenCookie
+			}
 		}
+
+		return ""
 	}
 
 	return tokenCookie
@@ -182,8 +187,10 @@ func (c *WebContext) SetTokenStringToCookie(token string, tokenExpiredTime int, 
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie(tokenCookieParam, token, tokenExpiredTime, path, "", secure, true)
 
-	// Clear the pre-rename cookie so it cannot be used after logout.
-	c.SetCookie(legacyTokenCookieParam, "", -1, path, "", secure, true)
+	for _, legacyCookieParam := range legacyTokenCookieParams {
+		// Clear the pre-rename cookies so they cannot be used after logout.
+		c.SetCookie(legacyCookieParam, "", -1, path, "", secure, true)
+	}
 }
 
 // GetClientLocale returns the client locale name

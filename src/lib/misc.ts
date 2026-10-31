@@ -85,7 +85,7 @@ export function asyncLoadAssets(type: string, assetUrl: string): Promise<AsyncLo
 }
 
 export function generateRandomString(): string {
-    let baseString = 'ratel_' + new Date().getTime();
+    let baseString = 'honey_' + new Date().getTime();
 
     if (crypto && crypto.getRandomValues) {
         const randoms = new Uint8Array(256);
